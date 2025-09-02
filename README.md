@@ -10,10 +10,12 @@ I also believe that sharing these writeups can be useful for others who are lear
 
 ## 📂 Repository Structure
 
-- **htb/** → HackTheBox writeups  
-- **tryhackme/** → TryHackMe writeups  
-- **dockerlabs/** → DockerLabs labs  
-- **images/** → Screenshots used in the writeups  
+- **HTB/** → HackTheBox writeups  
+- **Tryhackme/** → TryHackMe writeups  
+- **Dockerlabs/** → DockerLabs labs
+- **Hackmyvm/** → HackMyVM writeups  
+- **Vulnyx/** → Vulnyx writeups  
+- **images/** → Screenshots used in the writeups
 
 ---
 
