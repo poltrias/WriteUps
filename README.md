@@ -12,7 +12,7 @@ I also believe that sharing these writeups can be useful for others who are lear
 
 - **HTB/** → HackTheBox writeups  
 - **Tryhackme/** → TryHackMe writeups  
-- **Dockerlabs/** → DockerLabs labs
+- **Dockerlabs/** → DockerLabs writeups
 - **Hackmyvm/** → HackMyVM writeups  
 - **Vulnyx/** → Vulnyx writeups  
 - **images/** → Screenshots used in the writeups
