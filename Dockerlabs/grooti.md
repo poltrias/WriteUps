@@ -184,7 +184,7 @@ A continuación, utilizamos BurpSuite para interceptar la petición y configurar
 
 Durante esta prueba, observé que la respuesta correspondiente al número 16 era más larga de lo habitual.
 
-![alt text](image.png)
+![alt text](../images/image.png)
 
 Repetimos el envío manual del formulario con el número 16, y en lugar de recibir un archivo `.txt`, el servidor devuelve un archivo `.zip`.
 
@@ -266,4 +266,4 @@ Hemos modificado el contenido del script para que de permisos SUID al binario `/
 
 Ya somos root! 
 
-![alt text](image-1.png)
+![alt text](../images/image-1.png)
