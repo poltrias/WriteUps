@@ -73,6 +73,7 @@ Nmap done: 1 IP address (1 host up) scanned in 6.69 seconds
 El único puerto abierto es el puerto `80`, así que vamos a comprobar qué hay alojado.
 
 Encontramos una especie de portal donde podemos verificar la conectividad introduciendo `IPs` o dominios.
+
 ![alt text](../images/IP%20verify.png)
 
 Haremos una prueba verificando la conectividad con Google introduciendo `8.8.8.8`.
