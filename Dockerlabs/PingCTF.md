@@ -74,7 +74,8 @@ El único puerto abierto es el puerto `80`, así que vamos a comprobar qué hay 
 
 Encontramos una especie de portal donde podemos verificar la conectividad introduciendo `IPs` o dominios.
 
-![alt text](../images/IP%20verify.png)
+
+![Portal de conectividad](../images/IP%20verify.png)
 
 Haremos una prueba verificando la conectividad con Google introduciendo `8.8.8.8`.
 
@@ -93,7 +94,7 @@ Vamos a probar el clásico punto y coma después de la `IP`, seguido de un coman
 ```bash
 8.8.8.8;whoami
 ``` 
-![alt text](../images/whoami.png)
+![whoami](../images/whoami.png)
 
 Como vemos, ha funcionado y estamos interactuando con el usuario `www-data`.
 
