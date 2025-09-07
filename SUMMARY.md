@@ -7,5 +7,5 @@
   * [PingCTF](Dockerlabs/PingCTF.md)
 
 * HackMyVm
-  * [DC01](HackMyVm/DC01.md)
+  * [DC01](HackMyVM/DC01.md)
 
