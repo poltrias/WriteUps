@@ -5,6 +5,8 @@
 * DockerLabs
   * [Grooti](Dockerlabs/grooti.md)
   * [PingCTF](Dockerlabs/PingCTF.md)
+  * [Hidden](Dockerlabs/Hidden.md)
+  * [ChcocolateFire](Dockerlabs/ChocolateFire.md)
 
 * HackMyVm
   * [DC01](HackMyVM/DC01.md)
