@@ -1,6 +1,6 @@
 # 🛡️ CTF Writeups | Ethical Hacking
 
-Hi there! 👋 I am a **cybersecurity student** and I created this repository as a space to publish my **writeups** of machines and labs from different platforms (HackTheBox, TryHackMe, DockerLabs, etc.).
+Hi there! 👋 I am a **cybersecurity student** and I created this repository as a space to publish my **writeups** of machines and labs from different platforms (HackTheBox, HackmyVm, DockerLabs, Vulnyx, etc.).
 
 The main goal is to share my **working methodology** when approaching an ethical hacking challenge: from the initial reconnaissance to exploitation and privilege escalation.  
 
