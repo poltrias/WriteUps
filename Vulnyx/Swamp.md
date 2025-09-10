@@ -76,7 +76,7 @@ Hmm. We’re having trouble finding that site.
 We can’t connect to the server at swamp.nyx.
 ```
 
-we must specify in the `/etc/hosts` file that the `IP` `10.0.4.21` should resolve to `swamp.nyx`.
+We must specify in the `/etc/hosts` file that the `IP` `10.0.4.21` should resolve to `swamp.nyx`.
 
 ```bash
 sudo nano /etc/hosts
@@ -316,7 +316,7 @@ console.log($.next().value),console.log($.next().value),console.log($.next().val
 		"name":"Shrek","age":30
 ``` 
 
-we find a password value that looks like a Base64-encoded string:
+We find a password value that looks like a Base64-encoded string:
 
 ```
 c2hyZWs6cHV0b3Blc2FvZWxhc25v
