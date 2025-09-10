@@ -385,7 +385,6 @@ bash-5.2# whoami
 root
 bash-5.2#
 ```
-Ya somos root !
 
 We find the `root flag` inside the `/root` directory.
 
