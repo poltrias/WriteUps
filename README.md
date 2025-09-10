@@ -8,17 +8,6 @@ I also believe that sharing these writeups can be useful for others who are lear
 
 ---
 
-## 📂 Repository Structure
-
-- **Dockerlabs/** → DockerLabs writeups
-- **Hackmyvm/** → HackMyVM writeups
-- **Vulnyx/** → Vulnyx writeups  
-- **HTB/** → HackTheBox writeups  
-- **Tryhackme/** → TryHackMe writeups  
-- **images/** → Images used on the writeups  
-
----
-
 ## ⚠️ Disclaimer
 
 All writeups published here are intended **solely for educational and training purposes** in the field of ethical hacking and cybersecurity.  
