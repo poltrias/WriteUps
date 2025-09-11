@@ -92,6 +92,7 @@ Shellcodes: No Results
 Abrimos Metasploit y empleamos el módulo de `enumusers`.
 
 ```js
+search openssh
 use auxiliary/scanner/ssh/ssh_enumusers 
 show options
 set USER_FILE /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt
