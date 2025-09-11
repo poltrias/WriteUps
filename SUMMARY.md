@@ -15,6 +15,7 @@
   * [Trust (Very Easy)](Dockerlabs/Trust.md)
   * [BreakMySSH (Very Easy)](Dockerlabs/BreakMySSH.md)
   * [FirstHacking (Very Easy)](Dockerlabs/FirstHacking.md)
+  * [HedgeHog (Very Easy)](Dockerlabs/HedgeHog.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
