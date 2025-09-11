@@ -11,6 +11,7 @@
   * [Ciberguard (Intermediate)](Dockerlabs/Ciberguard.md)
   * [InfluencerHate (Easy)](Dockerlabs/Influencerhate.md)
   * [Obsession (Very Easy)](Dockerlabs/Obsession.md)
+  * [Injection (Very Easy)](Dockerlabs/Injection.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
