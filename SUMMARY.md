@@ -12,6 +12,7 @@
   * [InfluencerHate (Easy)](Dockerlabs/Influencerhate.md)
   * [Obsession (Very Easy)](Dockerlabs/Obsession.md)
   * [Injection (Very Easy)](Dockerlabs/Injection.md)
+  * [Trust (Very Easy)](Dockerlabs/Trust.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
