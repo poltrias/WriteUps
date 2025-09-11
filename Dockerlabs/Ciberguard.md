@@ -1,7 +1,6 @@
-# 🖥️ Writeup - Ciberguard 
+# 🖥️ Writeup - Ciberguard (Intermediate)
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Medium  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN

@@ -1,7 +1,6 @@
-# 🖥️ Writeup - Grooti 
+# 🖥️ Writeup - Grooti (Easy)
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Easy  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN
