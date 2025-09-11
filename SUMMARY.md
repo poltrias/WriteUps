@@ -6,7 +6,7 @@
   * [Grooti (Easy)](Dockerlabs/grooti.md)
   * [PingCTF (Easy)](Dockerlabs/PingCTF.md)
   * [Hidden (Intermediate)](Dockerlabs/Hidden.md)
-  * [ChcocolateFire (Easy)](Dockerlabs/ChocolateFire.md)
+  * [ChcocolateFire (Intermediate)](Dockerlabs/ChocolateFire.md)
   * [Sites (Intermediate)](Dockerlabs/sites.md)
   * [Ciberguard (Intermediate)](Dockerlabs/Ciberguard.md)
   * [InfluencerHate (Easy)](Dockerlabs/Influencerhate.md)
