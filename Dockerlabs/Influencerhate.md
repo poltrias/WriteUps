@@ -1,7 +1,6 @@
 # 🖥️ Writeup - InfluencerHate 
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Easy  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN

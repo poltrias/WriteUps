@@ -3,18 +3,18 @@
 * [Whoami](README.md)
 
 * DockerLabs
-  * [Grooti](Dockerlabs/grooti.md)
-  * [PingCTF](Dockerlabs/PingCTF.md)
-  * [Hidden](Dockerlabs/Hidden.md)
-  * [ChcocolateFire](Dockerlabs/ChocolateFire.md)
-  * [Sites](Dockerlabs/sites.md)
-  * [Ciberguard](Dockerlabs/Ciberguard.md)
-  * [InfluencerHate](Dockerlabs/Influencerhate.md)
+  * [Grooti (Easy)](Dockerlabs/grooti.md)
+  * [PingCTF (Easy)](Dockerlabs/PingCTF.md)
+  * [Hidden (Intermediate)](Dockerlabs/Hidden.md)
+  * [ChcocolateFire (Easy)](Dockerlabs/ChocolateFire.md)
+  * [Sites (Intermediate)](Dockerlabs/sites.md)
+  * [Ciberguard (Intermediate)](Dockerlabs/Ciberguard.md)
+  * [InfluencerHate (Easy)](Dockerlabs/Influencerhate.md)
 
 * HackMyVm
-  * [DC01](HackMyVM/DC01.md)
-  * [DC02](HackMyVM/DC02.md)
-  * [DC03](HackMyVM/DC03.md)
+  * [DC01 (Easy)](HackMyVM/DC01.md)
+  * [DC02 (Intermediate)](HackMyVM/DC02.md)
+  * [DC03 (Intermediate)](HackMyVM/DC03.md)
 
 * Vulnyx
-  * [Swamp](Vulnyx/Swamp.md)
+  * [Swamp (Easy)](Vulnyx/Swamp.md)

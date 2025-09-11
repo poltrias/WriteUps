@@ -1,7 +1,6 @@
 # 🖥️ Writeup - Swamp 
 
 **Platform:** Vulnyx  
-**Difficulty:** Easy  
 **Operating System:** Linux  
 
 # INSTALLATION

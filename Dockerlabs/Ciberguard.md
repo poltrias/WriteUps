@@ -1,4 +1,4 @@
-# 🖥️ Writeup - Ciberguard (Intermediate)
+# 🖥️ Writeup - Ciberguard 
 
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  

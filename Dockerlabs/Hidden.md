@@ -1,7 +1,6 @@
 # 🖥️ Writeup - Hidden 
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Medium  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN

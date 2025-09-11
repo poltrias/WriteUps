@@ -1,7 +1,6 @@
 # 🖥️ Writeup - Sites 
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Medium  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN

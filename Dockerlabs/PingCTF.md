@@ -1,7 +1,6 @@
 # 🖥️ Writeup - PingCTF 
 
 **Plataforma:** Dockerlabs  
-**Dificultad:** Easy  
 **Sistema Operativo:** Linux  
 
 # INSTALACIÓN

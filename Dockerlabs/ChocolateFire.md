@@ -1,4 +1,4 @@
-# 🖥️ Writeup - ChocolateFire (Easy)
+# 🖥️ Writeup - ChocolateFire 
 
 **Plataforma:** Dockerlabs   
 **Sistema Operativo:** Linux  

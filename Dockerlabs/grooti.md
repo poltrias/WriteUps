@@ -1,4 +1,4 @@
-# 🖥️ Writeup - Grooti (Easy)
+# 🖥️ Writeup - Grooti 
 
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
