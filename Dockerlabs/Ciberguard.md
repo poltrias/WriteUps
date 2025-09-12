@@ -52,7 +52,7 @@ nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
 ``` 
 
 ```bash
-nmap -n -Pn -sCV -p22,80,3306 --min-rate 5000 172.17.0.2
+nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:

@@ -20,6 +20,7 @@
   * [Vacaciones (Very Easy)](Dockerlabs/Vacaciones.md)
   * [Tproot (Very Easy)](Dockerlabs/Tproot.md)
   * [Ejotapete (Very Easy)](Dockerlabs/Ejotapete.md)
+  * [Pequeñas-mentirosas (Easy)](Dockerlabs/Pequeñas-mentirosas.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
