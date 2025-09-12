@@ -96,7 +96,7 @@ Probamos un ataque de `fuerza bruta` por `SSH` con el usuario `bebeaguaqueessano
 
 Es posible que `bebeaguaqueessano` sea una contraseña y no un usuario, así que continuamos buscando.
 
-# GOBUSTES
+# GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar recursos ocultos.
 
