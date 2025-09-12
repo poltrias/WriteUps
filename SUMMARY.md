@@ -21,6 +21,7 @@
   * [Tproot (Very Easy)](Dockerlabs/Tproot.md)
   * [Ejotapete (Very Easy)](Dockerlabs/Ejotapete.md)
   * [Pequeñas-mentirosas (Easy)](Dockerlabs/Pequeñas-mentirosas.md)
+  * [Aguademayo (Easy)](Dockerlabs/Aguademayo.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
