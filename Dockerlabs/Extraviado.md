@@ -92,19 +92,12 @@ Parecen ser un usuario y una contraseña codificados en `Base64`, así que los d
 
 ```bash
 echo "ZGFuaWVsYQ==" | base64 -d
+daniela
 ```
 
-Info:
-```
-daniela
-``` 
 
 ```bash
 echo "Zm9jYXJvamE=" | base64 -d
-```
-
-Info:
-```
 focaroja
 ```
 
