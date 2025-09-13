@@ -27,6 +27,7 @@
   * [Patriaquerida (Easy)](Dockerlabs/Patriaquerida.md)
   * [Balufood (Easy)](Dockerlabs/Balufood.md)
   * [Upload (Easy)](Dockerlabs/Upload.md)
+  * [Consolelog (Easy)](Dockerlabs/Consolelog.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
