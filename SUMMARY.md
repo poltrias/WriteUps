@@ -23,6 +23,7 @@
   * [Pequeñas-mentirosas (Easy)](Dockerlabs/Pequeñas-mentirosas.md)
   * [Aguademayo (Easy)](Dockerlabs/Aguademayo.md)
   * [Extraviado (Easy)](Dockerlabs/Extraviado.md)
+  * [Amor (Easy)](Dockerlabs/Amor.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
