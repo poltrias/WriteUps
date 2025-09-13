@@ -26,6 +26,7 @@
   * [Amor (Easy)](Dockerlabs/Amor.md)
   * [Patriaquerida (Easy)](Dockerlabs/Patriaquerida.md)
   * [Balufood (Easy)](Dockerlabs/Balufood.md)
+  * [Upload (Easy)](Dockerlabs/Upload.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
