@@ -25,7 +25,7 @@
   * [Extraviado (Easy)](Dockerlabs/Extraviado.md)
   * [Amor (Easy)](Dockerlabs/Amor.md)
   * [Patriaquerida (Easy)](Dockerlabs/Patriaquerida.md)
-  * [Balufood (Easy)](Dockerlabs/Blufood.md)
+  * [Balufood (Easy)](Dockerlabs/Balufood.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
