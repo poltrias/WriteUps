@@ -92,6 +92,8 @@ Podemos deducir que `carlota` es un usuario válido del sistema de la empresa, m
 
 Como no encontramos nada haciendo `fuzzing` de directorios, intentamos un ataque de fuerza bruta sobre el puerto `SSH` con el usuario `carlota`.
 
+# FUERZA BRUTA
+
 ```bash
 hydra -l carlota -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 60
 ```
