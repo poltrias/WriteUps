@@ -3,6 +3,8 @@
 * [Whoami](README.md)
 
 * DockerLabs
+  * Easy
+  * Intermediate
   * [Grooti (Easy)](Dockerlabs/grooti.md)
   * [PingCTF (Easy)](Dockerlabs/PingCTF.md)
   * [Hidden (Intermediate)](Dockerlabs/Hidden.md)
@@ -34,9 +36,17 @@
   * [AnonymousPingu (Easy)](Dockerlabs/AnonymousPingu.md)
 
 * HackMyVm
+  * Easy
+  * Intermediate
   * [DC01 (Easy)](HackMyVM/DC01.md)
   * [DC02 (Intermediate)](HackMyVM/DC02.md)
   * [DC03 (Intermediate)](HackMyVM/DC03.md)
 
 * Vulnyx
+  * Easy
+  * Intermediate
   * [Swamp (Easy)](Vulnyx/Swamp.md)
+
+* HTB
+  * Easy
+  * Intermediate
