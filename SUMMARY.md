@@ -30,6 +30,7 @@
   * [Consolelog (Easy)](Dockerlabs/Consolelog.md)
   * [Winterfell (Easy)](Dockerlabs/Winterfell.md)
   * [Pntopntobarra (Easy)](Dockerlabs/Pntopntobarra.md)
+  * [Psycho (Easy)](Dockerlabs/Psycho.md)
 
 * HackMyVm
   * [DC01 (Easy)](HackMyVM/DC01.md)
