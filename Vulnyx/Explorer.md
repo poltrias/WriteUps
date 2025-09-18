@@ -138,7 +138,7 @@ export TERM=xterm
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+# PRIVILEGE ESCALATION
 
 We check for `sudo` privileges, `SUID` binaries, and Linux `capabilities`.
 

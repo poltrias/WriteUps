@@ -41,8 +41,9 @@ nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.21
 ``` 
 
 ```bash
-nmap -n -Pn -sCV -p88,389,445 --min-rate 5000 10.0.4.21
+nmap -n -Pn -sCV -p22,53,80 --min-rate 5000 10.0.4.21
 ```
+
 Info:
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-10 17:31 CEST
