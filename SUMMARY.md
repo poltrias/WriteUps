@@ -45,6 +45,8 @@
   * [DC03 ​🟠​](HackMyVM/DC03.md)
 
 * Vulnyx
+  * Very Easy
+    * [HackingStation ​🔵​](Vulnyx/HackingStation.md)
   * Easy
     * [Explorer ​🟢​](Vulnyx/Explorer.md)
 
