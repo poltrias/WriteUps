@@ -45,6 +45,9 @@
   * [DC03 ​🟠​](HackMyVM/DC03.md)
 
 * Vulnyx
+  * Easy
+    * [Explorer ​🟢​](Vulnyx/Explorer.md)
+
   * [Swamp ​🟢​](Vulnyx/Swamp.md)
 
 
