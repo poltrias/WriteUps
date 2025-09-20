@@ -4,52 +4,52 @@
 
 * DockerLabs
   * Very Easy
-    * [Obsession ​🔵​](Dockerlabs/Obsession.md)
-    * [Injection ​🔵​](Dockerlabs/Injection.md)
-    * [Trust ​🔵​](Dockerlabs/Trust.md)
-    * [BreakMySSH ​🔵​](Dockerlabs/BreakMySSH.md)
-    * [FirstHacking ​🔵​](Dockerlabs/FirstHacking.md)
-    * [HedgeHog ​🔵​](Dockerlabs/HedgeHog.md)
-    * [BorazuwarahCTF ​🔵​](Dockerlabs/BorazuwarahCTF.md)
-    * [Vacaciones ​🔵​](Dockerlabs/Vacaciones.md)
-    * [Tproot ​🔵​](Dockerlabs/Tproot.md)
-    * [Ejotapete ​🔵​](Dockerlabs/Ejotapete.md)
+    * [Obsession ​🔵​](Dockerlabs/Very%20easy/Obsession.md)
+    * [Injection ​🔵​](Dockerlabs/Very%20easy/Injection.md)
+    * [Trust ​🔵​](Dockerlabs/Very%20easy/Trust.md)
+    * [BreakMySSH ​🔵​](Dockerlabs/Very%20easy/BreakMySSH.md)
+    * [FirstHacking ​🔵​](Dockerlabs/Very%20easy/FirstHacking.md)
+    * [HedgeHog ​🔵​](Dockerlabs/Very%20easy/HedgeHog.md)
+    * [BorazuwarahCTF ​🔵​](Dockerlabs/Very%20easy/BorazuwarahCTF.md)
+    * [Vacaciones ​🔵​](Dockerlabs/Very%20easy/Vacaciones.md)
+    * [Tproot ​🔵​](Dockerlabs/Very%20easy/Tproot.md)
+    * [Ejotapete ​🔵​](Dockerlabs/Very%20easy/Ejotapete.md)
 
   * Easy
-    * [Grooti ​🟢​](Dockerlabs/grooti.md)
-    * [PingCTF ​🟢​](Dockerlabs/PingCTF.md)
-    * [Pequeñas-mentirosas ​🟢​](Dockerlabs/Pequeñas-mentirosas.md)
-    * [Aguademayo ​🟢​](Dockerlabs/Aguademayo.md)
-    * [Extraviado ​🟢​](Dockerlabs/Extraviado.md)
-    * [Amor ​🟢​](Dockerlabs/Amor.md)
-    * [Patriaquerida ​🟢​](Dockerlabs/Patriaquerida.md)
-    * [Balufood ​🟢​](Dockerlabs/Balufood.md)
-    * [Upload ​🟢​](Dockerlabs/Upload.md)
-    * [Consolelog ​🟢​](Dockerlabs/Consolelog.md)
-    * [Winterfell ​🟢​](Dockerlabs/Winterfell.md)
-    * [Pntopntobarra ​🟢​](Dockerlabs/Pntopntobarra.md)
-    * [Psycho ​🟢​](Dockerlabs/Psycho.md)
-    * [AnonymousPingu ​🟢​](Dockerlabs/AnonymousPingu.md)
-    * [WalkingCMS ​🟢​](Dockerlabs/WalkingCMS.md)
-    * [InfluencerHate ​🟢​](Dockerlabs/Influencerhate.md)
+    * [Grooti ​🟢​](Dockerlabs/Easy/grooti.md)
+    * [PingCTF ​🟢​](Dockerlabs/Easy/PingCTF.md)
+    * [Pequeñas-mentirosas ​🟢​](Dockerlabs/Easy/Pequeñas-mentirosas.md)
+    * [Aguademayo ​🟢​](Dockerlabs/Easy/Aguademayo.md)
+    * [Extraviado ​🟢​](Dockerlabs/Easy/Extraviado.md)
+    * [Amor ​🟢​](Dockerlabs/Easy/Amor.md)
+    * [Patriaquerida ​🟢​](Dockerlabs/Easy/Patriaquerida.md)
+    * [Balufood ​🟢​](Dockerlabs/Easy/Balufood.md)
+    * [Upload ​🟢​](Dockerlabs/Easy/Upload.md)
+    * [Consolelog ​🟢​](Dockerlabs/Easy/Consolelog.md)
+    * [Winterfell ​🟢​](Dockerlabs/Easy/Winterfell.md)
+    * [Pntopntobarra ​🟢​](Dockerlabs/Easy/Pntopntobarra.md)
+    * [Psycho ​🟢​](Dockerlabs/Easy/Psycho.md)
+    * [AnonymousPingu ​🟢​](Dockerlabs/Easy/AnonymousPingu.md)
+    * [WalkingCMS ​🟢​](Dockerlabs/Easy/WalkingCMS.md)
+    * [InfluencerHate ​🟢​](Dockerlabs/Easy/Influencerhate.md)
   * Intermediate
-    * [Hidden ​🟠​](Dockerlabs/Hidden.md)
-    * [ChcocolateFire ​🟠​](Dockerlabs/ChocolateFire.md)
-    * [Sites ​🟠​](Dockerlabs/sites.md)
-    * [Ciberguard ​🟠​](Dockerlabs/Ciberguard.md)
+    * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
+    * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
+    * [Sites ​🟠​](Dockerlabs/Intermediate/sites.md)
+    * [Ciberguard ​🟠​](Dockerlabs/Intermediate/Ciberguard.md)
     
 
 * HackMyVm
-  * [DC01 ​🟢​](HackMyVM/DC01.md)
-  * [DC02 ​🟠​](HackMyVM/DC02.md)
-  * [DC03 ​🟠​](HackMyVM/DC03.md)
+  * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
+  * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
+  * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
 
 * Vulnyx
   * Very Easy
-    * [HackingStation ​🔵​](Vulnyx/HackingStation.md)
+    * [HackingStation ​🔵​](Vulnyx/Very%20easy/HackingStation.md)
   * Easy
-    * [Explorer ​🟢​](Vulnyx/Explorer.md)
+    * [Explorer ​🟢​](Vulnyx/Easy/Explorer.md)
 
-  * [Swamp ​🟢​](Vulnyx/Swamp.md)
+  * [Swamp ​🟢​](Vulnyx/Easy/Swamp.md)
 
 
