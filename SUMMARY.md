@@ -2,7 +2,7 @@
 
 * [Whoami👋​](README.md)
 
-* DockerLabs
+* DockerLabs 🐳​
   * Very Easy
     * [Obsession ​🔵​](Dockerlabs/Very%20easy/Obsession.md)
     * [Injection ​🔵​](Dockerlabs/Very%20easy/Injection.md)
@@ -39,12 +39,12 @@
     * [Ciberguard ​🟠​](Dockerlabs/Intermediate/Ciberguard.md)
     
 
-* HackMyVm
+* HackMyVm 💻
   * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
   * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
   * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
 
-* Vulnyx
+* Vulnyx 👾
   * Very Easy
     * [HackingStation ​🔵​](Vulnyx/Very%20easy/HackingStation.md)
   * Easy
