@@ -126,10 +126,11 @@ We inspect the page source:
 We find that the cat image path is very suspicious and matches the directory referenced as containing the credentials.
 Next, we attempt to navigate manually to likely filenames such as `credentials.txt`, `creds.txt`, or `access.txt`.
 
-We eventually find a match: there is a `symlink` pointing to `/etc/jimmy.txt`, but we cannot read the file.
+We eventually find a match: 
 
 ![alt text](../../images/ximai2.png)
 
+There is a `symlink` pointing to `/etc/jimmy.txt`, and we cannot read the file.
 
 We cannot progress further here, so we inspect the `WordPress` instance running on port `8000`.
 
@@ -210,13 +211,14 @@ Inside, when we attempt to run commands like `ls` or `sudo -l`, we see the follo
 ```
 sorry, you are restricted from using this command.
 ```
-Despues de unos minutos sin saber que hacer, compruebo el $PATH i me encuentro con esto:
+After a few minutes with no clear direction, we check the `$PATH`:
 
 ```
 jimmy@Ximai:~$ echo $PATH
 ./...
 ```
-the `$PATH` is misconfigured, and fixing it likely resolves the command execution issues.
+
+The `$PATH` is clearly misconfigured, and fixing it likely resolves the command execution issues.
 
 ```bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -272,7 +274,7 @@ adminer@Ximai:/var/www/wordpress$ whoami
 adminer
 ```
 
-We check `sudo` privileges and `SUID` binaries.
+We check `sudo` privileges and `SUID` binaries for the user `adminer`.
 
 ```bash
 sudo -l

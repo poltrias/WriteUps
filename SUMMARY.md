@@ -43,13 +43,15 @@
   * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
   * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
   * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
+  * [Ximai ​🟠​](HackMyVM/Intermediate/Ximai.md)
 
 * Vulnyx 👾
   * Very Easy
     * [HackingStation ​🔵​](Vulnyx/Very%20easy/HackingStation.md)
   * Easy
     * [Explorer ​🟢​](Vulnyx/Easy/Explorer.md)
+    * [Swamp ​🟢​](Vulnyx/Easy/Swamp.md)
 
-  * [Swamp ​🟢​](Vulnyx/Easy/Swamp.md)
+  
 
 
