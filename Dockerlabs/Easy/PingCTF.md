@@ -57,7 +57,7 @@ nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 Info:
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-04 19:38 CEST
-Nmap scan report for 172.17.0.2
+Nmap scan report for 172.17.0.2.
 Host is up (0.000026s latency).
 
 PORT   STATE SERVICE VERSION
