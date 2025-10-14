@@ -40,10 +40,12 @@
     
 
 * HackMyVm 💻
-  * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
-  * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
-  * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
-  * [Ximai ​🟠​](HackMyVM/Intermediate/Ximai.md)
+  * Easy
+    * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
+  * Intermediate
+    * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
+    * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
+    * [Ximai ​🟠​](HackMyVM/Intermediate/Ximai.md)
 
 * Vulnyx 👾
   * Very Easy
