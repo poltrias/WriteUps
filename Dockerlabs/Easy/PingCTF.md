@@ -198,4 +198,4 @@ root
 bash-5.2# 
 ```
 
-Somos root!
+Ya somos root!
