@@ -32,7 +32,7 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
 
  We identify with high confidence that the victim’s IP is `10.0.4.26`.
 
- # PORT SCANNING
+# PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
