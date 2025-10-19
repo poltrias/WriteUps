@@ -41,7 +41,7 @@ nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.28
 ``` 
 
 ```bash
-nmap -n -Pn -sCV -p22,80,3306,8000 --min-rate 5000 10.0.4.28
+nmap -n -Pn -sCV -p22,3333 --min-rate 5000 10.0.4.28
 ```
 Info:
 ```
@@ -299,7 +299,7 @@ The symlink is created. We browse the `root` directory and view the `.bash_histo
 
 ![alt text](../../images/bash_h.png)
 
-We find a `password` and use it to authenticate as `root`. 
+We find a `password` and use it to authenticate as `root : fuck1ng0bs3rv3rs`. 
 
 ```bash
 su root

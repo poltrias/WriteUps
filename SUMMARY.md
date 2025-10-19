@@ -42,6 +42,7 @@
 * HackMyVm 💻
   * Easy
     * [DC01 ​🟢​](HackMyVM/Easy/DC01.md)
+    * [Observer ​🟢​](HackMyVM/Easy/Observer.md)
   * Intermediate
     * [DC02 ​🟠​](HackMyVM/Intermediate/DC02.md)
     * [DC03 ​🟠​](HackMyVM/Intermediate/DC03.md)
