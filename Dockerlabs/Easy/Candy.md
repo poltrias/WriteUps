@@ -134,7 +134,6 @@ Payload:
 ?>
 ```
 
-Info:
 ![alt text](../../images/revshelljoomla.png)
 
 Guardamos los cambios.
