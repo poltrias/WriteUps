@@ -32,6 +32,7 @@
     * [AnonymousPingu ​🟢​](Dockerlabs/Easy/AnonymousPingu.md)
     * [WalkingCMS ​🟢​](Dockerlabs/Easy/WalkingCMS.md)
     * [InfluencerHate ​🟢​](Dockerlabs/Easy/Influencerhate.md)
+    * [WhereIsMyWebShell ​🟢​](Dockerlabs/Easy/WhereIsMyWebShell.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
