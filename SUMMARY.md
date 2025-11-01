@@ -36,6 +36,7 @@
     * [NodeClimb ​🟢​](Dockerlabs/Easy/NodeClimb.md)
     * [Library ​🟢​](Dockerlabs/Easy/Library.md)
     * [Candy ​🟢​](Dockerlabs/Easy/Candy.md)
+    * [JenkHack ​🟢​](Dockerlabs/Easy/JenkHack.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
