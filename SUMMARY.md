@@ -39,6 +39,7 @@
     * [JenkHack ​🟢​](Dockerlabs/Easy/JenkHack.md)
     * [Dockerlabs ​🟢​](Dockerlabs/Easy/Dockerlabs.md)
     * [Allien ​🟢​](Dockerlabs/Easy/Allien.md)
+    * [Balulero ​🟢​](Dockerlabs/Easy/Balulero.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
