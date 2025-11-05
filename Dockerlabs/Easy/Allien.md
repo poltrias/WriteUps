@@ -186,7 +186,8 @@ Intentamos acceder por el puerto `22` (SSH) con las credenciales del usuario `ad
 ssh administrador@172.17.0.2
 ```
 
-Accedemos con éxito
+Accedemos con éxito.
+
 Después de una enumeración exhaustiva, no encontramos vías de escalada de privilegios a `root`. Además, las credenciales `satriani7` : `50cent` no nos sirven para autenticarnos por `SSH`.
 
 Sin embargo, descubrimos que tenemos permisos de escritura sobre el directorio `/var/www/html/`, donde se encuentran los archivos visibles en el puerto `80`, por lo que podemos intentar subir un archivo que nos devuelva una `reverse shell` una vez accedamos a él desde el navegador.
