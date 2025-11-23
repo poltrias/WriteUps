@@ -187,6 +187,7 @@ auth
 ```
 
 Observamos que las primeras líneas parecen contener credenciales para el usuario `admin`, aunque identificamos un carácter 'z' redundante al final de la contraseña.
+
 Probamos la autenticación para el usuario `admin` con estas credenciales (sin el carácter 'z' final).
 
 ```bash
@@ -210,7 +211,9 @@ User admin may run the following commands on 200a64db404a:
     (ALL) NOPASSWD: /usr/bin/pip3 install *
 ```
 
-Descubrimos que podemos ejecutar el binario `pip3` con privilegios de `root` para instalar cualquier cosa. Aprovechamos este vector de la configuración de sudo para la escalada de privilegios a `root` de la siguiente manera:
+Descubrimos que podemos ejecutar el binario `pip3` con privilegios de `root` para instalar cualquier cosa. 
+
+Aprovechamos este vector de la configuración de sudo para la escalada de privilegios a `root` de la siguiente manera:
 
 ```bash
 TF=$(mktemp -d)
