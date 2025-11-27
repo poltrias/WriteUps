@@ -13,7 +13,6 @@
     * [BorazuwarahCTF ​🔵​](Dockerlabs/Very%20easy/BorazuwarahCTF.md)
     * [Vacaciones ​🔵​](Dockerlabs/Very%20easy/Vacaciones.md)
     * [Tproot ​🔵​](Dockerlabs/Very%20easy/Tproot.md)
-    * [Ejotapete ​🔵​](Dockerlabs/Very%20easy/Ejotapete.md)
 
   * Easy
     * [Grooti ​🟢​](Dockerlabs/Easy/grooti.md)
@@ -42,6 +41,7 @@
     * [Balulero ​🟢​](Dockerlabs/Easy/Balulero.md)
     * [Paradise ​🟢​](Dockerlabs/Easy/Paradise.md)
     * [PkgPoison ​🟢​](Dockerlabs/Easy/PkgPoison.md)
+    * [Ejotapete ​​🟢](Dockerlabs/Easy/Ejotapete.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
