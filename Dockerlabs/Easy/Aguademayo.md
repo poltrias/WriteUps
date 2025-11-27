@@ -88,7 +88,7 @@ Al inspeccionar el código fuente, encontramos un comentario al final:
 
 se trata de un código escrito en `Brainfuck`, así que lo pasamos por un intérprete.
 
-![alt text](../images/brain.png)
+![alt text](../../images/brain.png)
 
 El resultado obtenido, al juntar todas las letras, es `bebeaguaqueessano`.
 
