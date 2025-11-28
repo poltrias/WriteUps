@@ -355,8 +355,10 @@ Finalmente, procedemos a autenticarnos con dichas credenciales.
 su root
 ```
 
+```
 root@94f15ac76968:/home# whoami
 root
 root@94f15ac76968:/home#
+```
 
 Ya somos root!
