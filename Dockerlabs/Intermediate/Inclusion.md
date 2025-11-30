@@ -152,7 +152,7 @@ Starting gobuster in directory enumeration mode
 Progress: 20757 / 1543906 (1.34%)
 ```
 
-Este es el archivo que probablemente sea vulnerable a LFI, index.php.
+Este es el archivo que probablemente sea vulnerable a `LFI`, `index.php`.
 
 # LFI
 
@@ -235,23 +235,24 @@ Esto indica que `manchi`, el usuario con el que operamos actualmente, es el úni
 Este hallazgo nos lleva a intentar un ataque de `fuerza bruta` contra el usuario `seller`, pero esta vez de manera local desde la sesión de `manchi`.
 
 Para ello utilizamos el repositorio de `GitHub` Maalfer/Sudo_BruteForce, concretamente el script de bash `Linux-Su-Force.sh`.
+
 Una vez descargado en nuestra máquina atacante, debemos transferirlo junto con el diccionario a la máquina víctima. Dado que en la máquina víctima no disponemos de `wget` ni `curl`, utilizamos `scp` para la transferencia.
 
 ```bash
 scp Linux-su-Force.sh manchi@172.17.0.2:/tmp/Linux-su-Force.sh
 ```
 
-Info:
 ```
 manchi@172.17.0.2's password: 
 Linux-Su-Force.sh                                        100% 1600   697.5KB/s   00:00
 ```
 
+----------------------------------------------------------------------------------------------------------------------------------------
+
 ```bash
 scp /usr/share/wordlists/rockyou.txt manchi@172.17.0.2:/tmp/rockyou.txt
 ```
 
-Info:
 ```
 manchi@172.17.0.2's password: 
 rockyou.txt                                              100%  133MB 326.5MB/s   00:00
