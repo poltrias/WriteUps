@@ -44,6 +44,7 @@
     * [PkgPoison ​🟢​](Dockerlabs/Easy/PkgPoison.md)
     * [Aidor ​🟢​](Dockerlabs/Easy/Aidor.md)
     * [Reflection ​🟢​](Dockerlabs/Easy/Reflection.md)
+    * [Internship ​🟢​](Dockerlabs/Easy/Internship.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
