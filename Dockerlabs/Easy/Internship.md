@@ -1,4 +1,4 @@
-# 🖥️ Writeup - Reflection 
+# 🖥️ Writeup - Internship 
 
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
@@ -8,12 +8,12 @@
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
 ```bash 
-unzip reflection.zip
+unzip internship.zip
 ```
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
-sudo bash auto_deploy.sh reflection.tar
+sudo bash auto_deploy.sh internship.tar
 ``` 
 Info:
 
