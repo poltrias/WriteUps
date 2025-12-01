@@ -96,6 +96,7 @@ Introducimos por ejemplo:
 ```
 
 Resultado:
+
 ![alt text](../../images/lab1result.png)
 
 # EXPLOTACIÓN LAB 2
@@ -112,6 +113,7 @@ Introducimos por ejemplo:
 ```
 
 Resultado:
+
 ![alt text](../../images/lab2result.png)
 
 # EXPLOTACIÓN LAB 3
@@ -133,6 +135,7 @@ http://172.17.0.2/laboratorio3/?opcion1=<p>hola</p>&opcion2=<p>soy</p>&opcion3=<
 ```
 
 Resultado:
+
 ![alt text](../../images/lab3result.png)
 
 # EXPLOTACIÓN LAB 4
@@ -147,6 +150,7 @@ http://172.17.0.2/laboratorio4/?data=valor
 ```
 
 Resultado:
+
 ![alt text](../../images/lab4result.png)
 
 Una vez completados los 4 laboratorios, pulsamos el botón que aparece en la página principal.
