@@ -140,7 +140,7 @@ export BASH=bash
 
 # PRIVILEGE ESCALATION
 
-Comprobamos permisos `sudo` y `SUID`.
+We check for `sudo` privileges and `SUID` binaries.
 
 ```bash
 sudo -l
