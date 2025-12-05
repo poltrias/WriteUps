@@ -7,7 +7,7 @@
 
 We download the `zip` containing the `.ova` of the Lower6 machine, extract it, and import it into VirtualBox.
 
-We configure the network interface of the HackingStation machine and run it alongside the attacker machine.
+We configure the network interface of the Lower6 machine and run it alongside the attacker machine.
 
 # HOST DISCOVERY
 
