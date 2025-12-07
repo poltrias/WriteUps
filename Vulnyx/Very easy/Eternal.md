@@ -167,7 +167,7 @@ Server username: NT AUTHORITY\SYSTEM
 meterpreter >
 ```
 
-We alrady have `SYSTEM` privileges!
+We already have `SYSTEM` privileges!
 
 Finally, we locate both the `user flag` and the `root flag` in the `C:\Users\MIKE\Desktop` directory.
 
