@@ -182,7 +182,7 @@ User www-data may run the following commands on lower5:
     (low) NOPASSWD: /usr/bin/bash
 ```
 
-We can execute the `bash` binary with the permissions of the `low` user. We can easily abuse this privilege in order to move laterally to the `low` user.
+We can execute the `bash` binary with the permissions of the `low` user. We can easily abuse this privilege in order to perform lateral movement to the user `low` .
 
 ```bash
 sudo -u low /usr/bin/bash -i

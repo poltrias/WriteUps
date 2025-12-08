@@ -71,6 +71,7 @@
     * [Lower6 ​🔵​](Vulnyx/Very%20easy/Lower6.md)
     * [Lower5 ​🔵​](Vulnyx/Very%20easy/Lower5.md)
     * [Eternal ​🔵​](Vulnyx/Very%20easy/Eternal.md)
+    * [Infected ​🔵​](Vulnyx/Very%20easy/Infected.md)
   * Easy
     * [Explorer ​🟢​](Vulnyx/Easy/Explorer.md)
     * [Swamp ​🟢​](Vulnyx/Easy/Swamp.md)
