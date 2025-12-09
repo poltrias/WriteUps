@@ -86,7 +86,7 @@ En la pestaña profesores encontramos la información personal del profesorado, 
 
 ![alt text](../../images/luisprofe.png)
 
-Deducimos que estamos ante un `WordPress` y que `Luis` es el administrador de este.
+Nos dice que estamos ante un `WordPress` y que `Luis` es el administrador de este.
 
 # GOBUSTER
 
