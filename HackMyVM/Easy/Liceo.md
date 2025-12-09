@@ -121,6 +121,7 @@ Progress: 41610 / 1543906 (2.70%)
 ```
 
 We discover an `/uploads` directory and an `upload.php` file.
+
 We navigate to `upload.php` and see a panel that allows us to upload a file:
 
 ![alt text](../../images/uplooad.png)
