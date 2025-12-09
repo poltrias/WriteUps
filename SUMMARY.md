@@ -47,6 +47,7 @@
     * [Internship ​🟢​](Dockerlabs/Easy/Internship.md)
     * [Los 40 ladrones ​🟢​](Dockerlabs/Easy/Los40ladrones.md)
     * [Backend ​🟢​](Dockerlabs/Easy/Backend.md)
+    * [Escolares ​🟢​](Dockerlabs/Easy/Escolares.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
