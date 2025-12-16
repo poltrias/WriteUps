@@ -78,6 +78,8 @@
   * Easy
     * [Explorer ​🟢​](Vulnyx/Easy/Explorer.md)
     * [Swamp ​🟢​](Vulnyx/Easy/Swamp.md)
+  * Intermediate
+    * [Leak ​🟠​](Vulnyx/Intermediate/Leak.md)
 
   
 
