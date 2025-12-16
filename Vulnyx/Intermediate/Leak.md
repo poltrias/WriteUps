@@ -293,6 +293,7 @@ User george may run the following commands on leak:
 ```
 
 We identify that we can execute the `wkhtmltopdf` binary with `root` privileges.
+
 After some research, we discover that this binary is used to convert HTML files to PDF. However, it is not strict regarding file formats.
 
 We continue enumerating. We transfer `pspy64` from our attacking machine and execute it on the victim machine.
