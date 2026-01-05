@@ -127,7 +127,7 @@ We decide to upload a `.js` `reverse shell` via `FTP` and attempt to access it t
 nano reverse.js
 ```
 
-![alt text](../../images/rev.js.png)
+![alt text](../../images/revvjs.png)
 
 We upload the `reverse shell` payload via FTP using the `PUT` command.
 
