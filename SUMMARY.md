@@ -71,6 +71,7 @@
   * Very Easy
     * [HackingStation ​🔵​](Vulnyx/Very%20easy/HackingStation.md)
     * [Lower6 ​🔵​](Vulnyx/Very%20easy/Lower6.md)
+    * [Lower7 ​🔵​](Vulnyx/Very%20easy/Lower7.md)
     * [Lower5 ​🔵​](Vulnyx/Very%20easy/Lower5.md)
     * [Eternal ​🔵​](Vulnyx/Very%20easy/Eternal.md)
     * [Infected ​🔵​](Vulnyx/Very%20easy/Infected.md)
