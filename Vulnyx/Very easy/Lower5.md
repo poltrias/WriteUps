@@ -30,9 +30,9 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.31       08:00:27:33:a7:76      1      60  PCS Systemtechnik GmbH
  ```
 
- We identify with high confidence that the victim’s IP is `10.0.4.31`.
+We identify with high confidence that the victim’s IP is `10.0.4.31`.
 
- # PORT SCANNING
+# PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
