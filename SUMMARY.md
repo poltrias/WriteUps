@@ -83,6 +83,13 @@
   * Intermediate
     * [Leak ​🟠​](Vulnyx/Intermediate/Leak.md)
 
+* TheHackersLabs 🧪
+  * Easy
+    * [Cocido Andaluz ​🟢​](TheHackersLabs/Easy/CocidoAndaluz.md)
+    
+  
+
+
   
 
 
