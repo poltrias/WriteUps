@@ -48,6 +48,7 @@
     * [Los 40 ladrones ​🟢​](Dockerlabs/Easy/Los40ladrones.md)
     * [Backend ​🟢​](Dockerlabs/Easy/Backend.md)
     * [Escolares ​🟢​](Dockerlabs/Easy/Escolares.md)
+    * [Move ​🟢​](Dockerlabs/Easy/Move.md)
   * Intermediate
     * [Hidden ​🟠​](Dockerlabs/Intermediate/Hidden.md)
     * [ChcocolateFire ​🟠​](Dockerlabs/Intermediate/ChocolateFire.md)
