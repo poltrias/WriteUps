@@ -126,7 +126,6 @@ Esto nos indica que podría haber algún tipo de credencial de acceso almacenada
 
 No podemos avanzar más a través del puerto `80`, por lo que pasamos a inspeccionar el puerto `3000`, donde se está ejecutando una instancia de `Grafana`.
 
-> [!INFO]
 > Grafana es una plataforma de código abierto para la visualización y análisis de datos que permite crear dashboards interactivos.
 
 Accedemos al puerto `3000`.
