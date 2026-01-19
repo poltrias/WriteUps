@@ -87,6 +87,7 @@
 * TheHackersLabs 🧪
   * Easy
     * [Cocido Andaluz ​🟢​](TheHackersLabs/Easy/CocidoAndaluz.md)
+  * Intermediate
     
   
 
