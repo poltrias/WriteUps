@@ -1,8 +1,12 @@
 # 🛡️ CTF Writeups | Ethical Hacking
 
-Hi there! 👋 I am a **cybersecurity student** and I created this repository as a space to publish my **writeups** of machines and labs from different platforms (HackTheBox, HackmyVm, DockerLabs, Vulnyx, etc.).
+I am a **Computer Engineering student** with a strong background in **System Administration**, passionate about Offensive Security.
 
-The main goal is to share my **working methodology** when approaching an ethical hacking challenge: from the initial reconnaissance to exploitation and privilege escalation.  
+Currently, I hold the eCPPTv3 and eJPTv2 certifications, and I use this repository to document my continuous learning journey.
+
+The main goal is to share my **working methodology** when approaching an ethical hacking challenge: from the initial reconnaissance to exploitation and privilege escalation. 
+
+Here, I document the resolution of machines and challenges from platforms such as **HackTheBox**, **HackMyVM**, **DockerLabs**, and **Vulnyx**, treating these environments as if they were real-world security audits.
 
 I also believe that sharing these writeups can be useful for others who are learning or want to strengthen specific techniques. If anything I document here helps someone, I consider it a success. 🚀  
 
