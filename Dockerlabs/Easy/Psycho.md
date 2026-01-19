@@ -85,7 +85,7 @@ Accedemos por `HTTP` y, aparentemente, no encontramos información relevante.
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
 ```bash
-gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
+gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
 
 Info:

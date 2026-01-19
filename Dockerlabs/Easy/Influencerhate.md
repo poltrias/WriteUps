@@ -147,7 +147,7 @@ httpadmin:fhttpadmin
 Al decodificar el string en `Base64` vemos que contiene las credenciales, por lo que es el header que necesitamos para poder realizar el fuzzing de directorios.
 
 ```bash
-gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,txt,html -H "Authorization: Basic aHR0cGFkbWluOmZodHRwYWRtaW4=" -k -t 50
+gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x php,txt,html -H "Authorization: Basic aHR0cGFkbWluOmZodHRwYWRtaW4=" -k -t 50
 ```
 
 Info:
