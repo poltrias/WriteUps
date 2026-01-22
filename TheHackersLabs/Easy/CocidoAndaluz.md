@@ -11,7 +11,7 @@ Configuramos la interfaz de red de la máquina Cocido Andaluz y la iniciamos jun
 
 # RECONOCIMIENTO DE HOSTS
 
-En este punto, aún desconocemos la dirección `IP` asignada a Cocido Andaluz, por lo que procedemos a descubrirla:
+En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
@@ -30,7 +30,7 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.38       08:00:27:9a:e7:06      1      60  PCS Systemtechnik GmbH
  ```
 
-Identificamos con total seguridad que la `IP` de la víctima es `10.0.4.38`.
+Identificamos con seguridad que la `IP` de la víctima es `10.0.4.38`.
 
 # ESCANEO DE PUERTOS    
 
@@ -43,6 +43,7 @@ nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.38
 ```bash
 nmap -n -Pn -sCV -p21,80,139,445 --min-rate 5000 10.0.4.38
 ```
+
 Info:
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-11 22:56 +0100
