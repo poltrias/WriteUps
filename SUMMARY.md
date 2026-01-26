@@ -87,6 +87,7 @@
 * TheHackersLabs 🧪
   * Easy
     * [Cocido Andaluz ​🟢​](TheHackersLabs/Easy/CocidoAndaluz.md)
+    * [Cocido Andaluz ​🟢​](TheHackersLabs/Easy/Castor.md)
   * Avanzado
     * [Operación Pescador ​🟠​](TheHackersLabs/Avanzado/OperacionPescador.md)
     
