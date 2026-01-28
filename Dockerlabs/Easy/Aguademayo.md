@@ -3,6 +3,9 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+![Tag](https://img.shields.io/badge/Linux)
+
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
