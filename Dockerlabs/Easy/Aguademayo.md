@@ -7,6 +7,9 @@
 ![Easy](https://img.shields.io/badge/-Easy-763CAC?style=flat-square)
 ![Medium](https://img.shields.io/badge/-Medium-763CAC?style=flat-square)
 
+
+![Linux](https://img.shields.io/badge/-Linux-763CAC?style=flat-square&logo=linux&logoColor=white) ![Easy](https://img.shields.io/badge/-Easy-763CAC?style=flat-square) ![Medium](https://img.shields.io/badge/-Medium-763CAC?style=flat-square)
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
