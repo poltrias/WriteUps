@@ -6,7 +6,7 @@
 
 ![](https://img.shields.io/badge/-Linux-763CAC?style=flat-square&logo=linux&logoColor=white) ![](https://img.shields.io/badge/-Easy-763CAC?style=flat-square) ![](https://img.shields.io/badge/-niggatron-763CAC?style=flat-square)
 
-> **Tags:** `DockerLabs` `Linux` `Easy` `LFI`
+> **Tags:** `DockerLabs` `Linux` `Easy` `creisi`
 
 # INSTALACIÓN
 
