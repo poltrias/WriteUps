@@ -3,8 +3,9 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
-![Tag](https://img.shields.io/badge/Linux)
-
+![Linux](https://img.shields.io/badge/-Linux-763CAC?style=flat-square&logo=linux&logoColor=white)
+![Easy](https://img.shields.io/badge/-Easy-763CAC?style=flat-square)
+![Medium](https://img.shields.io/badge/-Medium-763CAC?style=flat-square)
 
 # INSTALACIÓN
 
