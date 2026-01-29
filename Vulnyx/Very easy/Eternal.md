@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Windows  
 
+> **Tags:** `Windows` `SMB` `NSE Scripts` `MS17-010` `EternalBlue` `Metasploit` `Kernel Exploit` 
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Eternal machine, extract it, and import it into VirtualBox.

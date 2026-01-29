@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Windows  
 
+> **Tags:** `Windows` `Windows XP` `SMB` `NSE Scripts` `MS08-067` `NetAPI` `Metasploit` `Stack Buffer Overflow`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Experience machine, extract it, and import it into VirtualBox.

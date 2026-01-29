@@ -3,6 +3,8 @@
 **Plataforma:** The Hackers Labs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `XXE` `Burp Suite` `Hydra` `Sudoers` `Information Leakage`
+
 # INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Castor, lo extraemos y la importamos en VirtualBox.

@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Jenkins` `CVE-2024-23897` `Arbitrary File Read` `IPv6 Bypass` `Pspy64` `Sudoers` `Data Exfiltration`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Leak machine, extract it, and import it into VirtualBox.

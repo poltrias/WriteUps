@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `Hydra` `Wordlist Manipulation` `Sudoers` `Lateral Movement`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

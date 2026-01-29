@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `LFI` `Log Poisoning` `User-Agent` `Apache Logs` `Sudoers` `GPG` `John the Ripper` 
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower5 machine, extract it, and import it into VirtualBox.

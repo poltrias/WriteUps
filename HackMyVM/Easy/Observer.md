@@ -3,6 +3,8 @@
 **Platform:** HackMyVM  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Python` `Fuzzing` `Sudoers` `Systemctl` `Symlink Exploitation` `Bash History`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Observer machine, extract it, and import it into VirtualBox.

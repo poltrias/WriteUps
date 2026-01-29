@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Robots.txt` `Default Credentials` `File Upload` `Reverse Shell` `Password Reuse`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Explorer machine, extract it, and import it into VirtualBox.

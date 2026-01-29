@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `Hydra` `Burp Suite` `Gobuster` `Base64` `Brute Force` `Basic Auth` `Bash Scripting` `Cracking`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

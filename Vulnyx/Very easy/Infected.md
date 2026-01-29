@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Apache` `Information Disclosure` `mod_backdoor` `HTTP Headers` `RCE` `Sudoers` `Service` `Directory Traversal` 
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Infected machine, extract it, and import it into VirtualBox.

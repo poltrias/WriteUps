@@ -3,6 +3,8 @@
 **Plataforma:** The Hackers Labs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Gobuster` `Wfuzz` `RCE` `Web Shell` `SUID`
+
 # INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Operación Pescador, lo extraemos y la importamos en VirtualBox.

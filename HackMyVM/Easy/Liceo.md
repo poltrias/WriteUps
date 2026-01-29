@@ -3,6 +3,8 @@
 **Platform:** HackMyVM  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Web` `Gobuster` `File Upload` `Bypass` `RCE` `SUID`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Liceo machine, extract it, and import it into VirtualBox.

@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `FTP` `Hydra` `Node.js` `Reverse Shell` `File Upload` `Shadow Group` `John the Ripper` 
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower7 machine, extract it, and import it into VirtualBox.

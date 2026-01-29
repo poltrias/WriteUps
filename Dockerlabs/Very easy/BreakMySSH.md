@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `OpenSSH` `Metasploit` `Hydra` `Username Enumeration` `CVE-2018-15473` 
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

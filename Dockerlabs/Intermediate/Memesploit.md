@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `SMB` `Metasploit` `Brute Force` `Zip Cracking` `Sudoers` `Service Abuse` `Writable File` `SUID`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs   
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Openfire` `XMPP` `Java` `CVE-2023-32315` `Authentication Bypass` `RCE` `Metasploit` 
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.

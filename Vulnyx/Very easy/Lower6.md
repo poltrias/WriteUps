@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Redis` `Hydra` `Credential Dumping` `Credential Stuffing` `Capabilities` `Python`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower6 machine, extract it, and import it into VirtualBox.

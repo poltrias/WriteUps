@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `MariaDB` `SQLi` `Burp Suite` `SQLMap` `Hydra` `John The Ripper` `SUID` 
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
@@ -16,7 +18,6 @@ La máquina ya está descomprimida y solo falta montarla.
 sudo bash auto_deploy.sh backend.tar
 ``` 
 Info:
-
 ```
 
                             ##        .         

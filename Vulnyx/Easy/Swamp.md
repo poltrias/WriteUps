@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `DNS Zone Transfer` `AXFR` `JavaScript Deobfuscation` `Source Code` `Base64` `Sudoers` `Writable Script` 
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Swamp machine, extract it, and import it into VirtualBox.

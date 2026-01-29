@@ -3,6 +3,8 @@
 **Plataforma:** The Hackers Labs  
 **Sistema Operativo:** Windows  
 
+> **Tags:** `Windows` `FTP` `Hydra` `File Upload` `ASPX Webshell` `RCE` `Metasploit` `Impacket` `SMB Delivery`
+
 # INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Cocido Andaluz, lo extraemos y la importamos en VirtualBox.

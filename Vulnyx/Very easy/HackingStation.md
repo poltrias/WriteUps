@@ -3,6 +3,8 @@
 **Platform:** Vulnyx  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `Command Injection` `Burp Suite` `URL Encoding` `Reverse Shell` `Sudoers`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the HackingStation machine, extract it, and import it into VirtualBox.

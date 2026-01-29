@@ -3,6 +3,8 @@
 **Platform:** HackMyVM  
 **Operating System:** Linux  
 
+> **Tags:** `Linux` `WordPress` `WPScan` `SQLi` `SQLMap` `File Read` `Restricted Shell` `Sudoers` `Writable Binary`
+
 # INSTALLATION
 
 We download the `zip` containing the `.ova` of the Ximai machine, extract it, and import it into VirtualBox.

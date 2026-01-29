@@ -3,6 +3,8 @@
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
+> **Tags:** `Linux` `Web` `Gobuster` `Cryptography` `JS Deobfuscation` `Hydra` `Cron Job` `Writable File` `Steganography` `Steghide` `Sudoers`
+
 # INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
