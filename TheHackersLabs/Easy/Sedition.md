@@ -304,7 +304,7 @@ Por último, obtenemos las `flags` de usuario y root.
 
 ```
 cat /home/debian/flag.txt
-pinguinitopinguinazo
+pingxxxxxxxxxxxinazo
 cat /root/root.txt
-laflagdelbunkerderootmolaaunmas
+laflagdelxxxxxxxxxolaaunmas
 ```
