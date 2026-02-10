@@ -91,6 +91,7 @@
     * [Sedition ​🟢​](TheHackersLabs/Easy/Sedition.md)
   * Avanzado
     * [Operación Pescador ​🟠​](TheHackersLabs/Avanzado/OperacionPescador.md)
+    * [Pa Que Aiga Lujo ​🟠​](TheHackersLabs/Avanzado/PaQueHaigaLujo.md)
     
   
 
