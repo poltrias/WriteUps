@@ -3,7 +3,7 @@
 **Plataforma:** The Hackers Labs  
 **Sistema Operativo:** Linux  
 
-> **Tags:** `Linux` `Gobuster` `Wfuzz` `RCE` `Web Shell` `SUID`
+> **Tags:** `Linux` `Hydra` `Docker` `Pivoting` `Drupal` `Metasploit` `Sudoers`
 
 # INSTALACIÓN
 
