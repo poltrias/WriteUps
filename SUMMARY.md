@@ -92,6 +92,7 @@
   * Avanzado
     * [Operación Pescador ​🟠​](TheHackersLabs/Avanzado/OperacionPescador.md)
     * [Pa Que Aiga Lujo ​🟠​](TheHackersLabs/Avanzado/PaQueAigaLujo.md)
+    * [Sarxixas ​🟠​](TheHackersLabs/Avanzado/Sarxixas.md)
     
   
 
