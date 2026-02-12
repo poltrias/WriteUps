@@ -3,7 +3,7 @@
 **Plataforma:** The Hackers Labs  
 **Sistema Operativo:** Linux  
 
-> **Tags:** `Linux` `Hydra` `Docker` `Pivoting` `Drupal` `Metasploit` `Sudoers`
+> **Tags:** `Linux` `Pluck CMS` `RCE` `Zip Cracking` `John` `Base58` `Docker` `Group Permission`
 
 # INSTALACIÓN
 
