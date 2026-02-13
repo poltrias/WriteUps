@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Balufood 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Balufood ​​
+
+## 🖥️ Writeup - Balufood
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Python` `Werkzeug` `Gobuster` `Information Leakage` `Lateral Movement` `Bashrc`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip balufood.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh balufood.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,5000 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-13 17:02 CEST
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Tenemos abiertos los puertos `22` y `5000`.
 
 Accedemos por `HTTP` en el puerto `5000` y nos encontramos con la página de un restaurante.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -91,6 +100,7 @@ gobuster dir -u http://172.17.0.2:5000 -w /usr/share/seclists/Discovery/Web-Cont
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -115,7 +125,7 @@ Progress: 11051 / 1543906 (0.72%)
 
 Descubrimos una página de `login` y probamos credenciales típicas como `admin` : `admin`.
 
-![alt text](../../images/login2.png)
+![alt text](../../.gitbook/assets/login2.png)
 
 Nos autenticamos con éxito con dichas credenciales y accedemos al panel de administración.
 
@@ -129,7 +139,7 @@ Inspeccionando el código fuente del panel de administración encontramos el sig
 
 Accedemos por `SSH` con estas credenciales `sysadmin` : `backup123`.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -142,7 +152,6 @@ app.secret_key = 'cuidaditocuidadin'
 ```
 
 Consultamos el archivo /etc/passwd y vemos que existe un usuario llamado `balulero`.
-
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -171,7 +180,6 @@ sshd:x:101:65534::/run/sshd:/usr/sbin/nologin
 balulero:x:1001:1001:balulero,,,:/home/balulero:/bin/bash
 ```
 
-
 ```
 su balulero
 ```
@@ -191,6 +199,7 @@ su root
 ```
 
 Info:
+
 ```
 root@6cfcd99d416f:/home/balulero# whoami
 root

