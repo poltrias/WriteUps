@@ -7,7 +7,7 @@
 ## DOCKERLABS
 
 * 🔵 Very Easy
-  * [Obsession ​​](Dockerlabs/Very%20easy/Obsession.md)
+  * [🐧 Obsession ​​](Dockerlabs/Very%20easy/Obsession.md)
   * [Injection ​​](Dockerlabs/Very%20easy/Injection.md)
   * [Trust ​​](Dockerlabs/Very%20easy/Trust.md)
   * [BreakMySSH ​​](Dockerlabs/Very%20easy/BreakMySSH.md)
@@ -95,7 +95,7 @@
   * [Cocido Andaluz ​​](TheHackersLabs/Easy/CocidoAndaluz.md)
   * [Castor ​​](TheHackersLabs/Easy/Castor.md)
   * [Sedition ​](TheHackersLabs/Easy/Sedition.md)
-* 🟡 Avanzado
+* 🟡 Intermediate
   * [Operación Pescador ​​](TheHackersLabs/Avanzado/OperacionPescador.md)
   * [Pa Que Aiga Lujo ​​](TheHackersLabs/Avanzado/PaQueAigaLujo.md)
   * [Sarxixas ​​](TheHackersLabs/Avanzado/Sarxixas.md)
