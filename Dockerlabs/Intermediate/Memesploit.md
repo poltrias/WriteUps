@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Memesploit ​​
-
-## 🖥️ Writeup - Memesploit
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

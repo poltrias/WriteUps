@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Swamp ​​
-
-## 🖥️ Writeup - Swamp
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Sedition ​
-
-## 🖥️ Writeup - Sedition
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Linux
 

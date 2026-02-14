@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Winterfell ​​
-
-## 🖥️ Writeup - Winterfell
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

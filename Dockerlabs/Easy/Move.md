@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Move ​​
-
-## 🖥️ Writeup - Move
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

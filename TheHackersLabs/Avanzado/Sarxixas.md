@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Sarxixas ​​
-
-## 🖥️ Writeup - Sarxixas
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Linux
 

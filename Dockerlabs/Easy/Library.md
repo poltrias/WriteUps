@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Library ​​
-
-## 🖥️ Writeup - Library
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

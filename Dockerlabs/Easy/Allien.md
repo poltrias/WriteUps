@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Allien ​​
-
-## 🖥️ Writeup - Allien
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Explorer ​
-
-## 🖥️ Writeup - Explorer
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Internship ​
-
-## 🖥️ Writeup - Internship
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

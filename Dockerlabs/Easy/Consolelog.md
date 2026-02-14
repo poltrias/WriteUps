@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Consolelog ​​
-
-## 🖥️ Writeup - Consolelog
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

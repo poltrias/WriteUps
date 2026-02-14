@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# BreakMySSH ​​
-
-## 🖥️ Writeup - BreakMySSH
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

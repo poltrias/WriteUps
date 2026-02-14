@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# ChcocolateFire ​​
-
-## 🖥️ Writeup - ChocolateFire
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

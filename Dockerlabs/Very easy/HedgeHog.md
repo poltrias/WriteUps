@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# HedgeHog ​​
-
-## 🖥️ Writeup - HedgeHog
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

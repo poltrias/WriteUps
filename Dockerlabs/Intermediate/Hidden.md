@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Hidden ​​
-
-## 🖥️ Writeup - Hidden
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

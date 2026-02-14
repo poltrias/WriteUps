@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Sites ​​
-
-## 🖥️ Writeup - Sites
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

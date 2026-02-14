@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# JenkHack ​​
-
-## 🖥️ Writeup - JenkHack
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

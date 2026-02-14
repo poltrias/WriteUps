@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Pa Que Aiga Lujo ​​
-
-## 🖥️ Writeup - Pa Que Aiga Lujo
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Obsession ​​
-
-## 🖥️ Writeup - Obsession
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

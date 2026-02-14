@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Lower5 ​​
-
-## 🖥️ Writeup - Lower5
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

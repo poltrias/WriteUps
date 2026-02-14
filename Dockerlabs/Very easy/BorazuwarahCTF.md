@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# BorazuwarahCTF ​​
-
-## 🖥️ Writeup - BorazuwarahCTF
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

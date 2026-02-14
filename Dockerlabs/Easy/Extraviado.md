@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Extraviado ​​
-
-## 🖥️ Writeup - Extraviado
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

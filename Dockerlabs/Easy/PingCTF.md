@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# PingCTF ​​
-
-## 🖥️ Writeup - PingCTF
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

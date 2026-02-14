@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Pequeñas-mentirosas ​​
-
-## 🖥️ Writeup - Pequeñas mentirosas
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

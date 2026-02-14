@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Candy ​​
-
-## 🖥️ Writeup - Candy
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

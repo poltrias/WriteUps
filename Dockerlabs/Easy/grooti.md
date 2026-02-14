@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Grooti ​​
-
-## 🖥️ Writeup - Grooti
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

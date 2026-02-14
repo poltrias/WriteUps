@@ -2,10 +2,6 @@
 icon: windows
 ---
 
-# Experience ​​
-
-## 🖥️ Writeup - Experience
-
 **Platform:** Vulnyx\
 **Operating System:** Windows
 

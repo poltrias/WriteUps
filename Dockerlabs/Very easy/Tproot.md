@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Tproot ​​
-
-## 🖥️ Writeup - Tproot
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

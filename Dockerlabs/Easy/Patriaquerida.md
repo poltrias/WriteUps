@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Patriaquerida ​​
-
-## 🖥️ Writeup - Patriaquerida
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

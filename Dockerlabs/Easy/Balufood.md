@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Balufood ​​
-
-## 🖥️ Writeup - Balufood
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# HackingStation ​​
-
-## 🖥️ Writeup - HackingStation
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

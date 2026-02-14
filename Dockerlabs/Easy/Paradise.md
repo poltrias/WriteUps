@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Paradise ​​
-
-## 🖥️ Writeup - Paradise
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Inclusion ​​
-
-## 🖥️ Writeup - Inclusion
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

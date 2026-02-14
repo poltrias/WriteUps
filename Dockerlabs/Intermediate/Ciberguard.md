@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Ciberguard ​​
-
-## 🖥️ Writeup - Ciberguard
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

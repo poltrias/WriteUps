@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Infected ​​
-
-## 🖥️ Writeup - Infected
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

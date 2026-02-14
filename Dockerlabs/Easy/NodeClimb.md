@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# NodeClimb ​​
-
-## 🖥️ Writeup - NodeClimb
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

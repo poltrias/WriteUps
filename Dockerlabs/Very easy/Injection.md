@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Injection ​​
-
-## 🖥️ Writeup - Injection
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

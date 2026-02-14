@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Liceo ​​
-
-## 🖥️ Writeup - Liceo
-
 **Platform:** HackMyVM\
 **Operating System:** Linux
 

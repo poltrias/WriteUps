@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Trust ​​
-
-## 🖥️ Writeup - Trust
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Escolares ​​
-
-## 🖥️ Writeup - Escolares
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

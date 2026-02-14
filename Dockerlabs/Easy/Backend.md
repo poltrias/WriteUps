@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Backend ​​
-
-## 🖥️ Writeup - Backend
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

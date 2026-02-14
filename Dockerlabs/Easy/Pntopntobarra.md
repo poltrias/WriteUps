@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Pntopntobarra ​​
-
-## 🖥️ Writeup - Pntopntobarra
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Vacaciones ​​
-
-## 🖥️ Writeup - Vacaciones
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

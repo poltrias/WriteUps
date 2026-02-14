@@ -2,10 +2,6 @@
 icon: windows
 ---
 
-# Eternal ​​
-
-## 🖥️ Writeup - Eternal
-
 **Platform:** Vulnyx\
 **Operating System:** Windows
 

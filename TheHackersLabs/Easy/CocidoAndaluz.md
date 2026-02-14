@@ -2,10 +2,6 @@
 icon: windows
 ---
 
-# Cocido Andaluz ​​
-
-## 🖥️ Writeup - Cocido Andaluz
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Windows
 

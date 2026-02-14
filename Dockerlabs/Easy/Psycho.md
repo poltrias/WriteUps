@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Psycho ​​
-
-## 🖥️ Writeup - Psycho
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

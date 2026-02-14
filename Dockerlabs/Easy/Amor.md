@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Amor ​​
-
-## 🖥️ Writeup - Amor
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

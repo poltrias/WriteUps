@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Upload ​​
-
-## 🖥️ Writeup - Upload
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

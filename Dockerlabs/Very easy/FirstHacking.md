@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# FirstHacking ​​
-
-## 🖥️ Writeup - FirstHacking
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

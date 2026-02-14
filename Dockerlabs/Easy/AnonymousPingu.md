@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# AnonymousPingu ​​
-
-## 🖥️ Writeup - AnonymousPingu
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

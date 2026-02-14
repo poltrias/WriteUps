@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Ejotapete ​​
-
-## 🖥️ Writeup - Ejotapete
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

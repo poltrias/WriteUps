@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Castor ​​
-
-## 🖥️ Writeup - Castor
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Linux
 

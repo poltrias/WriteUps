@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Ximai ​​
-
-## 🖥️ Writeup - Ximai
-
 **Platform:** HackMyVM\
 **Operating System:** Linux
 

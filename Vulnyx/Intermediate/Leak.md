@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Leak ​​
-
-## 🖥️ Writeup - Leak
-
 **Platform:** Vulnyx\
 **Operating System:** Linux
 

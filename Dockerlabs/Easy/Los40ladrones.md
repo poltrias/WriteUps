@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Los 40 ladrones ​​
-
-## 🖥️ Writeup - Los 40 ladrones
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

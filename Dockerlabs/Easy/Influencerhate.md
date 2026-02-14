@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# InfluencerHate ​​
-
-## 🖥️ Writeup - InfluencerHate
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

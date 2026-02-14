@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Veneno ​​
-
-## 🖥️ Writeup - Veneno
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

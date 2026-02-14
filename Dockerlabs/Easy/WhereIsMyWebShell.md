@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# WhereIsMyWebShell ​​
-
-## 🖥️ Writeup - WhereIsMyWebShell
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

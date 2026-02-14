@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Balulero ​​
-
-## 🖥️ Writeup - Balulero
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

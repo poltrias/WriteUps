@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Operación Pescador ​​
-
-## 🖥️ Writeup - Operación Pescador
-
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Linux
 

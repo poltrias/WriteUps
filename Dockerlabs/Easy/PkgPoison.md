@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# PkgPoison ​​
-
-## 🖥️ Writeup - PkgPoison
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

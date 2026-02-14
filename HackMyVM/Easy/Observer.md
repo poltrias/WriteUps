@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Observer ​​
-
-## 🖥️ Writeup - Observer
-
 **Platform:** HackMyVM\
 **Operating System:** Linux
 

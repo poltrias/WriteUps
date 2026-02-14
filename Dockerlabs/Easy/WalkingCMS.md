@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# WalkingCMS ​​
-
-## 🖥️ Writeup - WalkingCMS
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 

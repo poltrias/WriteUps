@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Reflection ​​
-
-## 🖥️ Writeup - Reflection
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
