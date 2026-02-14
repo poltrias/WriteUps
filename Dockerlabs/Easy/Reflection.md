@@ -87,13 +87,13 @@ Identificamos que los puertos `22` y `80` están abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con esta página:
 
-![alt text](../../images/XSS.png)
+![](../../images/XSS.png)
 
 Nos encontramos ante 4 desafíos de `XSS` que debemos resolver para continuar con la explotación de la máquina.
 
 ## EXPLOTACIÓN LAB 1
 
-![alt text](../../images/lab1.png)
+![](../../images/lab1.png)
 
 En este primer desafío, el objetivo es conseguir un `XSS` Reflejado básico. Simplemente debemos lograr que nuestro input se refleje en la web.
 
@@ -105,11 +105,11 @@ Introducimos por ejemplo:
 
 Resultado:
 
-![alt text](../../images/lab1result.png)
+![](../../images/lab1result.png)
 
 ## EXPLOTACIÓN LAB 2
 
-![alt text](../../images/lab2.png)
+![](../../images/lab2.png)
 
 En este caso tratamos con un `XSS` Almacenado. Todo lo que inyectamos queda guardado en el servidor, por lo que cualquier visitante posterior ejecutará el código o verà el texto reflejado.
 
@@ -123,11 +123,11 @@ Introducimos por ejemplo:
 
 Resultado:
 
-![alt text](../../images/lab2result.png)
+![](../../images/lab2result.png)
 
 ## EXPLOTACIÓN LAB 3
 
-![alt text](../../images/lab3.png)
+![](../../images/lab3.png)
 
 Aquí observamos que las opciones seleccionadas en los dropdowns se reflejan en la página.
 
@@ -147,11 +147,11 @@ http://172.17.0.2/laboratorio3/?opcion1=<p>hola</p>&opcion2=<p>soy</p>&opcion3=<
 
 Resultado:
 
-![alt text](../../images/lab3result.png)
+![](../../images/lab3result.png)
 
 ## EXPLOTACIÓN LAB 4
 
-![alt text](../../images/lab4.png)
+![](../../images/lab4.png)
 
 El mensaje nos indica que no hay contenido en el parámetro `data`. Sin embargo, comprobamos que si añadimos `?data=valor` manualmente a la `URL`, logramos reflejar dicho contenido en la página.
 
@@ -163,11 +163,11 @@ http://172.17.0.2/laboratorio4/?data=valor
 
 Resultado:
 
-![alt text](../../images/lab4result.png)
+![](../../images/lab4result.png)
 
 Una vez completados los 4 laboratorios, pulsamos el botón que aparece en la página principal.
 
-![alt text](../../images/sshcreds.png)
+![](../../images/sshcreds.png)
 
 Se nos revelan las credenciales del usuario `balu` : `balulero`, las cuales utilizamos para conectarnos mediante `SSH`.
 

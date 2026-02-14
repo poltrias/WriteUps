@@ -138,7 +138,7 @@ No podemos avanzar más a través del puerto `80`, por lo que pasamos a inspecci
 
 Accedemos al puerto `3000`.
 
-![alt text](../../images/grrafana.png)
+![](../../images/grrafana.png)
 
 Nos encontramos con un panel de `login` de `Grafana`, en el cual también podemos visualizar la `versión` en la parte inferior de la pantalla.
 

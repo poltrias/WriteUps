@@ -80,7 +80,7 @@ Nmap done: 1 IP address (1 host up) scanned in 6.67 seconds
 
 El único puerto abierto es el `80`. Accedemos por `HTTP` y vemos que existe un panel que permite subir archivos.
 
-![alt text](../../images/upload.png)
+![](../../images/upload.png)
 
 Dichos archivos se almacenan en el directorio `/uploads` y podemos ejecutarlos desde allí.
 
@@ -90,7 +90,7 @@ Lo copiamos en nuestra máquina `Kali`, configuramos nuestra `IP` y el `puerto` 
 
 Intentamos subirlo a través del panel de subida y la operación resulta exitosa.
 
-![alt text](../../images/upload2.png)
+![](../../images/upload2.png)
 
 Navegamos al directorio `/uploads` para ejecutar el archivo. Antes de ello, levantamos un listener en nuestra máquina atacante.
 

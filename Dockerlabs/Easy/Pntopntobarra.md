@@ -87,13 +87,13 @@ Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y observamos una página de advertencia de virus con dos botones.
 
-![alt text](../../images/virus.png)
+![](../../images/virus.png)
 
 El primer botón ejecuta un `script` que bloquea la máquina por completo, obligándonos a reiniciarla.
 
 Si pulsamos el segundo botón, aparece el siguiente mensaje:
 
-![alt text](../../images/ejemplos.png)
+![](../../images/ejemplos.png)
 
 Está intentando mostrar una imagen que no existe. Lo confirmamos observando la URL.
 

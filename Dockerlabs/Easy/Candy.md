@@ -126,7 +126,7 @@ Obtenemos `sanluis12345`. Intuimos que `admin` : `sanluis12345` son las credenci
 
 Navegamos a la ruta `/administrator` para autenticarnos con las credenciales encontradas.
 
-![alt text](../../images/joomla.png)
+![](../../images/joomla.png)
 
 Logramos acceder con éxito al panel de administración.
 
@@ -142,7 +142,7 @@ Payload:
 ?>
 ```
 
-![alt text](../../images/revshelljoomla.png)
+![](../../images/revshelljoomla.png)
 
 Guardamos los cambios.
 

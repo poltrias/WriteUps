@@ -108,7 +108,7 @@ Accedemos al puerto `80` y encontramos una página web de herramientas de cibers
 
 Accedemos al puerto `8080` y nos encontramos con el panel de inicio de sesión de `Jenkins`, por lo que vamos a probar a autenticarnos con dichas credenciales.
 
-![alt text](../../images/jenkinss.png)
+![](../../images/jenkinss.png)
 
 Hemos obtenido acceso al panel de administración de `Jenkins`.
 

@@ -121,7 +121,7 @@ Progress: 11051 / 1543906 (0.72%)
 
 Descubrimos una página de `login` y probamos credenciales típicas como `admin` : `admin`.
 
-![alt text](../../images/login2.png)
+![](../../images/login2.png)
 
 Nos autenticamos con éxito con dichas credenciales y accedemos al panel de administración.
 
