@@ -2,10 +2,6 @@
 icon: linux
 ---
 
-# Aidor ​​
-
-## 🖥️ Writeup - Aidor
-
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
