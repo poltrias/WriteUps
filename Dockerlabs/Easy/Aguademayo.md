@@ -2,8 +2,6 @@
 icon: linux
 ---
 
-# Aguademayo ​​
-
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
