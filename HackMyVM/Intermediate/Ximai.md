@@ -135,7 +135,7 @@ We find that the cat image path is very suspicious and matches the directory ref
 
 We eventually find a match:
 
-![](../../.gitbook/assets/ximai2.png)
+![](../../images/ximai2.png)
 
 There is a `symlink` pointing to `/etc/jimmy.txt`, and we cannot read the file.
 
@@ -143,7 +143,7 @@ We cannot progress further here, so we inspect the `WordPress` instance running 
 
 There, we find a message indicating `MySQL` allows local file access, suggesting the database could be abused to read local files, potentially via one of the installed WordPress `plugins`.
 
-![](../../.gitbook/assets/ximai3.png)
+![](../../images/ximai3.png)
 
 ## WPSCAN
 

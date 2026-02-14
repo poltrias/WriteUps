@@ -124,7 +124,7 @@ ftp>
 
 Next, we check port `3000`, which is running a `HTTP` service based on `Node.js`.
 
-![](../../.gitbook/assets/nodejss.png)
+![](../../images/nodejss.png)
 
 The system tells us the page is working but currently has no content.
 

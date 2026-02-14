@@ -135,7 +135,7 @@ Al final descubrimos que `estoesunsecreto` se trata de un directorio.
 
 Accedemos a `http://172.17.0.2/estoesunsecreto`.
 
-![alt text](../../.gitbook/assets/lucas.png)
+![alt text](../../images/lucas.png)
 
 Encontramos dentro un archivo llamado `mensaje_para_lucas.txt`, con el siguiente contenido:
 

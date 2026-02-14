@@ -84,15 +84,15 @@ Identificamos los puertos `22` y `5000` abiertos.
 
 Accedemos a través del puerto `5000` y encontramos un panel de inicio de sesión.
 
-![alt text](../../.gitbook/assets/dashlogin.png)
+![alt text](../../images/dashlogin.png)
 
 Vemos que en la parte inferior indica que nos podemos registrar, así que lo hacemos con un usuario de prueba.
 
-![alt text](../../.gitbook/assets/testuser.png)
+![alt text](../../images/testuser.png)
 
 Procedemos a iniciar sesión con la cuenta que acabamos de crear y accedemos al dashboard.
 
-![alt text](../../.gitbook/assets/dashb.png)
+![alt text](../../images/dashb.png)
 
 Una vez en el dashboard vemos nuestro nombre de usuario y nuestra contraseña actual (el `hash`). Sin embargo, nos llama mucho más la atención otra cosa, la `URL`:
 
@@ -104,7 +104,7 @@ Esta nos indica que nuestro usuario tiene el identificador 55. Vamos a comprobar
 
 ## EXPLOTACIÓN IDOR
 
-![alt text](../../.gitbook/assets/pepe.png)
+![alt text](../../images/pepe.png)
 
 Como podemos ver, al cambiar el `ID` de 55 a 53, entramos en la cuenta de `pepe` y podemos visualizar su contraseña hasheada.
 

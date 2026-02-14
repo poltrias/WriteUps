@@ -111,7 +111,7 @@ En particular, nos llama la atención el directorio `/upload`, sobre el cual ten
 
 Comprobamos si este directorio existe también en el puerto `80`.
 
-![alt text](../../.gitbook/assets/upload3.png)
+![alt text](../../images/upload3.png)
 
 Efectivamente existe, aunque inicialmente no contiene ningún archivo.
 

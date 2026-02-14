@@ -197,7 +197,7 @@ A continuación, utilizamos BurpSuite para interceptar la petición y configurar
 
 Durante esta prueba, observé que la respuesta correspondiente al número 16 era más larga de lo habitual.
 
-![Respuestas](../../.gitbook/assets/image.png)
+![Respuestas](../../images/image.png)
 
 Repetimos el envío manual del formulario con el número 16, y en lugar de recibir un archivo `.txt`, el servidor devuelve un archivo `.zip`.
 
@@ -281,6 +281,6 @@ printf '#!/bin/bash\nchmod u+s /bin/bash\n' > malicious.sh
 
 Hemos alterado el script para que otorgue permisos SUID al binario `/bin/bash`. Ahora solo queda esperar unos segundos y probar el comando `/bin/bash -p` , lo que debería proporcionarnos una shell con privilegios de root.
 
-![root](../../.gitbook/assets/image-1.png)
+![root](../../images/image-1.png)
 
 Ya somos root!

@@ -121,7 +121,7 @@ Progress: 1038852 / 1543899 (67.29%)
 
 Descubrimos el directorio `/shop`. Entramos y vemos la siguiente página:
 
-![](../../.gitbook/assets/shop.png)
+![](../../images/shop.png)
 
 En la parte inferior de la pantalla observamos un mensaje de error:
 
@@ -196,7 +196,7 @@ Comprobamos la vulnerabilidad intentando visualizar `/etc/passwd` mediante este 
 http://172.17.0.2/shop/index.php?archivo=../../../../etc/passwd
 ```
 
-![](../../.gitbook/assets/lfipasswd.png)
+![](../../images/lfipasswd.png)
 
 Tenemos éxito y logramos leer el contenido, donde identificamos dos usuarios del sistema: `manchi` y `seller`.
 

@@ -158,7 +158,7 @@ Identificamos el parámetro `page`, por lo que podemos emplearlo para leer el ar
 http://172.17.0.2/index.php?page=/var/www/html/.hidden_pass
 ```
 
-![alt text](../../.gitbook/assets/balu.png)
+![alt text](../../images/balu.png)
 
 Obtenemos la hidden pass, pero asumiendo que se trata de una contraseña aún nos falta un usuario. Por ello aprovechamos el `LFI` para revisar el contenido de `/etc/passwd`.
 
@@ -166,7 +166,7 @@ Obtenemos la hidden pass, pero asumiendo que se trata de una contraseña aún no
 http://172.17.0.2/index.php?page=/etc/passwd
 ```
 
-![alt text](../../.gitbook/assets/etc.png)
+![alt text](../../images/etc.png)
 
 Allí encontramos dos usuarios: `mario` y `pinguino`.
 

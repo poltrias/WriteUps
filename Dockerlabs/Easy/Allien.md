@@ -158,7 +158,7 @@ Utilizamos dichas credenciales para acceder al share `/backup24`.
 smbclient //172.17.0.2/backup24 -U satriani7 -p
 ```
 
-![alt text](../../.gitbook/assets/credentials.png)
+![alt text](../../images/credentials.png)
 
 Encontramos en el directorio `/Documents/Personal/` dos archivos `.txt` interesantes. Los transferimos a nuestra máquina atacante para leerlos.
 

@@ -98,7 +98,7 @@ Nos indica que existe un directorio oculto llamado `.env_de_baluchingon` que con
 
 Vamos a ver su contenido navegando a `http://172.17.0.2/.env_de_baluchingon`.
 
-![alt text](../../.gitbook/assets/balulero.png)
+![alt text](../../images/balulero.png)
 
 Encontramos las credenciales de recuperación para el usuario `balu` : `balubalulerobalulei`.
 

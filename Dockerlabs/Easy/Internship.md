@@ -87,7 +87,7 @@ Identificamos que los puertos `22` y `80` están abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con esta página:
 
-![alt text](../../.gitbook/assets/gatekeeper.png)
+![alt text](../../images/gatekeeper.png)
 
 Inspeccionamos el código fuente y encontramos información sobre un dominio.
 
@@ -171,13 +171,13 @@ Regresamos a la página principal y volvemos a revisar el código en busca de m�
 
 Procedemos a desofuscarlo utilizando la herramienta online `deobfuscate.io`.
 
-![alt text](../../.gitbook/assets/deobfuscate.png)
+![alt text](../../images/deobfuscate.png)
 
 El script de JS nos revela dos rutas que no conocíamos anteriormente: `/lab/login.php` y `/lab/employees.php`.
 
 Navegamos a la ruta `/lab/employees.php` y encontramos lo siguiente:
 
-![alt text](../../.gitbook/assets/json.png)
+![alt text](../../images/json.png)
 
 Aquí visualizamos la información de todos los empleados, incluyendo sus nombres y departamentos.
 
@@ -365,7 +365,7 @@ Visualizamos la imagen.
 open imagen.jpeg
 ```
 
-![alt text](../../.gitbook/assets/troll.png)
+![alt text](../../images/troll.png)
 
 Troleada histórica.
 

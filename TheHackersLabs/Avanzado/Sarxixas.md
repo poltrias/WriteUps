@@ -100,7 +100,7 @@ Identificamos los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
 Vemos que el servicio web está corriendo un CMS llamado `Pluck` en su versión `4.7.13`.
 
-![](../../.gitbook/assets/plucklogin.png)
+![](../../images/plucklogin.png)
 
 Buscamos vulnerabilidades conocidas para esta versión específica utilizando `searchsploit`.
 
@@ -208,7 +208,7 @@ ElAbueloDeLaAnitta
 
 Con la contraseña `ElAbueloDeLaAnitta` logramos acceder al panel de administración de `Pluck`.
 
-![alt text](../../.gitbook/assets/pluckdash.png)
+![alt text](../../images/pluckdash.png)
 
 Ahora que estamos autenticados, podemos utilizar el `exploit` identificado anteriormente para subir una `webshell`.
 
@@ -233,7 +233,7 @@ Uploaded Webshell to: http://sarxixas.thl:80//files/shell.phar
 
 El exploit ha funcionado y nos proporciona una ruta donde se ha subido la shell. Accedemos a la `webshell`.
 
-![alt text](../../.gitbook/assets/pwnyshell.png)
+![alt text](../../images/pwnyshell.png)
 
 El siguiente paso es entablar una `reverse shell`.
 

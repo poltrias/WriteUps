@@ -260,7 +260,7 @@ ssh -L 8080:172.17.0.2:80 Sophia@10.0.4.91
 
 Ahora, el servicio `Drupal` interno es accesible desde nuestro `localhost:8080`.
 
-![](../../.gitbook/assets/drupalpiv.png)
+![](../../images/drupalpiv.png)
 
 Lanzamos `Metasploit` para explotar la vulnerabilidad.
 

@@ -87,11 +87,11 @@ Identificamos los puertos `22` y `80` abiertos.
 
 Accedemos al servicio web del puerto `80` y encontramos la siguiente página:
 
-![alt text](../../.gitbook/assets/escolares.png)
+![alt text](../../images/escolares.png)
 
 En la pestaña profesores encontramos la información personal del profesorado, lo cual nos da una gran pista:
 
-![alt text](../../.gitbook/assets/luisprofe.png)
+![alt text](../../images/luisprofe.png)
 
 Nos dice que estamos ante un `WordPress` y que `Luis` es el administrador de este.
 
@@ -381,7 +381,7 @@ Encontramos las credenciales válidas para el usuario `luisillo` : `Luis1981`.
 
 Intentamos acceder con este usuario y contraseña al dashboard de `WordPress`, pero obtenemos el siguiente error:
 
-![alt text](../../.gitbook/assets/escolaresdl.png)
+![alt text](../../images/escolaresdl.png)
 
 Esto indica que debemos añadir el dominio `escolares.dl` al archivo `/etc/hosts`.
 
@@ -403,7 +403,7 @@ ff02::2 ip6-allrouters
 
 Tras configurar el archivo, intentamos acceder otra vez al `wp-admin` y entramos con éxito.
 
-![alt text](../../.gitbook/assets/wp_luis.png)
+![alt text](../../images/wp_luis.png)
 
 Dentro del panel de administración encontramos un `plugin` llamado `WP File Manager`.
 
@@ -411,7 +411,7 @@ Este plugin nos permite gestionar (añadir, eliminar, editar...) los archivos de
 
 Nos aprovechamos de este componente para editar el archivo `index.php`, que se encuentra en el directorio `/themes`.
 
-![alt text](../../.gitbook/assets/revshellwp.png)
+![alt text](../../images/revshellwp.png)
 
 Sustituimos el contenido original por código `PHP` malicioso para obtener una `reverse shell`.
 

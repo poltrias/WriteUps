@@ -115,7 +115,7 @@ Progress: 102351 / 1543906 (6.63%)
 
 Encontramos varios archivos `.php` y un directorio `/uploads`. Navegamos al archivo `machine.php` y nos encontramos un formulario de subida, suponemos que para subir las máquinas.
 
-![alt text](../../.gitbook/assets/subida.png)
+![alt text](../../images/subida.png)
 
 Intentamos subir una `reverse shell` en `PHP`, pero nos aparece el siguiente mensaje:
 

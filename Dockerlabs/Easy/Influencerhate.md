@@ -188,7 +188,7 @@ Starting gobuster in directory enumeration mode
 
 Existe un `login.php`, así que volvemos a intentar un ataque de fuerza bruta.
 
-![alt text](../../.gitbook/assets/login.png)
+![alt text](../../images/login.png)
 
 Para ello creamos un `script` en `bash` llamado `fuerza_bruta.sh`.
 

@@ -87,7 +87,7 @@ Identificamos los puertos `22` y `80` abiertos.
 
 Accedemos al servicio web en el puerto `80` y nos encontramos con la siguiente página:
 
-![alt text](../../.gitbook/assets/backend.png)
+![alt text](../../images/backend.png)
 
 Accedemos al panel de login mediante el botón superior y probamos una inyección `SQL`.
 
@@ -96,7 +96,7 @@ Accedemos al panel de login mediante el botón superior y probamos una inyecció
 password
 ```
 
-![alt text](../../.gitbook/assets/mariadb.png)
+![alt text](../../images/mariadb.png)
 
 Recibimos un error de sintaxis `SQL`. Esto nos indica que el aplicativo es posiblemente vulnerable a `SQLi`, ya que hemos logrado alterar la lógica de la consulta con éxito.
 
@@ -104,7 +104,7 @@ Utilizaremos `SQLMap` para intentar extraer información de las bases de datos e
 
 Para ello, interceptamos la petición de login con `BurpSuite`.
 
-![alt text](../../.gitbook/assets/burps.png)
+![alt text](../../images/burps.png)
 
 La guardamos en un archivo llamado `request.txt` para pasársela a `SQLMap`.
 

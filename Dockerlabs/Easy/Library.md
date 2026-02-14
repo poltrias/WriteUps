@@ -121,7 +121,7 @@ Progress: 1387269 / 1543899 (89.85%)
 
 Encontramos un directorio `/javascript` y un archivo `index.php`. Accedemos al archivo `index.php` y encontramos una cadena de texto:
 
-![alt text](../../.gitbook/assets/indexphp.png)
+![alt text](../../images/indexphp.png)
 
 Esta cadena parece ser una contraseña, pero en este punto desconocemos los usuarios existentes en el sistema.
 

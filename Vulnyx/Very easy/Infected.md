@@ -109,13 +109,13 @@ Progress: 28533 / 1543906 (1.85%)
 
 We discover the `info.php` file and proceed to inspect it in search of exploitation vectors.
 
-![](../../.gitbook/assets/mod_backdoor.png)
+![](../../images/mod_backdoor.png)
 
 Among the loaded modules, we find one named `mod_backdoor`.
 
 We search the internet and find an exploit for this module:
 
-![](../../.gitbook/assets/backdoor.png)
+![](../../images/backdoor.png)
 
 ## EXPLOITATION
 
@@ -247,7 +247,7 @@ sudo -u root /usr/bin/joe
 
 An interactive console opens. We discover that by pressing `Ctrl + K`, followed by `!`, a prompt appears to execute a command.
 
-![](../../.gitbook/assets/prompt.png)
+![](../../images/prompt.png)
 
 We execute the command `/bin/bash`.
 

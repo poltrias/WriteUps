@@ -161,7 +161,7 @@ Encontramos credenciales de `WordPress` para el usuario `mario` : `love`.
 
 Accedemos mediante el login en http://172.17.0.2/wordpress/wp-admin/.
 
-![alt text](../../.gitbook/assets/wp.png)
+![alt text](../../images/wp.png)
 
 Una vez dentro encontramos un `plugin` llamado `Theme Editor`, que nos permite modificar, subir o eliminar archivos de un tema.
 

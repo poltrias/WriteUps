@@ -92,7 +92,7 @@ We identify ports `21`, `22`, and `80` as open.
 
 We access the web service on port `80` and encounter the following page:
 
-![](../../.gitbook/assets/liceu.png)
+![](../../images/liceu.png)
 
 ## GOBUSTER
 
@@ -133,11 +133,11 @@ We discover an `/uploads` directory and an `upload.php` file.
 
 We navigate to `upload.php` and see a panel that allows us to upload a file:
 
-![](../../.gitbook/assets/uplooad.png)
+![](../../images/uplooad.png)
 
 We attempt to upload a `shell.php` file so that, upon execution, it returns a `reverse shell` to our attacking machine. We utilize the `php-reverse-shell` file from `PentestMonkey` on `GitHub`.
 
-![](../../.gitbook/assets/error.png)
+![](../../images/error.png)
 
 However, we encounter an error stating that uploading `.php` files is not permitted.
 
@@ -149,13 +149,13 @@ cp shell.php shell.phar
 
 We now test uploading `shell.phar`.
 
-![](../../.gitbook/assets/pharrr.png)
+![](../../images/pharrr.png)
 
 It works. We have successfully uploaded the file.
 
 If we now navigate to the `/uploads` directory, we find the file we just uploaded.
 
-![](../../.gitbook/assets/gayaf.png)
+![](../../images/gayaf.png)
 
 We set up a `listener` on our attacking machine, waiting to receive the connection.
 
