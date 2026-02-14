@@ -1,5 +1,3 @@
-# 🖥️ Writeup - Aguademayo 
-
 **Plataforma:** Dockerlabs  
 **Sistema Operativo:** Linux  
 
