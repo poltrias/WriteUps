@@ -117,7 +117,7 @@ Progress: 1183407 / 1543899 (76.65%)
 
 We discover two hidden files; one is `info.php`, which could reveal server configuration, but for now we focus on `reminder.php`.
 
-![alt text](../../.gitbook/assets/ximai.png)
+![](../../.gitbook/assets/ximai.png)
 
 We open `reminder.php` and see a page that states someone left a `.txt` file containing Jimmy’s credentials, but the page does not reveal its location.
 
@@ -135,7 +135,7 @@ We find that the cat image path is very suspicious and matches the directory ref
 
 We eventually find a match:
 
-![alt text](../../.gitbook/assets/ximai2.png)
+![](../../.gitbook/assets/ximai2.png)
 
 There is a `symlink` pointing to `/etc/jimmy.txt`, and we cannot read the file.
 
@@ -143,7 +143,7 @@ We cannot progress further here, so we inspect the `WordPress` instance running 
 
 There, we find a message indicating `MySQL` allows local file access, suggesting the database could be abused to read local files, potentially via one of the installed WordPress `plugins`.
 
-![alt text](../../.gitbook/assets/ximai3.png)
+![](../../.gitbook/assets/ximai3.png)
 
 ## WPSCAN
 

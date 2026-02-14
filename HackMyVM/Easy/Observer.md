@@ -309,7 +309,7 @@ ln -s /root .
 
 The symlink is created. We browse the `root` directory and view the `.bash_history`.
 
-![alt text](../../.gitbook/assets/bash_h.png)
+![](../../.gitbook/assets/bash_h.png)
 
 We find a `password` and use it to authenticate as `root : fuck1ng0bs3rv3rs`.
 

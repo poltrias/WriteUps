@@ -113,11 +113,11 @@ We discover a `connect.php` file, but navigating to it simply reveals a blank pa
 
 With no other initial leads, we access port `8080` and encounter a Jenkins instance:
 
-![alt text](../../.gitbook/assets/jenkinsss.png)
+![](../../.gitbook/assets/jenkinsss.png)
 
 We navigate to the People tab:
 
-![alt text](../../.gitbook/assets/george.png)
+![](../../.gitbook/assets/george.png)
 
 We identify a user named `george`.
 
@@ -135,7 +135,7 @@ We find a `CVE` associated with it that allows us to access files via the `CLI`.
 Jenkins Arbitrary File Read Through the CLI (CVE-2024-23897)
 ```
 
-![alt text](../../.gitbook/assets/exploitcli.png)
+![](../../.gitbook/assets/exploitcli.png)
 
 ```bash
 wget http://10.0.4.36:8080/jnlpJars/jenkins-cli.jar
@@ -222,7 +222,7 @@ We obtain credentials that likely belong to the user `george` : `g30rg3_L3@k3D`.
 
 We attempt to authenticate on the `Jenkins` login panel using these credentials.
 
-![alt text](../../.gitbook/assets/Loginjenkins.png)
+![](../../.gitbook/assets/Loginjenkins.png)
 
 However, we are unsuccessful.
 
@@ -364,7 +364,7 @@ private.pdf
 
 Once obtained, we proceed to view its content:
 
-![alt text](../../.gitbook/assets/privatekeyroot.png)
+![](../../.gitbook/assets/privatekeyroot.png)
 
 We identify it as an `SSH private key`, likely belonging to the `root` user.
 

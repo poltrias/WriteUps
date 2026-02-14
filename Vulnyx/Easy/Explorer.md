@@ -80,13 +80,13 @@ We access the web service over `HTTP`, the server is running but there is no con
 
 The scan reveals a `robots.txt` file, and it contains a Disallow entry for `/extplorer`.
 
-![alt text](../../.gitbook/assets/robots.png)
+![](../../.gitbook/assets/robots.png)
 
 Encontramos una disallowed entry, un directorio llamado /extplorer.
 
 We navigate to `/extplorer` and encounter a `login` page.
 
-![alt text](../../.gitbook/assets/loginex.png)
+![](../../.gitbook/assets/loginex.png)
 
 We try common/default credentials such as `admin` : `admin`.
 
@@ -94,7 +94,7 @@ The default credentials work, so we log in to an admin panel that appears to be 
 
 We upload a `PHP` reverse shell (PentestMonkey’s `php-reverse-shell`).
 
-![alt text](../../.gitbook/assets/revvshell.png)
+![](../../.gitbook/assets/revvshell.png)
 
 Before any further action, we start a `listener` on our attacker machine.
 

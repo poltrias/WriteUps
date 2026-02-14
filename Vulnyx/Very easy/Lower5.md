@@ -76,11 +76,11 @@ We identify ports `22` and `80` as open.
 
 We access the web service on port `80` and encounter the following page:
 
-![alt text](../../.gitbook/assets/vteam.png)
+![](../../.gitbook/assets/vteam.png)
 
 If we navigate to `About Us`, we see that the `URL` reveals a possible vulnerability:
 
-![alt text](../../.gitbook/assets/page.php.png)
+![](../../.gitbook/assets/page.php.png)
 
 We notice that through the `page.php` file, the `About Us` page is included for us to view. This could very well be vulnerable to `LFI`.
 
