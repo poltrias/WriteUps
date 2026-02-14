@@ -2,7 +2,7 @@
 icon: linux
 ---
 
-**Plataforma:** The Hackers Labs\
+**Plataforma:** The Hackers Labs
 **Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Gobuster` `Wfuzz` `RCE` `Web Shell` `SUID`
