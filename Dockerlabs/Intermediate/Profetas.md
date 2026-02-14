@@ -95,7 +95,7 @@ Probamos las credenciales `admin:admin` y logramos acceder.
 
 Al entrar nos encontramos un dashboard de monitorización de servidores.
 
-![alt text](../../images/profetamoni.png)
+![](../../images/profetamoni.png)
 
 En la parte inferior de la página encontramos una cadena codificada en `Base64`.
 
@@ -157,7 +157,7 @@ Revisamos los resultados: `/uploads` está vacío, `upload.php` devuelve un `err
 
 Sin embargo, al acceder a `/admin.php`, encontramos otro `panel de login`.
 
-![alt text](../../images/notadmin.png)
+![](../../images/notadmin.png)
 
 El sistema valida que el usuario sea una dirección de correo electrónico, impidiendo cualquier otro formato. 
 
@@ -169,7 +169,7 @@ Al intentar acceder con credenciales de prueba, obtenemos la siguiente pista:
 
 Para evadir la restricción del formato de email, inspeccionamos el código fuente, localizamos la etiqueta `<input>` y modificamos el atributo `type="email"` por `type="text"`.
 
-![alt text](../../images/bypassemail.png)
+![](../../images/bypassemail.png)
 
 Con el tipo de input modificado, probamos con las credenciales `notadmin:notadmin`, pero recibimos un mensaje de error:
 
@@ -186,13 +186,13 @@ notadmin
 
 Esta vez logramos acceder con éxito.
 
-![alt text](../../images/notadminsqli.png)
+![](../../images/notadminsqli.png)
 
 # XXE INJECTION
 
 Accedemos al Portal 2.
 
-![alt text](../../images/portalxxe.png)
+![](../../images/portalxxe.png)
 
 Nos encontramos con un procesador de `XML`, lo que sugiere que podría ser vulnerable a `XXE` (XML External Entity).
 
@@ -257,7 +257,7 @@ Las credenciales `jeremias:jeremias` resultan ser válidas y logramos acceso al 
 
 # MOVIMIENTO LATERAL
 
-Enumeramos el directorio personal en `/home/jeremia`s y encontramos un archivo llamado `ezequiel.pyc`. 
+Enumeramos el directorio personal en `/home/jeremias` y encontramos un archivo llamado `ezequiel.pyc`. 
 
 Para analizarlo correctamente, lo transferimos a nuestra máquina atacante.
 
@@ -276,7 +276,7 @@ Utilizamos la herramienta online `pylingual.io` para descompilar el archivo `.py
 
 Una vez descompilado, analizamos el código y encontramos lo siguiente:
 
-![alt text](../../images/pyc.png)
+![](../../images/pyc.png)
 
 Concatenamos las dos variables encontradas para formar una posible contraseña: `234r3fsd2-34fsdrr32`.
 
@@ -360,7 +360,6 @@ Leemos el contenido del archivo recibido:
 cat passw0rd_r00t.txt
 ```
 
-Info:
 ```
 fl4sk1pwd
 ```
@@ -371,7 +370,6 @@ Finalmente, utilizamos esta contraseña para autenticarnos como `root`.
 su root
 ```
 
-Info:
 ```
 root@5d8e7a746121:/home/ezequiel# whoami
 root

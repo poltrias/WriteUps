@@ -96,13 +96,13 @@ Identificamos los puertos abiertos: `22` (SSH), `80` (HTTP) y `445` (Samba).
 
 Al acceder al puerto `80`, encontramos la página web con el contenido:
 
-![alt text](../../.gitbook/assets/darkweb.png)
+![](../../.gitbook/assets/darkweb.png)
 
 Observamos que el texto presenta campos o palabras ocultas.
 
 Mediante la inspección del código fuente de la página, recuperamos las siguientes cadenas de texto ocultas: `fuerzabrutasiempre`, `metasploit_ctf` y `memehydra`.
 
-![alt text](../../.gitbook/assets/darkweb2.png)
+![](../../.gitbook/assets/darkweb2.png)
 
 Estas palabras clave sugieren la necesidad de un ataque de `fuerza bruta`, siendo probable que `memehydra` sea un usuario o una contraseña.
 

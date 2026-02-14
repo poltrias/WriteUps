@@ -197,7 +197,7 @@ Procedemos a investigar qué más archivos podemos incluir aprovechando la vulne
 http://172.17.0.2/problems.php?backdoor=../../../../var/log/apache2/error.log
 ```
 
-![alt text](../../.gitbook/assets/errorlog.png)
+![](../../.gitbook/assets/errorlog.png)
 
 Confirmamos que podemos visualizar el `error.log`.
 
@@ -221,7 +221,7 @@ http://172.17.0.2/%3c%3fphp%20system('id');%20%3f%3e.php
 
 Al realizar esta petición, el servidor genera un error, ya que el archivo no existe, y guarda la entrada en `error.log`.
 
-![alt text](../../.gitbook/assets/errorlogid.png)
+![](../../.gitbook/assets/errorlogid.png)
 
 Como se observa en la captura, el servidor no solo nos muestra el error, sino que interpreta nuestra instrucción y nos devuelve el resultado del comando `id`.
 
