@@ -1,6 +1,6 @@
 # Table of contents
 
-* [🕵️ Whoami](README.md)
+* [🕵️ whoami](README.md)
 
 ## DOCKERLABS
 
