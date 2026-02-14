@@ -76,7 +76,7 @@ Identificamos los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
 Accedemos al servicio web del puerto `80` y encontramos la siguiente página.
 
-![alt text](../../.gitbook/assets/castor.png)
+![](../../.gitbook/assets/castor.png)
 
 A primera vista, no localizamos información relevante que nos sugiera un vector de ataque claro.
 
@@ -128,7 +128,7 @@ Esto nos indica que el servidor espera recibir datos en formato `XML`.
 
 Interceptamos la petición con `Burp Suite`.
 
-![alt text](../../.gitbook/assets/requestcastor.png)
+![](../../.gitbook/assets/requestcastor.png)
 
 La enviamos al `Repeater` con `Ctrl + R` para realizar pruebas.
 
@@ -164,7 +164,7 @@ Content-Length: 145
 </root>
 ```
 
-![alt text](../../.gitbook/assets/burpcastor.png)
+![](../../.gitbook/assets/burpcastor.png)
 
 ¡Ha funcionado! El servidor ha procesado el `XML` correctamente y nos ha devuelto el contenido del archivo `/etc/passwd`.
 

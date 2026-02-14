@@ -147,7 +147,7 @@ Una vez subida, accedemos a la `webshell` vía navegador.
 http://10.0.4.38/cmd.aspx
 ```
 
-![alt text](../../.gitbook/assets/aspx.png)
+![](../../.gitbook/assets/aspx.png)
 
 Como vemos en la captura, ya tenemos ejecución remota de comandos (`RCE`).
 
