@@ -100,7 +100,7 @@ Identificamos los puertos `22` (SSH) y `80` (HTTP) abiertos.
 
 Vemos que el servicio web está corriendo un CMS llamado `Pluck` en su versión `4.7.13`.
 
-![alt text](../../.gitbook/assets/plucklogin.png)
+![](../../.gitbook/assets/plucklogin.png)
 
 Buscamos vulnerabilidades conocidas para esta versión específica utilizando `searchsploit`.
 

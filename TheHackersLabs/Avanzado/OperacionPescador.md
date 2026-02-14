@@ -88,7 +88,7 @@ ff02::2 ip6-allrouters
 
 Accedemos al puerto `80` y nos encontramos con un panel de `inicio de sesión` y un mensaje que nos indica que probablemente no podamos hacer `fuerza bruta`.
 
-![alt text](../../.gitbook/assets/innovasolutions.png)
+![](../../.gitbook/assets/innovasolutions.png)
 
 ## GOBUSTER
 
@@ -127,7 +127,7 @@ Progress: 252599 / 1543906 (16.36%)
 
 Encontramos una carpeta `/uploads` con un tamaño de respuesta de 338. Accedemos y vemos el siguiente archivo:
 
-![alt text](../../.gitbook/assets/pngphp.png)
+![](../../.gitbook/assets/pngphp.png)
 
 El contenido parece ser el de una imagen, pero la extensión es `.php`.
 
@@ -164,7 +164,7 @@ Modificamos la `URL` para incluir el comando `id`.
 http://mail.innovasolutions.thl/uploads/foto.png.php?cmd=id
 ```
 
-![alt text](../../.gitbook/assets/idrce.png)
+![](../../.gitbook/assets/idrce.png)
 
 ¡Funciona! Tenemos ejecución remota de comandos.
 
