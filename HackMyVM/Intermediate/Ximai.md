@@ -117,7 +117,7 @@ Progress: 1183407 / 1543899 (76.65%)
 
 We discover two hidden files; one is `info.php`, which could reveal server configuration, but for now we focus on `reminder.php`.
 
-![](../../.gitbook/assets/ximai.png)
+![](../../images/ximai.png)
 
 We open `reminder.php` and see a page that states someone left a `.txt` file containing Jimmy’s credentials, but the page does not reveal its location.
 
