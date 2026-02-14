@@ -194,8 +194,6 @@ Solo nos queda autenticarnos con ella y obtener acceso completo al sistema.
 su root
 ```
 
-Info:
-
 ```
 root@6cfcd99d416f:/home/balulero# whoami
 root

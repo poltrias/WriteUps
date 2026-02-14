@@ -294,8 +294,6 @@ We escalate privileges to `root`.
 su root
 ```
 
-Info:
-
 ```
 root@lower7:/home/a.clark# whoami
 root

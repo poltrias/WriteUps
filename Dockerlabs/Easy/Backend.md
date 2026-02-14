@@ -515,10 +515,8 @@ Volvemos a la sesión de `pepe` e intentamos autenticarnos como `root` utilizand
 
 ```bash
 su root
-spongebob34
+#password spongebob34
 ```
-
-Info:
 
 ```
 root@cccfa5e90f12:/home/pepe# whoami

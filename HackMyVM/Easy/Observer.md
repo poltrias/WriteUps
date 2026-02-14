@@ -317,8 +317,6 @@ We find a `password` and use it to authenticate as `root : fuck1ng0bs3rv3rs`.
 su root
 ```
 
-Info:
-
 ```
 root@observer:/home/jan# whoami
 root

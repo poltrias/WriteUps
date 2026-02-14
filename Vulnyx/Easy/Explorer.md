@@ -176,8 +176,6 @@ We try the same password on the system `root` account.
 su root
 ```
 
-Info:
-
 ```
 root@explorer:/var/www/html/extplorer/config# whoami
 root

@@ -309,8 +309,6 @@ We authenticate using this password.
 su root
 ```
 
-Info:
-
 ```
 root@lower5:/home/low# whoami
 root

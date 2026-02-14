@@ -286,8 +286,6 @@ Finalmente, verificamos que el usuario `root` ya no tiene contraseña y consegui
 su root
 ```
 
-Info:
-
 ```
 root@5f4ca3874341:/home/gladys# whoami
 root

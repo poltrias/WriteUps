@@ -453,8 +453,6 @@ Finalmente, usamos esta contraseña para autenticarnos como `root`.
 su root
 ```
 
-Info:
-
 ```
 root@ef25e2f8a7f6:/home/carlos/carpeta55# whoami
 root

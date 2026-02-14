@@ -251,8 +251,6 @@ Intentamos escalar privilegios a `root` con esta contraseña.
 su root
 ```
 
-Info:
-
 ```
 www-data@6aa01e22d477:/tmp$ su root
 Password: contraseñaderoot123

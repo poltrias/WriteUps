@@ -170,8 +170,6 @@ La respuesta es `osoazul`, por lo que la utilizamos para autenticarnos directame
 su root
 ```
 
-Info:
-
 ```
 root@dockerlabs:/home/diego/.local/share# whoami
 root

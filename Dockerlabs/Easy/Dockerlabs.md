@@ -238,8 +238,6 @@ Procedemos a autenticarnos como `root` con la contraseña encontrada.
 su root
 ```
 
-Info:
-
 ```
 root@f5e2571a1bae:/opt# whoami
 root

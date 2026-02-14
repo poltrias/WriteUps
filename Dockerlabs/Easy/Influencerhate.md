@@ -341,8 +341,6 @@ Con este ataque logramos encontrar las credenciales de `root` : `rockyou`.
 su root
 ```
 
-Info:
-
 ```
 root@4fd4c5ded6c2:/tmp# whoami
 root
