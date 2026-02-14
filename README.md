@@ -1,3 +1,4 @@
+## 🕵️ whoami
 
 I am a **Computer Engineering** student, deeply passionate about **Offensive Security**. This repository serves as my technical lab, where I document my continuous learning journey and methodology.
 
