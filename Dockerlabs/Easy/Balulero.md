@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Balulero 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Balulero ​​
+
+## 🖥️ Writeup - Balulero
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Information Leakage` `Sudoers` `Lateral Movement` `Writable File` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip balulero.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh balulero.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-05 18:40 CET
 Nmap scan report for 172.17.0.2
@@ -93,7 +102,7 @@ Nos indica que existe un directorio oculto llamado `.env_de_baluchingon` que con
 
 Vamos a ver su contenido navegando a `http://172.17.0.2/.env_de_baluchingon`.
 
-![alt text](../../images/balulero.png)
+![alt text](../../.gitbook/assets/balulero.png)
 
 Encontramos las credenciales de recuperación para el usuario `balu` : `balubalulerobalulei`.
 
@@ -103,15 +112,16 @@ Vamos a intentar acceder por `SSH` con estas credenciales.
 ssh balu@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for balu on c64bde09402c:
     env_reset, mail_badpass,
@@ -145,6 +155,7 @@ En este punto, la escalada de privilegios a `root` es tan sencilla como ejecutar
 ```
 
 Info:
+
 ```
 bash-5.0# whoami
 root

