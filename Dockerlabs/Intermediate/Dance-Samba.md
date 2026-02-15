@@ -5,7 +5,7 @@ icon: linux
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `SQLi` `XXE` `Bypass` `Python` `Sudoers` `Croc`
+> **Tags:** `Linux` `FTP` `SMB` `Brute Force` `Information Disclosure` `Cryptography` `Sudoers` 
 
 ## INSTALACIÓN
 
@@ -179,7 +179,6 @@ Encontramos un archivo nota.txt, lo descargamos y leemos su contenido.
 cat nota.txt
 ```
 
-Info:
 ```
 I don't know what to do with Macarena, she's obsessed with donald.`
 ```
@@ -404,7 +403,7 @@ MMZVM522LBFHUWSXJYYWG3KWO5MVQTT2MQZDS6K2IE6T2===
 Descubrimos que es una cadena codificada en `Base64` y posteriormente en `Base32`. Procedemos a decodificarla.
 
 ```Bash
-echo 'MMZVM522LBFHUWSXJYYWG3KWO5MVQTT2MQZDS6K2IE6T2===' | base32 -d | base64 -d`
+echo 'MMZVM522LBFHUWSXJYYWG3KWO5MVQTT2MQZDS6K2IE6T2===' | base32 -d | base64 -d
 ```
 
 ```
@@ -438,7 +437,6 @@ Leemos el archivo `/opt/password.txt` que encontramos anteriormente.
 sudo /usr/bin/file -f /opt/password.txt
 ```
 
-Info:
 ```
 root:rooteable2: cannot open `root:rooteable2' (No such file or directory)
 ```
