@@ -180,7 +180,7 @@ cat nota.txt
 ```
 
 ```
-I don't know what to do with Macarena, she's obsessed with donald.`
+I don't know what to do with Macarena, she's obsessed with donald.
 ```
 
 El mensaje nos revela dos posibles usuarios: `macarena` y `donald`.
