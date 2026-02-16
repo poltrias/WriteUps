@@ -103,45 +103,6 @@ Host script results:
 |_    Message signing enabled but not required
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 16.91 secondsStarting Nmap 7.98 ( https://nmap.org ) at 2026-02-15 15:25 +0100
-Nmap scan report for 172.17.0.2
-Host is up (0.000023s latency).
-
-PORT    STATE SERVICE     VERSION
-21/tcp  open  ftp         vsftpd 3.0.5
-| ftp-syst: 
-|   STAT: 
-| FTP server status:
-|      Connected to ::ffff:172.17.0.1
-|      Logged in as ftp
-|      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 300
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 1
-|      vsFTPd 3.0.5 - secure, fast, stable
-|_End of status
-| ftp-anon: Anonymous FTP login allowed (FTP code 230)
-|_-rw-r--r--    1 0        0              69 Aug 19  2024 nota.txt
-22/tcp  open  ssh         OpenSSH 9.6p1 Ubuntu 3ubuntu13.4 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   256 a2:4e:66:7d:e5:2e:cf:df:54:39:b2:08:a9:97:79:21 (ECDSA)
-|_  256 92:bf:d3:b8:20:ac:76:08:5b:93:d7:69:ef:e7:59:e1 (ED25519)
-139/tcp open  netbios-ssn Samba smbd 4
-445/tcp open  netbios-ssn Samba smbd 4
-MAC Address: 02:42:AC:11:00:02 (Unknown)
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
-Host script results:
-| smb2-time: 
-|   date: 2026-02-15T14:25:22
-|_  start_date: N/A
-| smb2-security-mode: 
-|   3.1.1: 
-|_    Message signing enabled but not required
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 16.91 seconds
 ```
 

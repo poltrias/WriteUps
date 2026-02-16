@@ -50,6 +50,7 @@
   * [Backend ​​](Dockerlabs/Easy/Backend.md)
   * [Escolares ​​](Dockerlabs/Easy/Escolares.md)
   * [Move ​​](Dockerlabs/Easy/Move.md)
+  * [Verdejo ​​](Dockerlabs/Easy/Verdejo.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
