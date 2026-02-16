@@ -116,7 +116,7 @@ recuerda... tu contrasea es tu usuario
 
 Esto nos da una gran pista que utilizaremos más adelante.
 
-# GOBUSTER
+## GOBUSTER
 
 A continuación, utilizamos `Gobuster` para enumerar directorios y archivos en el servidor web.
 
@@ -188,7 +188,7 @@ Esta vez logramos acceder con éxito.
 
 ![](../../images/notadminsqli.png)
 
-# XXE INJECTION
+## XXE INJECTION
 
 Accedemos al Portal 2.
 
@@ -255,7 +255,7 @@ ssh jeremias@172.17.0.2
 
 Las credenciales `jeremias:jeremias` resultan ser válidas y logramos acceso al sistema.
 
-# MOVIMIENTO LATERAL
+## MOVIMIENTO LATERAL
 
 Enumeramos el directorio personal en `/home/jeremias` y encontramos un archivo llamado `ezequiel.pyc`. 
 
@@ -293,7 +293,7 @@ ezequiel
 ezequiel@5d8e7a746121:~$
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 En `/home/ezequiel` encontramos un archivo llamado `acces0.txt` con el siguiente contenido:
 

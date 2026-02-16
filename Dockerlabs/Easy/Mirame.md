@@ -100,7 +100,7 @@ La inyección funciona correctamente y logramos acceder.
 
 ![](../../images/clima.png)
 
-# SQLMAP
+## SQLMAP
 
 Confirmada la vulnerabilidad, decidimos utilizar `SQLMap` para volcar la base de datos. 
 
@@ -286,7 +286,7 @@ Navegamos a la ruta `/directoriotravieso`. Dentro hay una imagen llamada `mirame
 
 Esto sugiere `esteganografía`, así que la descargamos a nuestra máquina atacante.
 
-# ESTEGANOGRAFÍA
+## ESTEGANOGRAFÍA
 
 Intentamos extraer información oculta con `steghide`, pero nos solicita una contraseña.
 
@@ -373,7 +373,7 @@ Intentamos acceder vía `SSH`.
 ssh carlos@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, comprobamos permisos `sudo` y `SUID`.
 
