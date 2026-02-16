@@ -54,6 +54,7 @@
   * [Mirame ​​](Dockerlabs/Easy/Mirame.md)
   * [Elevator ​​](Dockerlabs/Easy/Elevator.md)
   * [Pressenter ​​](Dockerlabs/Easy/Pressenter.md)
+  * [Vulnvault ​​](Dockerlabs/Easy/VulnVault.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
