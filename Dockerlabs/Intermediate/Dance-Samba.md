@@ -146,7 +146,7 @@ I don't know what to do with Macarena, she's obsessed with donald.
 
 El mensaje nos revela dos posibles usuarios: `macarena` y `donald`.
 
-# ENUMERACIÓN SMB
+## ENUMERACIÓN SMB
 
 A continuación, utilizamos `enum4linux` para enumerar el servicio `SMB` y confirmar la existencia de usuarios.
 
@@ -349,7 +349,7 @@ Finalmente, nos conectamos por `SSH` utilizando la clave privada.
 ssh -i id_rsa macarena@172.17.0.2
 ```
 
-# ESCALADA DE PRIVILEGIOS
+## ESCALADA DE PRIVILEGIOS
 
 Una vez dentro, enumeramos el sistema y encontramos en `/opt` un archivo `password.txt`, que no tenemos permisos para leer, y en `/home/secret` un archivo llamado `hash`.
 

@@ -96,6 +96,8 @@ Intentamos una `inyección de comandos` clásica utilizando `;`, pero no obtenem
 
 ![](../../images/semicolon.png)
 
+## SSTI
+
 A continuación, probamos a ver si la aplicación es vulnerable a `SSTI` (Server-Side Template Injection) introduciendo la operación matemática `{{7*7}}` en el input.
 
 ![](../../images/49.png)
