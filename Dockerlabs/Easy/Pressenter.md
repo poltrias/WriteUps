@@ -5,7 +5,7 @@ icon: linux
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `SQLi` `SQLMap` `Steganography` `John` `SUID` `Information Leakage`
+> **Tags:** `Linux` `Web` `WordPress` `WPScan` `PHP` `MySQL` `Password Reuse` 
 
 ## INSTALACIÓN
 
@@ -83,7 +83,7 @@ Accedemos a la página web del puerto `80`.
 
 Al inspeccionar el `código fuente`, encontramos el siguiente comentario interesante:
 
-```
+```html
 <p class="hidden-domain">Find us at <a href="http://pressenter.hl" target="_blank">pressenter.hl</a></p>
 ```
 
