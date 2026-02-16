@@ -51,6 +51,7 @@
   * [Escolares ​​](Dockerlabs/Easy/Escolares.md)
   * [Move ​​](Dockerlabs/Easy/Move.md)
   * [Verdejo ​​](Dockerlabs/Easy/Verdejo.md)
+  * [Mirame ​​](Dockerlabs/Easy/Mirame.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
