@@ -53,6 +53,7 @@
   * [Verdejo ​​](Dockerlabs/Easy/Verdejo.md)
   * [Mirame ​​](Dockerlabs/Easy/Mirame.md)
   * [Elevator ​​](Dockerlabs/Easy/Elevator.md)
+  * [Pressenter ​​](Dockerlabs/Easy/Pressenter.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
