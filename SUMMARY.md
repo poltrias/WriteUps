@@ -56,6 +56,7 @@
   * [Pressenter ​​](Dockerlabs/Easy/Pressenter.md)
   * [Vulnvault ​​](Dockerlabs/Easy/VulnVault.md)
   * [Picadilly ​​](Dockerlabs/Easy/Picadilly.md)
+  * [Hiddencat ​​](Dockerlabs/Easy/Picadilly.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
