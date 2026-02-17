@@ -57,6 +57,7 @@
   * [Vulnvault ​​](Dockerlabs/Easy/VulnVault.md)
   * [Picadilly ​​](Dockerlabs/Easy/Picadilly.md)
   * [Hiddencat ​​](Dockerlabs/Easy/Hiddencat.md)
+  * [FindYourStyle ​​](Dockerlabs/Easy/Findyourstyle.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
