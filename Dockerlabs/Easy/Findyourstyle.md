@@ -131,7 +131,6 @@ Comenzamos la enumeración de usuarios del sistema.
 cat /etc/passwd | grep 'sh'
 ```
 
-Info:
 ```
 root:x:0:0:root:/root:/bin/bash
 ballenita:x:1000:1000:ballenita,,,:/home/ballenita:/bin/bash
@@ -176,7 +175,6 @@ Muchas veces se reutilizan este tipo de contraseñas también para el usuario de
 su ballenita
 ```
 
-Info:
 ```
 ballenita@260dc31a3696:/$ whoami
 ballenita
@@ -190,7 +188,7 @@ Hemos logrado pivotar con éxito.
 Una vez dentro, comprobamos permisos `sudo`.
 
 ```Bash
-sudo -l`
+sudo -l
 ```
 
 Info:
@@ -242,7 +240,6 @@ Procedemos a autenticarnos como `root` para finalizar la máquina.
 su root
 ```
 
-Info:
 ``` 
 root@260dc31a3696:/# whoami
 root
