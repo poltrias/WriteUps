@@ -262,7 +262,6 @@ su root
 # Password: WinServerRootFakeNews
 ```
 
-Info:
 ```
 root@8e97e79e398d:/home/pipe# whoami
 root
