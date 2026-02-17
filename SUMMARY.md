@@ -58,6 +58,7 @@
   * [Picadilly ​​](Dockerlabs/Easy/Picadilly.md)
   * [Hiddencat ​​](Dockerlabs/Easy/Hiddencat.md)
   * [FindYourStyle ​​](Dockerlabs/Easy/Findyourstyle.md)
+  * [WinFake ​​](Dockerlabs/Easy/Winfake.md)
 
 * [🟡 Intermediate](dockerlabs/intermediate/README.md)
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
