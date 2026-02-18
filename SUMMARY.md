@@ -73,6 +73,7 @@
   * [Dance-Samba ​​](Dockerlabs/Intermediate/Dance-Samba.md)
   * [Domain ​​](Dockerlabs/Intermediate/Domain.md)
   * [HackPenguin ​​](Dockerlabs/Intermediate/Hackpenguin.md)
+  * [StrongJenkins ​​](Dockerlabs/Intermediate/StrongJenkins.md)
 
 ## HACKMYVM
 
