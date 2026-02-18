@@ -5,7 +5,9 @@ icon: linux
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `SQLi` `XXE` `Bypass` `Python` `Sudoers` `Croc`
+> **Tags:** `Linux` `Web` `Steganography` `Cryptography` `KeePass` `ps aux` `SUID` 
+
+Linux Web Steganography Cryptography Cracking KeePass Abuse SUID
 
 ## INSTALACIÓN
 
@@ -223,7 +225,28 @@ drwx------ 2 penguin hackpenguin 4096 Feb 18 16:22 .cache
 
 Encontramos un script llamado `script.sh` que pertenece a `root`, pero sobre el cual tenemos permisos de escritura `(rwxrwxrwx)`. 
 
-Es muy probable que este script se esté ejecutando mediante una tarea programada o un proceso en segundo plano por el usuario root.
+Vamos a comprobar si existe algun proceso que esté ejecutando este script.
+
+```bash
+ps aux
+```
+
+```
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  3.4  0.0   2900  1792 ?        Ss   16:07   1:16 /bin/sh -c service apache2 start && service ssh start && while true; do /bin/bash /home/hackpenguin/script.sh; done
+root          25  0.0  0.1   6788  4836 ?        Ss   16:07   0:00 /usr/sbin/apache2 -k start
+www-data      31  1.2  0.1 1212916 7816 ?        Sl   16:07   0:27 /usr/sbin/apache2 -k start
+www-data      59  1.3  0.1 1212908 7920 ?        Sl   16:07   0:29 /usr/sbin/apache2 -k start
+root          92  0.0  0.1  15444  5540 ?        Ss   16:07   0:00 sshd: /usr/sbin/sshd [listener] 0 of 10-100 startups
+www-data  136751  1.2  0.1 1212908 7720 ?        Sl   16:09   0:27 /usr/sbin/apache2 -k start
+root      975171  0.0  0.2  16740 11032 ?        Ss   16:22   0:00 sshd: penguin [priv]
+penguin   982894  0.0  0.1  17000  7828 ?        R    16:22   0:00 sshd: penguin@pts/0
+penguin   982907  0.0  0.0   2900  1908 pts/0    Ss   16:22   0:00 -sh
+root     1083598  0.0  0.0   5056  3944 pts/0    S    16:24   0:00 bash -p
+root     3010233  0.0  0.0   7492  3180 pts/0    R+   16:45   0:00 ps aux
+```
+
+Como podemos ver en la primera línea, el script está constantemente siendo ejecutado como el usuario `root`.
 
 Modificamos el `script` para asignar permisos `SUID` al binario `/bin/bash`.
 
