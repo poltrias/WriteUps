@@ -5,7 +5,7 @@ icon: linux
 **Plataforma:** Dockerlabs\
 **Sistema Operativo:** Linux
 
-> **Tags:** `Linux` `Web` `SQLi` `XXE` `Bypass` `Python` `Sudoers` `Croc`
+> **Tags:** `Linux` `Samba` `Enum4linux` `NetExec` `File Upload` `SUID` `Nano` 
 
 ## INSTALACIÓN
 
