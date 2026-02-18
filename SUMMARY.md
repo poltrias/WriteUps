@@ -4,7 +4,7 @@
 
 ## DOCKERLABS
 
-* [🔵 Very Easy](dockerlabs/very-easy/README.md)
+* [🔵 Very Easy]
   * [Obsession ​​](<Dockerlabs/Very easy/Obsession.md>)
   * [Injection ​​](<Dockerlabs/Very easy/Injection.md>)
   * [Trust ​​](<Dockerlabs/Very easy/Trust.md>)
@@ -61,7 +61,7 @@
   * [WinFake ​​](Dockerlabs/Easy/Winfake.md)
   * [ShowTime​](Dockerlabs/Easy/Showtime.md)
 
-* [🟡 Intermediate](dockerlabs/intermediate/README.md)
+* [🟡 Intermediate]
   * [Hidden ​​](Dockerlabs/Intermediate/Hidden.md)
   * [ChcocolateFire ​​](Dockerlabs/Intermediate/ChocolateFire.md)
   * [Sites ​​](Dockerlabs/Intermediate/sites.md)
@@ -78,18 +78,18 @@
 
 ## HACKMYVM
 
-* [🟢 Easy](hackmyvm/easy/README.md)
+* [🟢 Easy]
   * [DC01 ​​](HackMyVM/Easy/DC01.md)
   * [Observer ​​](HackMyVM/Easy/Observer.md)
   * [Liceo ​​](HackMyVM/Easy/Liceo.md)
-* [🟡 Intermediate](hackmyvm/intermediate/README.md)
+* [🟡 Intermediate]
   * [DC02 ​​](HackMyVM/Intermediate/DC02.md)
   * [DC03 ​​](HackMyVM/Intermediate/DC03.md)
   * [Ximai ​​](HackMyVM/Intermediate/Ximai.md)
 
 ## VULNYX
 
-* [🔵 Very Easy](vulnyx/very-easy/README.md)
+* [🔵 Very Easy]
   * [HackingStation ​​](<Vulnyx/Very easy/HackingStation.md>)
   * [Lower6 ​](<Vulnyx/Very easy/Lower6.md>)
   * [Lower7 ​](<Vulnyx/Very easy/Lower7.md>)
@@ -97,19 +97,19 @@
   * [Eternal ​​](<Vulnyx/Very easy/Eternal.md>)
   * [Infected ​​](<Vulnyx/Very easy/Infected.md>)
   * [Experience ​​](<Vulnyx/Very easy/Experience.md>)
-* [🟢 Easy](vulnyx/easy/README.md)
+* [🟢 Easy]
   * [Explorer ​](Vulnyx/Easy/Explorer.md)
   * [Swamp ​​](Vulnyx/Easy/Swamp.md)
-* [🟡 Intermediate](vulnyx/intermediate/README.md)
+* [🟡 Intermediate]
   * [Leak ​​](Vulnyx/Intermediate/Leak.md)
 
 ## THEHACKERSLABS
 
-* [🟢 Easy](thehackerslabs/easy/README.md)
+* [🟢 Easy]
   * [Cocido Andaluz ​​](TheHackersLabs/Easy/CocidoAndaluz.md)
   * [Castor ​​](TheHackersLabs/Easy/Castor.md)
   * [Sedition ​](TheHackersLabs/Easy/Sedition.md)
-* [🟡 Intermediate](thehackerslabs/intermediate/README.md)
+* [🟡 Intermediate]
   * [Operación Pescador ​​](TheHackersLabs/Avanzado/OperacionPescador.md)
   * [Pa Que Aiga Lujo ​​](TheHackersLabs/Avanzado/PaQueAigaLujo.md)
   * [Sarxixas ​​](TheHackersLabs/Avanzado/Sarxixas.md)
