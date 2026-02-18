@@ -16,7 +16,7 @@
   * [Tproot ​​](<Dockerlabs/Very easy/Tproot.md>)
   * [Ejotapete ​​](<Dockerlabs/Very easy/Ejotapete.md>)
   
-* [🟢 Easy](dockerlabs/easy/README.md)
+* [🟢 Easy]
   * [Grooti ​​](Dockerlabs/Easy/grooti.md)
   * [PingCTF ​​](Dockerlabs/Easy/PingCTF.md)
   * [Pequeñas-mentirosas ​​](Dockerlabs/Easy/Pequeñas-mentirosas.md)
