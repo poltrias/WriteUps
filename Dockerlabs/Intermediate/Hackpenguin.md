@@ -7,8 +7,6 @@ icon: linux
 
 > **Tags:** `Linux` `Web` `Steganography` `Cryptography` `KeePass` `ps aux` `SUID` 
 
-Linux Web Steganography Cryptography Cracking KeePass Abuse SUID
-
 ## INSTALACIÓN
 
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
