@@ -74,6 +74,7 @@
   * [Domain ​​](Dockerlabs/Intermediate/Domain.md)
   * [HackPenguin ​​](Dockerlabs/Intermediate/Hackpenguin.md)
   * [StrongJenkins ​​](Dockerlabs/Intermediate/StrongJenkins.md)
+  * [UserSearch ​​](Dockerlabs/Intermediate/UserSearch.md)
 
 ## HACKMYVM
 
