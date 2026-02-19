@@ -342,7 +342,6 @@ Accedemos a este recurso utilizando `smbclient`.
 smbclient //172.17.0.2/shared -U dylan -p
 ```
 
-Info:
 ```
 smb: \> ls
   .                                   D        0  Thu Feb 19 16:09:00 2026
