@@ -76,6 +76,7 @@
   * [StrongJenkins ​​](Dockerlabs/Intermediate/StrongJenkins.md)
   * [UserSearch ​​](Dockerlabs/Intermediate/UserSearch.md)
   * [Eclipse ​​](Dockerlabs/Intermediate/Eclipse.md)
+  * [Database ​​](Dockerlabs/Intermediate/Database.md)
 
 ## HACKMYVM
 
