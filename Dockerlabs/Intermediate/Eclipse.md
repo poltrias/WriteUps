@@ -12,13 +12,13 @@ icon: linux
 Descargamos el `.zip` de la máquina desde DockerLabs a nuestro entorno y seguimos los siguientes pasos.
 
 ```bash
-unzip profetas.zip
+unzip eclipse.zip
 ```
 
 La máquina ya está descomprimida y solo falta montarla.
 
 ```bash
-sudo bash auto_deploy.sh profetas.tar
+sudo bash auto_deploy.sh eclipse.tar
 ```
 
 Info:
@@ -58,7 +58,7 @@ nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
 ```
 
 ```bash
-nmap -n -Pn -sCV -p22,80 --min-rate 5000 172.17.0.2
+nmap -n -Pn -sCV -p80,8983 --min-rate 5000 172.17.0.2
 ```
 
 Info:
@@ -81,7 +81,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 11.89 seconds
 ```
 
-Identificamos los puertos `80` (HTTP) y `8983` (Apache Solr) abiertos.
+Identificamos los puertos `80` y `8983` abiertos.
 
 Accedemos al servicio web del puerto `80` y nos encontramos con la página por defecto de `Apache2`. 
 
