@@ -75,6 +75,7 @@
   * [HackPenguin ​​](Dockerlabs/Intermediate/Hackpenguin.md)
   * [StrongJenkins ​​](Dockerlabs/Intermediate/StrongJenkins.md)
   * [UserSearch ​​](Dockerlabs/Intermediate/UserSearch.md)
+  * [Eclipse ​​](Dockerlabs/Intermediate/Eclipse.md)
 
 ## HACKMYVM
 
