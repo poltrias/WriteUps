@@ -77,6 +77,7 @@
   * [UserSearch ​​](Dockerlabs/Intermediate/UserSearch.md)
   * [Eclipse ​​](Dockerlabs/Intermediate/Eclipse.md)
   * [Database ​​](Dockerlabs/Intermediate/Database.md)
+  * [Bashpariencias ​​](Dockerlabs/Intermediate/Bashpariencias.md)
 
 ## HACKMYVM
 
