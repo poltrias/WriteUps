@@ -112,6 +112,7 @@
   * [Cocido Andaluz ​​](TheHackersLabs/Easy/CocidoAndaluz.md)
   * [Castor ​​](TheHackersLabs/Easy/Castor.md)
   * [Sedition ​](TheHackersLabs/Easy/Sedition.md)
+  * [Chimichurri ​](TheHackersLabs/Easy/Chimichurri.md)
 * 🟡 Intermediate
   * [Operación Pescador ​​](TheHackersLabs/Avanzado/OperacionPescador.md)
   * [Pa Que Aiga Lujo ​​](TheHackersLabs/Avanzado/PaQueAigaLujo.md)
