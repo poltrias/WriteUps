@@ -54,7 +54,7 @@ Una vez desplegada, cuando terminemos de hackearla, con un `Ctrl + C` se elimina
 A continuación, realizamos un escaneo general para comprobar qué puertos están abiertos y luego uno más exhaustivo para obtener información relevante sobre los servicios.
 
 ```bash
-nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
+sudo nmap -n -Pn -sS -sV -p- --open --min-rate 5000 172.17.0.2
 ```
 
 ```bash
@@ -209,9 +209,11 @@ git clone https://github.com/evkl1d/CVE-2023-46604
 cd CVE-2023-46604
 ```
 
-Una vez dentro del directorio, vemos un archivo llamado `poc.xml`. Este es el payload que debemos modificar para inyectar nuestra `IP` y el `puerto` donde estaremos a la escucha.
+Una vez dentro del directorio, vemos un archivo llamado `poc.xml`. 
 
-Lo editamos de la siguiente manera, sustituyendo los valores por los de nuestra máquina atacante `192.168.1.43` y el puerto elegido `9001`.
+Este es el payload que debemos modificar para inyectar nuestra `IP` y el `puerto` donde estaremos a la escucha.
+
+Lo editamos de la siguiente manera, sustituyendo los valores por los de nuestra máquina atacante.
 
 ```Bash
 nano poc.xml
@@ -284,6 +286,6 @@ root
 root@3421e4fd7290:/#
 ```
 
-Debido a que el servicio se estaba ejecutando con los máximos privilegios, recibimos la `reverse shell` directamente como el usuario `root`.
+Como el servicio se estaba ejecutando con los máximos privilegios, recibimos la `reverse shell` directamente como el usuario `root`.
 
-Ya somos root!
+Somos root!
